@@ -1,0 +1,75 @@
+.system-settings-container {
+    padding: 20px;
+    background-color: #f9f9f9;
+  }
+  
+  .settings-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: start;
+    text-decoration: none;
+  }
+  
+  .search-bar input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+    font-size: 16px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .settings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 20px;
+  }
+  
+  .settings-card {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    border: 1px solid #eaeaea;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+  }
+  
+  .settings-card:hover {
+    transform: translate(10px) scale(1.05);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+    background-color: #f0f8ff;
+  }
+  
+  #settings-icon i{
+    font-size: 40px !important;
+    color: #4e73df;
+    margin-bottom: 15px;
+    transition: color 0.3s ease;
+  }
+  
+  .settings-card:hover .settings-icon {
+    color: #007bff;
+  }
+  
+  .settings-card h2 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .settings-card p {
+    font-size: 14px;
+    color: #6c757d;
+  }
+  
+  .settings-card.text-decoration-none {
+    text-decoration: none;
+  }
+  
+  

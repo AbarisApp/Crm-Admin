@@ -1,0 +1,64 @@
+.message {
+    max-width: 85%;
+    padding: 6px 15px;
+    border-radius: 10px;
+    font-size: 14px;
+    line-height: 1.5;
+    word-wrap: break-word;
+    display: inline-block;
+    box-shadow: 0 2px 5px rgb(150 97 97 / 77%);
+    position: relative;
+}
+
+.message.sent {
+    background-color: #d1f7d6;
+    /* Light green for sender */
+    align-self: flex-end;
+    border-bottom-right-radius: 0;
+}
+
+.message.received {
+    background-color: #f1f0f0;
+    /* Light gray for receiver */
+    align-self: flex-start;
+    border-bottom-left-radius: 0;
+}
+
+.arrow-icon {
+    position: absolute;
+    right: 1rem;
+    display: none;
+    transition: ease-in-out 0.3s;
+
+}
+
+.arrow-icon i {
+    font-size: 1.4rem;
+    position: relative;
+    left: 48px;
+    font-weight: 700;
+    color: #fff;
+    display: none;
+    transition: ease-in-out 0.3s;
+}
+
+.message.sent:hover .arrow-icon i {
+    display: block;
+    transition: ease-in-out 0.3s;
+}
+
+.message.sent:hover .arrow-icon {
+    top: 1rem;
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0px 71px 34px 0px;
+    border-color: transparent #697ffe3b transparent transparent;
+    display: block;
+    transition: ease-in-out 0.3s;
+}
+
+.tScrollbarHide::-webkit-scrollbar {
+    display: none !important;
+}

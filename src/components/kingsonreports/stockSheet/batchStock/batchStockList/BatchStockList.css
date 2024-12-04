@@ -1,0 +1,36 @@
+.accordion-item {
+    border: 1px solid #ddd;
+    margin: 10px 0;
+    border-radius: 5px;
+  }
+  
+  .accordion-header {
+    padding: 10px;
+    background-color: #f7f7f7;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+  }
+  
+  .accordion-body {
+    padding: 10px;
+    background-color: #fff;
+  }
+  
+  .accordion-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .accordion-table th, .accordion-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .accordion-table th {
+    background-color: #f2f2f2;
+  }
+  

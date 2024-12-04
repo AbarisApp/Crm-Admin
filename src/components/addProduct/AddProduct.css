@@ -1,0 +1,8 @@
+.custom-modal {
+    max-width: 1300px;
+    margin: "80px auto";
+}
+
+.boxShadowNone {
+    box-shadow: none;
+}

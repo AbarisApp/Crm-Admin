@@ -1,0 +1,98 @@
+/* Offcanvas Styling for Responsiveness */
+
+
+@media (max-width: 768px) {
+    .responsive-offcanvas .offcanvas {
+        width: 100%;
+    }
+}
+
+/* General Form Styling */
+.task-form {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+
+
+.form-group label {
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+/* Icon Group Styling */
+.icon-group {
+    display: flex;
+    gap: 4px;
+    margin-top: 4px;
+}
+
+.icon-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+/* Button Group Styling */
+.button-group {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+.submit-button {
+    background-color: #e53935;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.cancel-button {
+    background-color: #fff;
+    color: #333;
+    border: 1px solid #ddd;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .task-form {
+        padding: 8px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        font-size: 14px;
+    }
+
+    .submit-button,
+    .cancel-button {
+        font-size: 14px;
+        padding: 6px 12px;
+    }
+}
+.icon-group i {
+    font-size: 1.2em;
+    cursor: pointer;
+    color: #6c757d; /* Adjust icon color */
+}
+
+
+

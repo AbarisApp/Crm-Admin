@@ -1,0 +1,52 @@
+.card-card {
+    border-radius: 10px;
+}
+
+.card-body-card .card-title {
+    font-weight: bold;
+    font-size: 1.2rem;
+    padding: 10px;
+}
+
+.list-group-item {
+    border: none;
+}
+
+.list-group-item span:last-child {
+    font-weight: bold;
+}
+
+.mt-3 .btn {
+    border-radius: 5px;
+}
+
+
+.card-setcard-1 {
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.card-setcard-1:hover {
+    transform: translateY(-5px);
+}
+
+.card-setcard-1 strong {
+    font-size: 1.25rem;
+}
+
+.card-setcard-1 .text-muted {
+    font-size: 0.875rem;
+}
+
+.rounded-circle {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mt-2 a {
+    font-size: 24px;
+    text-decoration: none;
+}

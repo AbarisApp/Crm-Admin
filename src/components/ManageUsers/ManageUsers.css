@@ -1,0 +1,48 @@
+ .dashboard-card {
+     border-radius: 8px;
+     padding: 20px;
+     color: white;
+     margin: 10px 0;
+     text-align: center;
+ }
+
+ .payments {
+     background-color: #26a69a;
+ }
+
+ .transactions {
+     background-color: #003366;
+ }
+
+ .winning {
+     background-color: #4b0082;
+ }
+
+ .lottery {
+     background-color: #d2691e;
+ }
+
+ .logins {
+     background-color: #483d8b;
+     color: white;
+ }
+
+ .notifications {
+     background-color: #a9a9a9;
+ }
+
+ .ban-user {
+     background-color: #ff8c00;
+     color: white;
+ }
+
+ .dashboard-section {
+     display: flex;
+     justify-content: space-between;
+     flex-wrap: wrap;
+ }
+
+ .btn-custom {
+     width: 100%;
+     margin: 5px 0;
+ }
