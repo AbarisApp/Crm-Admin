@@ -1,9 +1,10 @@
 import Breadcrumbs from '../../../../common/breadcrumb/Breadcrumbs'
 import React, { useEffect, useState } from 'react'
-import {  deleteAccAddProjectById, deleteAddSubjectById,getAccAddProjectByPage } from '../../../../api/login/Login'
+import { deleteAccAddProjectById, deleteAddSubjectById, getAccAddProjectByPage } from '../../../../api/login/Login'
 import { message } from 'antd'
 import CallStatusMasterList from './MasterList/CallStatusMasterList'
 import { useParams } from 'react-router-dom'
+import Loadar from '../../../../common/loader/Loader'
 function ProjectMasters() {
     const breadCrumbsTitle = {
         // title_1: "master",
@@ -14,15 +15,15 @@ function ProjectMasters() {
     const [count, setCount] = useState(10)
     const [page, setPage] = useState(0)
     const [totalCount, setTotalCount] = useState()
-    
+
 
     // ----------list Api----------
     const param = useParams()
-    const getFloorMasters = async (page) => {
-        
+    const getFloorMasters = async (page ,id) => {
+
         setLoading(true)
         try {
-            const res = await getAccAddProjectByPage(page ,count)
+            const res = await getAccAddProjectByPage(page, count ,id)
             setTotalCount(res?.totalCount)
             setData(res?.data)
             setPage(page)
@@ -60,12 +61,13 @@ function ProjectMasters() {
         message.error('Cancle Successfull!');
     };
     useEffect(() => {
-        getFloorMasters(0)
+        // getFloorMasters(0)
     }, [])
     return (
         <>
+            {loading && <Loadar />}
             <Breadcrumbs breadCrumbsTitle={breadCrumbsTitle} />
-            <CallStatusMasterList totalCount={totalCount} page={page} onChangeVal={onChangeVal} data={data}  count={count} confirm={confirm} cancel={cancel} loading={loading}/>
+            <CallStatusMasterList getFloorMasters={getFloorMasters} totalCount={totalCount} page={page} onChangeVal={onChangeVal} data={data} count={count} confirm={confirm} cancel={cancel} loading={loading} />
         </>
     )
 }
