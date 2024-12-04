@@ -4,12 +4,12 @@ import QuotationInformation from "./QuotationInformation"
 import ItenaryAdd from "./ItenaryAdd";
 import FilghtAdd from "./FilghtAdd";
 import TransportInformation from "./TransportInformation";
-import { addTravelRoomType, addTRCRM_tr_quotation_master, clodinaryImage, currencyList, getAirlLine, getTravelAllCity, getTravelAllCountry, getTravelAllMealType, getTravelAllOthers, getTravelAllState, getTRCRM_cost_label_master, getTRCRM_cost_type_master, getTRCRM_hotel_type_master, getTRCRM_sight_seeing_masteradmin } from "../../../../../../../api/login/Login";
+import { addTravelRoomType, addTRCRM_tr_quotation_master, clodinaryImage, currencyList, getAirlLine, getIdTRCRM_tr_quotation_master, getTravelAllCity, getTravelAllCountry, getTravelAllMealType, getTravelAllOthers, getTravelAllState, getTRCRM_cost_label_master, getTRCRM_cost_type_master, getTRCRM_hotel_type_master, getTRCRM_sight_seeing_masteradmin, updateTRCRM_tr_quotation_master } from "../../../../../../../api/login/Login";
 import { toast, ToastContainer } from "react-toastify";
 import { useParams } from "react-router-dom";
 
 
-const TravelQuotationAddComp = ({ cancelForm }) => {
+const TravelQuotationAddComp = ({ editData, cancelForm, getTransitionReport }) => {
     const param = useParams()
 
     const [currentStep, setCurrentStep] = useState(1);
@@ -304,7 +304,7 @@ const TravelQuotationAddComp = ({ cancelForm }) => {
     //     clone[name] = value
     //     setInitialData(clone)
     // }
-    console.log(initialData);
+    // console.log(initialData);
     const toastSuccessMessage = (message) => {
         toast.success(`${param?.id ? `${message}` : `${message}`} ${'Success'}`, {
             position: "top-right",
@@ -313,17 +313,65 @@ const TravelQuotationAddComp = ({ cancelForm }) => {
 
     const submitData = async () => {
         const clone = { ...initialData, attach_file: image }
-        try {
-            const res = await addTRCRM_tr_quotation_master(clone)
-            console.log(res);
-            if (res?.error == false) {
-                toastSuccessMessage('Add Quotation')
+        if (!editData?._id) {
+            try {
+                const res = await addTRCRM_tr_quotation_master(clone)
+                console.log(res);
+                if (res?.error == false) {
+                    toastSuccessMessage('Add Quotation')
+                    getTransitionReport(0)
+                    setTimeout(() => {
+                        cancelForm()
+                    }, 2000)
+
+                } else {
+                    toastSuccessMessage(res?.message)
+                }
+
+            } catch (error) {
+
             }
+        } else {
+            try {
+                const res = await updateTRCRM_tr_quotation_master(editData._id, clone)
+                console.log(res);
+                if (res?.error == false) {
+                    toastSuccessMessage('Update Quotation')
+                    getTransitionReport(0)
+                    setTimeout(() => {
+                        cancelForm()
+                    }, 2000)
+                } else {
+                    toastSuccessMessage(res?.message)
+                }
 
-        } catch (error) {
+            } catch (error) {
 
+            }
         }
+
+
     }
+
+    useEffect(() => {
+        const getIdData = async () => {
+            try {
+                const res = await getIdTRCRM_tr_quotation_master(editData._id)
+                console.log(res);
+                // setInitialState(res?.data)
+                setInitialData(res?.data)
+                setRows(res?.data?.cities)
+                setRowsHotelInfo(res?.data?.options)
+                setRowsItinerary(res?.data?.days)
+                setImage(res.data?.attach_file)
+            } catch (error) {
+
+            }
+        }
+        if (editData && editData._id) {
+            getIdData();
+        }
+    }, [editData])
 
 
     useEffect(() => {
@@ -376,6 +424,8 @@ const TravelQuotationAddComp = ({ cancelForm }) => {
                     otherFacilityData={otherFacilityData}
                     locations={locations}
                     submitData={submitData}
+                    getTransitionReport={getTransitionReport}
+                    editData={editData}
                 />
             )}
 

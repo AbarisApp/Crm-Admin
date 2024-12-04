@@ -5513,6 +5513,10 @@ export const deleteTRCRM_tr_lead = (id) => {
   return axiosInstance.delete(`${baseUrl}TRCRM_tr_lead/delete_type/${id}`);
 };
 
+export const getByIdTRCRM_tr_lead = (id) => {
+  return axiosInstance.get(`${baseUrl}TRCRM_tr_lead/${id}`);
+};
+
 
 
 export const getTRCRM_tr_traveller = (value) => {
@@ -5606,6 +5610,16 @@ export const addTRCRM_tr_quotation_master = (data) => {
 
 export const getTRCRM_tr_quotation_master = (value) => {
   return axiosInstance.get(`${baseUrl}TRCRM_tr_quotation_master/user?page=${value?.page}&count=${value?.count}&start_date=${value?.start_date}&end_date=${value?.end_date}`);
+};
+
+export const deleteTRCRM_tr_quotation_master = (id) => {
+  return axiosInstance.delete(`${baseUrl}TRCRM_tr_quotation_master/delete_type/${id}`);
+};
+export const getIdTRCRM_tr_quotation_master = (id) => {
+  return axiosInstance.get(`${baseUrl}TRCRM_tr_quotation_master/${id}`);
+};
+export const updateTRCRM_tr_quotation_master = (id, data) => {
+  return axiosInstance.put(`${baseUrl}TRCRM_tr_quotation_master/update_type/${id}`, data);
 };
 
 

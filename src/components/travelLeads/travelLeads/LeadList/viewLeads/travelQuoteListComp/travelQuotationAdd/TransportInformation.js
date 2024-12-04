@@ -5,7 +5,7 @@ import 'react-quill/dist/quill.snow.css';
 import { Link } from 'react-router-dom';
 const { Option } = Select;
 
-function TransportInformation({ submitData, locations, otherFacilityData, setInitialData, handleQuillChange, changeHandle, initialData, onPrev, data }) {
+function TransportInformation({ editData, getTransitionReport, submitData, locations, otherFacilityData, setInitialData, handleQuillChange, changeHandle, initialData, onPrev, data }) {
     const [value, setValue] = useState('');
     const [inclusionVal, setInclusionVal] = useState('');
     const [exclusionVal, setExclusionVal] = useState('');
@@ -191,7 +191,9 @@ function TransportInformation({ submitData, locations, otherFacilityData, setIni
 
 
                                     <div className="form-group col-12 mt-3">
-                                        <button type='button' className="btn btn-danger float-end" onClick={submitData}>Save</button>
+                                        <button type='button' className="btn btn-danger float-end" onClick={submitData}>
+                                            {editData?._id ? 'Update' : 'Add'}
+                                        </button>
                                         <button type='button' className="btn btn-primary float-end" onClick={onPrev}>Back</button>
                                     </div>
                                 </form>

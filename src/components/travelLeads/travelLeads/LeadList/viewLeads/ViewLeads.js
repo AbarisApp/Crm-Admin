@@ -1,5 +1,5 @@
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Breadcrumbs from '../../../../../common/breadcrumb/Breadcrumbs';
 import { Button, Tab, Tabs } from 'react-bootstrap';
 import { Form, Link, useParams } from 'react-router-dom';
@@ -13,6 +13,7 @@ import ServiceRequest from './serviceRequest/ServiceRequest';
 import LeadReminder from './reminder/Reminder';
 import TravelNote from './travelNote/TravelNote';
 import TravelFiles from './travelFiles/TravelFiles';
+import { getByIdTRCRM_tr_lead } from '../../../../../api/login/Login';
 
 const ViewLeads = () => {
     const breadCrumbsTitle = {
@@ -24,6 +25,22 @@ const ViewLeads = () => {
 
     const paramsAll = useParams()
     // console.log(paramsAll);
+
+    const [leadIdData, setLeadIdData] = useState(null)
+
+    const leadIdGet = async () => {
+        try {
+            const res = await getByIdTRCRM_tr_lead(paramsAll?.id)
+            console.log(res);
+            setLeadIdData(res?.data)
+        } catch (error) {
+
+        }
+    }
+
+    useEffect(() => {
+        leadIdGet()
+    }, [paramsAll?.id])
 
     return (
         <>
@@ -46,7 +63,7 @@ const ViewLeads = () => {
                                 <div className="row tab-color-change">
                                     <Tabs defaultActiveKey="about" id="lead-tabs" className="mb-3">
                                         <Tab eventKey="about" title="About">
-                                            <About />
+                                            <About leadIdData={leadIdData} />
                                         </Tab>
                                         <Tab eventKey="Ledger" title="Ledger">
                                             <Ladger />
