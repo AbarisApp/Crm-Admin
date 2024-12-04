@@ -1,6 +1,6 @@
 
 import Accordion from 'react-bootstrap/Accordion';
-const About = () => {
+const About = ({ leadIdData }) => {
 
     return (
 
@@ -12,87 +12,88 @@ const About = () => {
                     </div>
                     <form className="tbl-captionn">
                         <div className="row">
-                            <div className="col-lg-8">
+                            <div className="col-lg-12 ">
                                 <div className="row">
                                     <div className="col-xl-4 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">Mobile Number</label>
-                                        <p>8851746286</p>
+                                        <p>{leadIdData?.mobile_number}</p>
                                     </div>
                                     <div className="col-xl-4 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">Email Address</label>
-                                        <p>seoabaris@gmai.com</p>
+                                        <p>{leadIdData?.email_id}</p>
                                     </div>
                                     <div className="col-xl-4 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">First Name</label>
-                                        <p>Mr LEAD</p>
+                                        <p>{leadIdData?.first_name}</p>
                                     </div>
                                     <div className="col-xl-4 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">Last Name</label>
-                                        <p>LNAME</p>
+                                        <p>{leadIdData?.last_name}</p>
                                     </div>
                                     <div className="col-xl-4 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">Address</label>
-                                        <p>--</p>
+                                        <p>{leadIdData?.last_name}</p>
                                     </div>
                                     <div className="col-xl-4 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">City</label>
-                                        <p>--</p>
+                                        <p>{leadIdData?.city?.name}</p>
                                     </div>
                                     <div className="col-xl-4 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">Alternate Mobile Number</label>
-                                        <p>--</p>
+                                        <p>{leadIdData?.alternate_mobile_number}</p>
                                     </div>
                                     <div className="col-xl-4 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">Alternate Email Id</label>
-                                        --
+                                        <p>{leadIdData?.alternate_email_id}</p>
+
                                     </div>
                                     <div className="col-xl-4 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">Customer Types</label>
-                                        <p>--</p>
+                                        <p>{leadIdData?.customer_type?.customer_type}</p>
                                     </div>
                                     <div className="col-xl-4 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">Lead Source</label>
-                                        <p>--</p>
+                                        <p>{leadIdData?.lead_source?.name}</p>
                                     </div>
                                     <div className="col-xl-4 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">Referral Name</label>
-                                        <p>Referral Name</p>
+                                        <p>{leadIdData?.refer_code}</p>
                                     </div>
                                     <div className="col-xl-4 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">Lead Priority</label>
-                                        <p>Hot</p>
+                                        <p>{leadIdData?.lead_priority?.name}</p>
                                     </div>
                                     <div className="col-xl-4 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">Lead Status</label>
-                                        <p>Lead Status</p>
+                                        <p>{leadIdData?.lead_status?.name}</p>
                                     </div>
                                     <div className="col-xl-4 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">Trip Type</label>
-                                        <p>Honeymoon</p>
+                                        <p>{leadIdData?.trip_type?.name}</p>
                                     </div>
                                     <div className="col-xl-4 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">Tag</label>
-                                        <p>Honeymoon</p>
+                                        <p>{leadIdData?.tag?.name}</p>
                                     </div>
                                     <div className="col-xl-4 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">No. of Adults</label>
-                                        <p>3</p>
+                                        <p>{leadIdData?.no_of_adults}</p>
                                     </div>
                                     <div className="col-xl-4 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">No. of Children</label>
-                                        <p>6</p>
+                                        <p>{leadIdData?.no_of_children}</p>
                                     </div>
                                     <div className="col-xl-4 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">No. of Infant</label>
-                                        <p>--</p>
+                                        <p>{leadIdData?.no_of_infant}</p>
                                     </div>
                                     <div className="col-xl-4 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label"> Assigned To</label>
-                                        <p>Admin</p>
+                                        <p>{leadIdData?.assigned_to?.name}</p>
                                     </div>
                                     <div className="col-xl-4 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label"> Assinged Users</label>
-                                        <p>Admin</p>
+                                        <p>{leadIdData?.createdBy?.name}</p>
                                     </div>
                                     <div className="col-xl-4 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label"> Branch</label>
@@ -100,9 +101,9 @@ const About = () => {
                                     </div>
                                     <div className="col-xl-4 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label"> Created Date</label>
-                                        <p>15/11/2024 05:57 PM</p>
+                                        <p>{leadIdData?.createdAt}</p>
                                     </div>
-                                    <div className="col-lg-4">
+                                    {/* <div className="col-lg-4">
                                         <label for="exampleFormControlInput1" class="form-label">Change Lead Owner Assigned User</label>
                                         <select className="form-control" aria-label="Default select example">
                                             <option selected>Open this select Change Lead Owner Assigned User</option>
@@ -137,9 +138,394 @@ const About = () => {
                                             <option value={2}>Two</option>
                                             <option value={3}>Three</option>
                                         </select>
+                                    </div> */}
+
+
+
+                                    <div className='row'>
+                                        {Array.isArray(leadIdData?.lead_visa) && leadIdData?.lead_visa.length > 0 ? (
+                                            <div className='col-lg-12' style={{ border: '1px solid black' }}>
+                                                <h3 style={{ marginBottom: '10px' }}>Visa</h3>
+                                                <div className='row'>
+                                                    {leadIdData.lead_visa.map((item) => (
+                                                        <div className='col-lg-12' key={item?._id}>
+                                                            <div className='d-flex' style={{ justifyContent: 'space-between' }}>
+                                                                <div>
+                                                                    <h4>County</h4>
+                                                                    <p>{item?.country?.name}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>Visa Category</h4>
+                                                                    <p>{item?.visa_category?.name}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>Visa Type</h4>
+                                                                    <p>{item?.visa_category?.name}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>Duration</h4>
+                                                                    <p>{item?.visa_type?.name}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        ) : null}
+
+                                        {Array.isArray(leadIdData?.lead_flight) && leadIdData?.lead_flight.length > 0 ? (
+                                            <div className='col-lg-12' style={{ border: '1px solid black' }}>
+                                                <h3 style={{ marginBottom: '10px' }}>Flight Booking</h3>
+                                                <div className='row'>
+                                                    {leadIdData.lead_flight.map((item) => (
+                                                        <div className='col-lg-12' key={item?._id}>
+                                                            <div className='d-flex' style={{ justifyContent: 'space-between' }}>
+                                                                <div>
+                                                                    <h4>From</h4>
+                                                                    <p>{item?.from?.name}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>To</h4>
+                                                                    <p>{item?.to?.name}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>Departure</h4>
+                                                                    <p>{item?.departure}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>Return</h4>
+                                                                    <p>{item?.return}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>Class</h4>
+                                                                    <p>{item?.class?.name}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>Flexibility</h4>
+                                                                    <p>{item?.flexibility}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>Preference</h4>
+                                                                    <p>{item?.preference?.name}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>Category</h4>
+                                                                    <p>{item?.category_domestic_flight == true ? 'Domestic Flight' : ''} / {item?.category_international_flight == true ? 'International Flight' : ''}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        ) : null}
+                                        {Array.isArray(leadIdData?.lead_train) && leadIdData?.lead_train.length > 0 ? (
+                                            <div className='col-lg-12' style={{ border: '1px solid black' }}>
+                                                <h3 style={{ marginBottom: '10px' }}>Train Details</h3>
+                                                <div className='row'>
+                                                    {leadIdData.lead_train.map((item) => (
+                                                        <div className='col-lg-12' key={item?._id}>
+                                                            <div className='d-flex' style={{ justifyContent: 'space-between' }}>
+                                                                <div>
+                                                                    <h4>Country</h4>
+                                                                    <p>{item?.country?.name}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>From</h4>
+                                                                    <p>{item?.from?.name}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>To</h4>
+                                                                    <p>{item?.to?.name}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>Departure</h4>
+                                                                    <p>{item?.departure}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>Return</h4>
+                                                                    <p>{item?.return}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>Preference</h4>
+                                                                    <p>{item?.preference?.name}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>remark</h4>
+                                                                    <p>{item?.remark}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        ) : null}
+
+                                        {Array.isArray(leadIdData?.lead_forex) && leadIdData?.lead_forex.length > 0 ? (
+                                            <div className='col-lg-12' style={{ border: '1px solid black' }}>
+                                                <h3 style={{ marginBottom: '10px' }}>Forex</h3>
+                                                <div className='row'>
+                                                    {leadIdData.lead_forex.map((item) => (
+                                                        <div className='col-lg-12' key={item?._id}>
+                                                            <div className='d-flex' style={{ justifyContent: 'space-between' }}>
+                                                                <div>
+                                                                    <h4>Country</h4>
+                                                                    <p>{item?.country?.name}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>Amount</h4>
+                                                                    <p>{item?.amount}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        ) : null}
+
+                                        {Array.isArray(leadIdData?.lead_transport) && leadIdData?.lead_transport.length > 0 ? (
+                                            <div className='col-lg-12' style={{ border: '1px solid black' }}>
+                                                <h3 style={{ marginBottom: '10px' }}>Transport</h3>
+                                                <div className='row'>
+                                                    {leadIdData.lead_transport.map((item) => (
+                                                        <div className='col-lg-12' key={item?._id}>
+                                                            <div className='d-flex' style={{ justifyContent: 'space-between' }}>
+                                                                <div>
+                                                                    <h4>Country</h4>
+                                                                    <p>{item?.country?.name}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>City</h4>
+                                                                    <p>{item?.city?.name}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>Pick Up Date</h4>
+                                                                    <p>{item?.to?.name}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>Drop Date</h4>
+                                                                    <p>{item?.drop_date}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>Preference</h4>
+                                                                    <p>{item?.preference?.name}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>Transport Type</h4>
+                                                                    <p>{item?.transport_type_airport_transfers == true ? 'Airport Transfers' : ''} / {item?.transport_type_sightseeing_transfers == true ? 'Sightseeing Transfers' : ''} / {item?.transport_type_other == true ? 'Transport Type Other' : ''} / {item?.transport_type_other_name}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        ) : null}
+
+                                        {Array.isArray(leadIdData?.lead_other) && leadIdData?.lead_other.length > 0 ? (
+                                            <div className='col-lg-12' style={{ border: '1px solid black' }}>
+                                                <h3 style={{ marginBottom: '10px' }}>Other</h3>
+                                                <div className='row'>
+                                                    {leadIdData.lead_other.map((item) => (
+                                                        <div className='col-lg-12' key={item?._id}>
+                                                            <div className='d-flex' style={{ justifyContent: 'space-between' }}>
+                                                                <div>
+                                                                    <h4>Country</h4>
+                                                                    <p>{item?.country?.name}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>Travel Date</h4>
+                                                                    <p>{item?.travel_date}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>No. of Days</h4>
+                                                                    <p>{item?.number_of_days}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>Sub Category</h4>
+                                                                    <p>{item?.sub_category}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>Description</h4>
+                                                                    <p>{item?.description}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        ) : null}
+
+                                        {Array.isArray(leadIdData?.lead_bus) && leadIdData?.lead_bus.length > 0 ? (
+                                            <div className='col-lg-12' style={{ border: '1px solid black' }}>
+                                                <h3 style={{ marginBottom: '10px' }}>Bus</h3>
+                                                <div className='row'>
+                                                    {leadIdData.lead_bus.map((item) => (
+                                                        <div className='col-lg-12' key={item?._id}>
+                                                            <div className='d-flex' style={{ justifyContent: 'space-between' }}>
+                                                                <div>
+                                                                    <h4>Country</h4>
+                                                                    <p>{item?.country?.name}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>From</h4>
+                                                                    <p>{item?.from?.name}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>To</h4>
+                                                                    <p>{item?.to?.name}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>Departure</h4>
+                                                                    <p>{item?.departure}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>Return</h4>
+                                                                    <p>{item?.return}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>Preference</h4>
+                                                                    <p>{item?.preference?.name}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>Remark</h4>
+                                                                    <p>{item?.remark}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        ) : null}
+
+                                        {Array.isArray(leadIdData?.lead_passport) && leadIdData?.lead_passport.length > 0 ? (
+                                            <div className='col-lg-12' style={{ border: '1px solid black' }}>
+                                                <h3 style={{ marginBottom: '10px' }}>Passport</h3>
+                                                <div className='row'>
+                                                    {leadIdData.lead_passport.map((item) => (
+                                                        <div className='col-lg-12' key={item?._id}>
+                                                            <div className='d-flex' style={{ justifyContent: 'space-between' }}>
+                                                                <div>
+                                                                    <h4>Issusing Country</h4>
+                                                                    <p>{item?.issuing_country?.name}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>date</h4>
+                                                                    <p>{item?.date}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>Category</h4>
+                                                                    <p>{item?.category}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>Current Passport Number</h4>
+                                                                    <p>{item?.current_passport_number}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>Place Of Apply</h4>
+                                                                    <p>{item?.place_of_apply}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>No Of Person</h4>
+                                                                    <p>{item?.no_of_person}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>Remark</h4>
+                                                                    <p>{item?.remark}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>Urgent</h4>
+                                                                    <p>{item?.urgent == true ? 'Yes' : 'No'}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        ) : null}
+
+                                        {Array.isArray(leadIdData?.lead_cruise) && leadIdData?.lead_cruise.length > 0 ? (
+                                            <div className='col-lg-12' style={{ border: '1px solid black' }}>
+                                                <h3 style={{ marginBottom: '10px' }}>Cruise Details</h3>
+                                                <div className='row'>
+                                                    {leadIdData.lead_cruise.map((item) => (
+                                                        <div className='col-lg-12' key={item?._id}>
+                                                            <div className='d-flex' style={{ justifyContent: 'space-between' }}>
+                                                                <div>
+                                                                    <h4>Issusing Country</h4>
+                                                                    <p>{item?.issuing_country?.name}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>City</h4>
+                                                                    <p>{item?.city?.name}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>Days</h4>
+                                                                    <p>{item?.days}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>Cruise Name</h4>
+                                                                    <p>{item?.cruise_name}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>Type</h4>
+                                                                    <p>{item?.type}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>Departure</h4>
+                                                                    <p>{item?.departure}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>Return</h4>
+                                                                    <p>{item?.return}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>remark</h4>
+                                                                    <p>{item?.urgent == true ? 'Yes' : 'No'}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        ) : null}
+
+                                        {Array.isArray(leadIdData?.lead_adventure) && leadIdData?.lead_adventure.length > 0 ? (
+                                            <div className='col-lg-12' style={{ border: '1px solid black' }}>
+                                                <h3 style={{ marginBottom: '10px' }}>Adventure Details</h3>
+                                                <div className='row'>
+                                                    {leadIdData.lead_adventure.map((item) => (
+                                                        <div className='col-lg-12' key={item?._id}>
+                                                            <div className='d-flex' style={{ justifyContent: 'space-between' }}>
+                                                                <div>
+                                                                    <h4>Country</h4>
+                                                                    <p>{item?.country?.name}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>City</h4>
+                                                                    <p>{item?.city?.name}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>Travel Date</h4>
+                                                                    <p>{item?.travel_date}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>Category</h4>
+                                                                    <p>{item?.category_motorbiking == true ? 'Motorbiking' : ''} / {item?.category_camping == true ? 'Camping' : ''}/{item?.category_safari == true ? 'Safari' : ''} /{item?.category_water_sports == true ? 'Water Sports' : ''}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>Remark</h4>
+                                                                    <p>{item?.remark}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        ) : null}
                                     </div>
 
-                                    <div className="col-lg-12 mt-3">
+
+
+                                    {/* <div className="col-lg-12 mt-3">
                                         <Accordion>
                                             <Accordion.Item eventKey="0">
                                                 <Accordion.Header>Visa</Accordion.Header>
@@ -206,7 +592,7 @@ const About = () => {
                                                 </Accordion.Body>
                                             </Accordion.Item>
                                         </Accordion>
-                                    </div>
+                                    </div> */}
 
                                     {/* <div className="col-xl-12 text-center">
                                 <button type="button" className="btn btn-primary">
@@ -216,7 +602,7 @@ const About = () => {
                                 </div>
                             </div>
 
-                            <div className="col-lg-4">
+                            {/* <div className="col-lg-4">
                                 <div className="row">
                                     <div className="col-lg-12">
                                         <label for="exampleFormControlInput1" class="form-label">Change Assigned User</label>
@@ -256,7 +642,7 @@ const About = () => {
                                         </button>
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
 
                         </div>
                     </form>
