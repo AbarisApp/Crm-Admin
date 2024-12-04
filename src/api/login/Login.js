@@ -5861,11 +5861,20 @@ export const listStages = (id) => {
   });
 };
 
+export const listStagescount = (id) => {
+  return axiosInstance.get(`/acc_add_project/stageListwith_prj_count`, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
 
 
 // GET acc_add_project entries with pagination
-export const getAccAddProjectByPage = (page, count) => {
-  return axiosInstance.get(`/acc_add_project/user?page=${page}&count=${count}`);
+export const getAccAddProjectByPage = (page, count ,id) => {
+  return axiosInstance.get(`/acc_add_project/user?page=${page}&count=${count}&prj_stage=${id}`);
 };
 
 // GET a specific acc_add_project entry by ID
@@ -6083,6 +6092,14 @@ export const getProductList = (data) => {
 
 
 
+export const deleteProductById = (id) => {
+  return axios.delete(`${baseproductUrl}/product/${id}`, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
 
 
 // brand

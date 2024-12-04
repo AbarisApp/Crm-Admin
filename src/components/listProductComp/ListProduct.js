@@ -3,12 +3,18 @@ import { Link } from 'react-router-dom'
 import ExportPdf from '../../common/exportPdf/ExportPdf'
 import { ToastContainer } from 'react-toastify'
 import { message, Popconfirm } from 'antd'
+import { deleteProductById } from '../../api/login/Login'
+import Loadar from '../../common/loader/Loader'
 
 function ListProduct({ data }) {
     const [loading, setLoading] = useState(false)
     const deleteBlockAdd = async (id) => {
         setLoading(true)
+        try {
+            const res = await deleteProductById(id)
+        } catch (error) {
 
+        }
         setLoading(false)
     }
 
@@ -25,6 +31,7 @@ function ListProduct({ data }) {
 
     return (
         <>
+        {loading && <Loadar/>}
             <ToastContainer />
             <section className="ListDistributer mx-4 expdf ">
                 <div className="text-end">
@@ -84,7 +91,7 @@ function ListProduct({ data }) {
                                                             </div>
                                                         </td>
                                                         <td style={{ position: 'relative' }} className="d-flex align-item-center" >
-                                                             <Popconfirm
+                                                            <Popconfirm
                                                                 title="Delete !"
                                                                 description="Are you sure to delete ?"
                                                                 onConfirm={() => confirm(item?._id.uid)}

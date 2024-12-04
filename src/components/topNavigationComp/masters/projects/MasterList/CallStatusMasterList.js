@@ -2,15 +2,17 @@ import { Pagination, Popconfirm, Tabs } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
-import { listStages } from '../../../../../api/login/Login';
+import { listStages, listStagescount } from '../../../../../api/login/Login';
 
-function CallStatusMasterList({ data, totalCount, page, count, onChangeVal, confirm, cancel }) {
-    const [activeTab, setActiveTab] = useState("all");
+function CallStatusMasterList({ data, totalCount, page, count, onChangeVal, confirm, cancel ,getFloorMasters}) {
+    const [activeTab, setActiveTab] = useState();
     const [stages, setStages] = useState()
     const getData = async () => {
         try {
-            const res = await listStages()
-            setStages(res.data)
+            // const res = await listStages()
+            const res1 = await listStagescount()
+            setStages(res1.data)
+            getFloorMasters(0 ,res1.data[0]._id)
         } catch (error) {
 
         }
@@ -21,6 +23,7 @@ function CallStatusMasterList({ data, totalCount, page, count, onChangeVal, conf
     const changeStatus = (key) => {
         // Update the active tab
         setActiveTab(key);
+        getFloorMasters(page,key)
 
         // Add logic to handle tab-specific actions here
         console.log(`Selected Tab: ${key}`);
@@ -42,8 +45,11 @@ function CallStatusMasterList({ data, totalCount, page, count, onChangeVal, conf
                                     onChange={changeStatus}
                                     style={{ marginBottom: 16 }}
                                 >
-                                    <Tabs.TabPane tab="All Projects" key="all" />
-                                    <Tabs.TabPane tab="Project Created" key="created" />
+                                    {stages && stages?.map((val)=>{
+                                        return <Tabs.TabPane tab={`${val?.name} ${( val?.count )}`} key={val?._id}/>
+                                    })}
+                                  
+                                    {/* <Tabs.TabPane tab="Project Created" key="created" />
                                     <Tabs.TabPane tab="Recce Pending" key="reccePending" />
                                     <Tabs.TabPane tab="Design Pending" key="designPending" />
                                     <Tabs.TabPane tab="Design Freeze" key="designFreeze" />
@@ -55,7 +61,7 @@ function CallStatusMasterList({ data, totalCount, page, count, onChangeVal, conf
                                     <Tabs.TabPane tab="Hold" key="hold" />
                                     <Tabs.TabPane tab="Lost" key="lost" />
                                     <Tabs.TabPane tab="Rectification" key="rectification" />
-                                    <Tabs.TabPane tab="Archived" key="archived" />
+                                    <Tabs.TabPane tab="Archived" key="archived" /> */}
                                 </Tabs>
                                 <div className="table-responsive active-projects style-1" style={{ overflowX: 'auto' }}>
                                     <div className="tbl-caption">
