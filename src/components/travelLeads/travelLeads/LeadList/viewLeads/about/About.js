@@ -521,6 +521,40 @@ const About = ({ leadIdData }) => {
                                                 </div>
                                             </div>
                                         ) : null}
+
+                                        {Array.isArray(leadIdData?.lead_sightseeing) && leadIdData?.lead_sightseeing.length > 0 ? (
+                                            <div className='col-lg-12' style={{ border: '1px solid black' }}>
+                                                <h3 style={{ marginBottom: '10px' }}>Sightseeing</h3>
+                                                <div className='row'>
+                                                    {leadIdData.lead_sightseeing.map((item) => (
+                                                        <div className='col-lg-12' key={item?._id}>
+                                                            <div className='d-flex' style={{ justifyContent: 'space-between' }}>
+                                                                <div>
+                                                                    <h4>Country</h4>
+                                                                    <p>{item?.sightseeing_id?.country?.name}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>City</h4>
+                                                                    <p>{item?.city?.name}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>Travel Date</h4>
+                                                                    <p>{item?.travel_date}</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>Preference</h4>
+                                                                    <p>-</p>
+                                                                </div>
+                                                                <div>
+                                                                    <h4>Sightseeing Options</h4>
+                                                                    <p>--</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        ) : null}
                                     </div>
 
 

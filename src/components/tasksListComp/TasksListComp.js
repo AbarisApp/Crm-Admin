@@ -90,7 +90,7 @@ function TasksListComp({ style }) {
         // console.log(e);
         message.error('Cancle Successfull!');
     };
-   
+
 
 
     return (

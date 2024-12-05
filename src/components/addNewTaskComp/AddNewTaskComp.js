@@ -393,13 +393,13 @@ const AddNewTaskComp = () => {
         e.preventDefault();
         // Add your form submission logic here
         console.log(formValues);
-        
+
         const transformedValues = {
             ...formValues,
-            priority: formValues?.priority?._id ?  formValues?.priority?._id :  formValues?.priority,
+            priority: formValues?.priority?._id ? formValues?.priority?._id : formValues?.priority,
             attach_files: image,
             user_id: params?.id,
-            repeat_every: formValues?.repeat_every?.value ?formValues?.repeat_every?.value : formValues?.repeat_every,
+            repeat_every: formValues?.repeat_every?.value ? formValues?.repeat_every?.value : formValues?.repeat_every,
             assignees: formValues.assignees.map((assignee) => assignee._id),
             followers: formValues.followers.map((follower) => follower._id),
         };
@@ -432,7 +432,7 @@ const AddNewTaskComp = () => {
                 if (params?.id) {
                     const response = await getTaskById(params.update);
                     setImage(response?.data.attach_files);
-                   
+
                     const staff2s = response?.data.assignees.map((item) => ({
                         ...item,
                         value: item.name,
@@ -449,7 +449,7 @@ const AddNewTaskComp = () => {
                         user_id: params?.id,
                         repeat_every: response?.data.repeat_every,
                         assignees: staff2s,
-                        followers:staff2sf,
+                        followers: staff2sf,
                     };
                     setFormValues(transformedValues);
                 }

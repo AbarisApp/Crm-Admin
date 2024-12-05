@@ -1051,6 +1051,16 @@ import TripTypeAdd from "./components/travelCRM/tripType/tripTypeAdd/TripTypeAdd
 import SearchAccommodations from "./pages/DesertAdventure/Searchaccommodations/index.js";
 import Availablehotelsforyourholiday from "./pages/DesertAdventure/Availablehotelsforyourholiday/Index.js";
 
+import AutoSetReminder from "./components/PaymentView/SetReminder.js";
+import Payment from "./pages/p-report/PaymentView/index.js";
+import PaymentItemView from "./pages/p-report/PaymentItem/index.js";
+import TransactionsDayView from "./pages/p-report/TransactionsDayView/index.js";
+
+import TrendViews from "./pages/trendViews";
+import Boosts from "./pages/boosts";
+import DegreeViews from "./pages/degreeViews";
+import { BusinessView } from "./components/degreeView/businessView/BusinessViwe";
+
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [navigateState, setNavigateState] = useState(null);
@@ -3138,11 +3148,21 @@ function App() {
               <Route path="billings-credit" element={<CancilaionTab />} />
               <Route path="billings-multiprinting" element={<MultiplePrintings />} />
               {/* <Route path="billings-hotel/cruisevoucher" element={<HotelCruieseVoucher />} /> */}
-              {/* <Route path="create-billings-hotel/cruisevoucher" element={<HotelVouchers/>} /> */}              <Route path="maintenance_plan" element={<MaintenancePlan />} />
+              {/* <Route path="create-billings-hotel/cruisevoucher" element={<HotelVouchers/>} /> */}
+              <Route path="maintenance_plan" element={<MaintenancePlan />} />
 
 
               <Route path="searchaccommodations" element={<SearchAccommodations />} />
               <Route path="availableholidayhotels" element={<Availablehotelsforyourholiday />} />
+              <Route path="payment" element={<Payment />} />
+              <Route path="setreminder" element={<AutoSetReminder />} />
+              <Route path="dayview" element={<TransactionsDayView />} />
+              <Route path="itemview" element={<PaymentItemView />} />
+
+              <Route path="trend-view" element={<TrendViews />} />
+              <Route path="boost-view" element={<Boosts />} />
+              <Route path="degree-view" element={<DegreeViews />} />
+              <Route path="business-view" element={<BusinessView />} />
             </Route>
           </>
         )}

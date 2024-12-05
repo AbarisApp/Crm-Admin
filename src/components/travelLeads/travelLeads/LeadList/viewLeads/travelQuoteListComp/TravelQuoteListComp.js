@@ -8,7 +8,6 @@ import { deleteTRCRM_tr_quotation_master, getTRCRM_tr_quotation_master } from '.
 import { message, Popconfirm } from 'antd';
 
 function TravelQuoteListComp() {
-
     const [addShow, setAddShow] = useState(false);
     const [actionType, setActionType] = useState("add");
     const [editData, setEditData] = useState(null);
