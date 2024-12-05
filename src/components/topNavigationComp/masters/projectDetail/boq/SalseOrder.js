@@ -1,7 +1,9 @@
 import { Pagination } from "antd";
 import { PDFViewer } from "@react-pdf/renderer";
 import PdfBanks from "./pdfBank/PdfBanks";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { getClientOrder } from "../../../../../api/login/Login";
 
 const SalseOrder = () => {
    
@@ -10,6 +12,19 @@ const SalseOrder = () => {
     const pdfGenerateDefault = () => {
         setPdf(!pdf)
     }
+    const parems = useParams()
+    const [data, setData] = useState(null)
+    const getData = async () => {
+        try {
+            const res = await getClientOrder(parems.id)
+            console.log('getClientOrder', res);
+        } catch (error) {
+
+        }
+    }
+    useEffect(() => {
+        getData()
+    }, [])
     return (
         <>
             <div style={{ margin: "14px" }}>
