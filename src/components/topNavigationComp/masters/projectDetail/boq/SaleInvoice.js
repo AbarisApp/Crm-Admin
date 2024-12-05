@@ -1,8 +1,10 @@
 import { PDFViewer } from '@react-pdf/renderer'
 import { Pagination, Popconfirm } from 'antd'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ToastContainer } from 'react-toastify'
 import PdfBanks from './pdfBank/PdfBanks'
+import { getClientInvoice } from '../../../../../api/login/Login'
+import { useParams } from 'react-router-dom'
 
 function SaleInvoice() {
     const [pdf, setPdf] = useState(false)
@@ -10,6 +12,19 @@ function SaleInvoice() {
     const pdfGenerateDefault = () => {
         setPdf(!pdf)
     }
+    const parems = useParams()
+    const [data, setData] = useState(null)
+    const getData = async () => {
+        try {
+            const res = await getClientInvoice(parems.id)
+            console.log('getClientInvoice', res);
+        } catch (error) {
+
+        }
+    }
+    useEffect(() => {
+        getData()
+    }, [])
     return (
         <>
             {pdf && <div className="pdfcs">

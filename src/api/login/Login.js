@@ -2446,7 +2446,7 @@ export const updateCallSourceById = (id, data) => {
 // API use in call ADD
 
 
-export const getAllAssign = (userId, page = 0, count = 10) => {
+export const getAllAssign = ( page = 0, count = 10) => {
   return axiosInstance.get(`/staff/admin`, {
     headers: {
       "Content-Type": "application/json; charset=UTF-8",
@@ -6280,4 +6280,34 @@ export const searchingReminderTask = (page, count, key) => {
   return axiosInstance.get(
     `${baseUrl}task/reminder?page=${page}&count=${count}&search=${key}`
   );
+};
+
+
+
+export const getProposalsForClient = (id) => {
+  return axiosInstance.get(`/TRCRM_tr_quotation_master/admin?${id}`, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
+export const getClientOrder = (id) => {
+  return axiosInstance.get(`/lead_quotation_master/page?page=0&count=10&id=${id}`, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
+
+export const getClientInvoice = (id) => {
+  return axiosInstance.get(`/lead_quotation_master/?${id}`, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
 };
