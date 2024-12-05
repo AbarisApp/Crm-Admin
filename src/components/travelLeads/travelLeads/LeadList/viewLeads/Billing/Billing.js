@@ -20,17 +20,57 @@ export default function BillingDetail() {
         setAddFillDeatilsShow(false)
         setMainList(false)
     }
+
+
+    const [addShow, setAddShow] = useState(false);
+    const [actionType, setActionType] = useState("add");
+    const [editData, setEditData] = useState(null);
+
+    const [mainListcom, setMainListCom] = useState(true)
+    const funAddShow = () => {
+        setActionType("add");
+        setEditData(null);
+        setAddShow(true);
+        setMainListCom(false);
+    };
+
+    const funEditShow = (traveller) => {
+        setActionType("edit");
+        setEditData(traveller);
+        setAddShow(true);
+        setMainListCom(false);
+    };
+
+    const cancelForm = () => {
+        setAddShow(false);
+        setMainListCom(true);
+        setEditData(null);
+    };
+
+
+
     return (
         <>
-            {addFillDeatilsShow && <AddCancleRefundBill mainListFun={mainListFun} />}
+            {/* {addFillDeatilsShow && <AddCancleRefundBill mainListFun={mainListFun} />} */}
+
+            {addShow && (
+                <AddCancleRefundBill
+                    actionType={actionType}
+                    editData={editData}
+                    cancelForm={cancelForm}
+                // getTransitionReport={getTransitionReport}
+                />
+            )}
+
+
             {addCancelShow && <AddCancleRefund mainListFun={mainListFun} />}
-            {mainList && <div className="m-4">
+            {mainListcom && <div className="m-4">
                 <div className="table-responsive active-projects style-1">
                     <div className="tbl-caption">
                         <h4 className="heading mb-0">Biiling</h4>
                         <div>
                             <button className="btn btn-primary btn-sm" onClick={addCancelFun}><i class="fa-solid fa-user-plus"></i> Add Cancel/Refund Details</button>
-                            <button className="btn btn-primary btn-sm" onClick={addFillDeatilsFun}><i class="fa-solid fa-magnifying-glass"></i> Add Bill Details</button>
+                            <button className="btn btn-primary btn-sm" onClick={funAddShow}><i class="fa-solid fa-magnifying-glass"></i> Add Bill Details</button>
                         </div>
                     </div>
                     <table id="banner-tblwrapper" className="table dataTable no-footer" role="grid" aria-describedby="banner-tblwrapper_info">

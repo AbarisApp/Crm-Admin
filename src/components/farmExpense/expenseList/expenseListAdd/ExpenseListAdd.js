@@ -32,13 +32,13 @@ export const ExpenseListAdd = () => {
         // Add form submission logic here
         try {
             if (!params?.update) {
-                const res = await postLeadExpense({...formData , user_id:params.id});
+                const res = await postLeadExpense({ ...formData, user_id: params.id });
                 if (res?.statusCode == "200") {
                     toastSuccessMessage("Expense added successfully");
                     setTimeout(() => navigate(`/customer-view/${params?.id}/expenses-view`), 1000);
                 }
             } else {
-                const res = await updateLeadExpenseById(params.id, {...formData , user_id:params.id});
+                const res = await updateLeadExpenseById(params.id, { ...formData, user_id: params.id });
                 if (res?.statusCode == "200") {
                     toastSuccessMessage("Expense updated successfully");
                     setTimeout(() => navigate(`/customer-view/${params?.id}/expenses-view`), 1000);
@@ -54,7 +54,7 @@ export const ExpenseListAdd = () => {
             try {
                 if (params?.update) {
                     const response = await getLeadExpenseById(params.update);
-                   
+
                     setFormData(response.data);
                 }
             } catch (error) {
