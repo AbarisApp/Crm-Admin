@@ -1050,6 +1050,8 @@ import TripTypeAdd from "./components/travelCRM/tripType/tripTypeAdd/TripTypeAdd
 
 import SearchAccommodations from "./pages/DesertAdventure/Searchaccommodations/index.js";
 import Availablehotelsforyourholiday from "./pages/DesertAdventure/Availablehotelsforyourholiday/Index.js";
+import TaskRemainder from "./components/taskManager/taskRemainder/TaskRemainder.js";
+import TaskForme from "./components/taskManager/taskForMe/TaskForme.js";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -3116,8 +3118,9 @@ function App() {
                 <Route path="design" element={<DesignSection />} />
               </Route>
               <Route path="my-task/task-manager" element={<Taskmanager setManualData={setManualData} />} >
-                <Route path="" element={<TaskComent mnualData={mnualData} />} />
-                {/* <Route path="design" element={<DesignSection />} /> */}
+                <Route path="task-by-me" element={<TaskComent mnualData={mnualData} />} />
+                <Route path="reminders" element={<TaskRemainder />} />
+                <Route path="task-for-me" element={<TaskForme />} />
               </Route>
               {/* Shoib's Travel Crm Report Statics */}
               <Route path="hotel-voucher-report" element={<HotelVoucherPage />} />

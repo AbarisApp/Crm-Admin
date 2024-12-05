@@ -5887,7 +5887,7 @@ export const listStagescount = (id) => {
 
 
 // GET acc_add_project entries with pagination
-export const getAccAddProjectByPage = (page, count ,id) => {
+export const getAccAddProjectByPage = (page, count, id) => {
   return axiosInstance.get(`/acc_add_project/user?page=${page}&count=${count}&prj_stage=${id}`);
 };
 
@@ -6267,5 +6267,17 @@ export const updatetravelInvoice = (id, value) => {
 export const GetUpdatetravelInvoiceByid = (id) => {
   return axiosInstance.get(
     `${baseUrl}TRCRM_travelInvoice_master/${id}`
+  );
+};
+
+export const searchReminderTask = (page, count) => {
+  return axiosInstance.get(
+    `${baseUrl}task/reminder?page=${page}&count=${count}`
+  );
+};
+
+export const searchingReminderTask = (page, count, key) => {
+  return axiosInstance.get(
+    `${baseUrl}task/reminder?page=${page}&count=${count}&search=${key}`
   );
 };

@@ -59,10 +59,10 @@ function StaffKycDetailsByid({ imagePreviews, submitForm, setFieldValue, initial
         console.log(KycStatus);
         try {
             const statusRes = await updateStatusStaffKycDocStaffId(params.id, KycStatus);
-            if (error) {
-                toastErrorMessage(statusRes.message)
-            } else {
+            if (statusRes?.statusCode == "200") {
                 toastSuccessMessage(statusRes.message)
+            } else {
+                toastErrorMessage(statusRes.message)
             }
         } catch (error) {
             console.error('Error updating status:', error);
@@ -164,7 +164,7 @@ function StaffKycDetailsByid({ imagePreviews, submitForm, setFieldValue, initial
                                         <div className="dataTables_paginate paging_simple_numbers" id="empoloyees-tblwrapper_paginate">
                                         </div>
                                         {error ? (<div className='alert'>
-                                            <Alert message="Warning" type="warning" description={error?.message.toUpperCase()} />
+                                            <Alert message="Warning" type="warning" description={error?.message} />
                                         </div>) : ""}
                                     </div>
                                 </div>
