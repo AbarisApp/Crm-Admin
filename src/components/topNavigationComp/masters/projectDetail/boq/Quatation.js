@@ -1,14 +1,29 @@
 import { Pagination } from "antd";
 import PdfBanks from "./pdfBank/PdfBanks";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PDFViewer } from "@react-pdf/renderer";
+import { getProposalsForClient } from "../../../../../api/login/Login";
+import { useParams } from "react-router-dom";
 
 const Quatation = () => {
     const [pdf, setPdf] = useState(false)
-
+    const [data, setData] = useState(null)
     const pdfGenerateDefault = () => {
-      setPdf(!pdf)
+        setPdf(!pdf)
     }
+    const parems = useParams()
+    const getData = async () => {
+        try {
+            const res = await getProposalsForClient(parems.id)
+            console.log('getProposalsForClient', res);
+
+        } catch (error) {
+
+        }
+    }
+    useEffect(() => {
+        getData()
+    }, [])
     return (
         <>
 
@@ -61,7 +76,7 @@ const Quatation = () => {
                             </div> {pdf && <div className="pdfcs">
                                 <div className="loader-overlay">
                                     <PDFViewer style={{ width: '100%', height: '100vh' }}>
-                                        <PdfBanks title='Proposals For Client'/>
+                                        <PdfBanks title='Proposals For Client' />
                                     </PDFViewer>
                                 </div>
 
