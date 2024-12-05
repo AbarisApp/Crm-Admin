@@ -1050,6 +1050,8 @@ import TripTypeAdd from "./components/travelCRM/tripType/tripTypeAdd/TripTypeAdd
 
 import SearchAccommodations from "./pages/DesertAdventure/Searchaccommodations/index.js";
 import Availablehotelsforyourholiday from "./pages/DesertAdventure/Availablehotelsforyourholiday/Index.js";
+import TaskRemainder from "./components/taskManager/taskRemainder/TaskRemainder.js";
+import TaskForme from "./components/taskManager/taskForMe/TaskForme.js";
 
 import AutoSetReminder from "./components/PaymentView/SetReminder.js";
 import Payment from "./pages/p-report/PaymentView/index.js";
@@ -3118,16 +3120,14 @@ function App() {
               <Route path="travel-rating" element={<RatingPage />} />
               <Route path="travel-rating-add" element={<RatingAdd />} />
               <Route path="travel-rating-Update/:id" element={<RatingAdd />} />
-
-
-
               <Route path="organisation-setting/module-settings" element={<OrganisationSettings />} >
                 <Route path="" element={<Reccetemplet />} />
                 <Route path="design" element={<DesignSection />} />
               </Route>
               <Route path="my-task/task-manager" element={<Taskmanager setManualData={setManualData} />} >
-                <Route path="" element={<TaskComent mnualData={mnualData} />} />
-                {/* <Route path="design" element={<DesignSection />} /> */}
+                <Route path="task-by-me" element={<TaskComent mnualData={mnualData} />} />
+                <Route path="reminders" element={<TaskRemainder />} />
+                <Route path="task-for-me" element={<TaskForme />} />
               </Route>
               {/* Shoib's Travel Crm Report Statics */}
               <Route path="hotel-voucher-report" element={<HotelVoucherPage />} />
