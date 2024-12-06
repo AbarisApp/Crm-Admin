@@ -60,7 +60,7 @@ const Vaultpage = ({ title }) => {
             />
             <h4>{title}</h4>
             <div className="container mt-4 card">
-            <button className="btn btn-primary mb-3" onClick={() => {setModalShow2(true) }} style={{width:"140px"}}>Add Vault</button>
+                <button className="btn btn-primary mb-3" onClick={() => { setModalShow2(true) }} style={{ width: "140px" }}>Add Vault</button>
                 <div className="vault-entry-container">
                     <div className="vault-header">
                         <h3>Header Vault</h3>
@@ -75,7 +75,7 @@ const Vaultpage = ({ title }) => {
                             <p><strong>Server Address:</strong> k</p>
                             <p><strong>Port:</strong> Not provided</p>
                             <p><strong>Username:</strong> testadmin@gmail.com</p>
-                            <p><strong>Password:</strong> ******** <span className="lock-icon" onClick={() => setModalShow(true)}>🔒</span></p>
+                            <p style={{ cursor: 'pointer' }}><strong>Password:</strong> ******** <span className="lock-icon" onClick={() => setModalShow(true)}>🔒</span></p>
                         </div>
 
                         <div className="right-section">

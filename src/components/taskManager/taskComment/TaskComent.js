@@ -45,6 +45,7 @@ function TaskComent({ mnualData }) {
         try {
             const resp = await getCommentTaskById(id);
             setEditValue(resp.data)
+            
             if (resp?.data) {
                 setTaskDetails(resp.data);
                 setInitialValues((prev) => ({
@@ -68,7 +69,7 @@ function TaskComent({ mnualData }) {
             formData.append("image", file);
 
             try {
-                const res = await clodinaryImage(formData); // Replace with actual upload function
+                const res = await clodinaryImage(formData);
                 if (res?.data?.data?.url) {
                     uploadedFiles.push(res.data.data.url);
                 }
@@ -105,7 +106,7 @@ function TaskComent({ mnualData }) {
         try {
             const taskId = localStorage.getItem("66565478543478654765376547");
             if (!taskId) {
-                toastErrorMessage("Task ID is missing!");
+                toastErrorMessage("First Select Task");
                 return;
             }
 
@@ -121,39 +122,41 @@ function TaskComent({ mnualData }) {
             console.error("Form submission error:", error);
         }
 
+
         try {
             if (!initialValues._id) {
                 const res = await postCommentAccTask(initialValues);
                 if (res?.statusCode === "200") {
-                    // toastSuccessMessage("Task Create Successfully");
-                    getCommenetData(localStorage.getItem(`66565478543478654765376547`))
+                    toastSuccessMessage("Comment Added Successfully");
+                    getCommenetData(localStorage.getItem(`66565478543478654765376547`));
                     setInitialValues({
-                        task_id: "",
+                        task_id: taskId,
                         comment: "",
                         attachments: [],
-
                     });
-                    // getListData(page);
+                    // getListData(page); // Refresh the task list
                 } else {
-                    // toastErrorMessage("Failed to Post Comment");
+                    toastErrorMessage("Failed to Add Comment");
                 }
             } else {
+                // Edit existing comment
                 const res = await updateCommentAccTask(initialValues._id, initialValues);
                 if (res?.statusCode === "200") {
                     toastSuccessMessage("Comment Edited Successfully");
-                    getCommenetData(localStorage.getItem(`66565478543478654765376547`))
+                    getCommenetData(localStorage.getItem(`66565478543478654765376547`));
                     setInitialValues({
                         task_id: localStorage.getItem(`66565478543478654765376547`),
                         comment: "",
                         attachments: [],
-                    })
+                    });
                 } else {
-                    toastErrorMessage("Failed to Comment Edited");
+                    toastErrorMessage("Failed to Edit Comment");
                 }
             }
         } catch (error) {
             toastErrorMessage("Error processing the form.");
         }
+
 
     }
     const confirm = (id) => {
@@ -230,13 +233,12 @@ function TaskComent({ mnualData }) {
                                     <span>
                                         <i class="fa-sharp fa-solid fa-magnifying-glass"></i>
                                     </span>
-                                    <div className=''>
+                                    <div className='w-100'>
                                         <input
                                             type='search'
                                             placeholder='search'
                                             className='px-2 py-0 w-100 border-0 w-100'
                                             name='name'
-
                                         />
                                     </div>
                                 </div>
@@ -249,59 +251,72 @@ function TaskComent({ mnualData }) {
                                     </button>
                                 </div>
                             </div>
-                            <div className=''>
-                                <small>
-                                    <b>
-                                        No Task
-                                    </b>
-                                </small>
-                            </div>
-                            {mnualData?.map((data, i) => {
-                                return <div
-                                    style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'space-between',
-                                        backgroundColor: '#f8f9fc', // light gray background
-                                        padding: '10px 15px',
-                                        borderRadius: '8px',
-                                        margin: "6px 0",
-                                        fontSize: '14px', // font size to match the example
-                                        color: '#6c757d'  // muted gray text color
-                                    }}
-                                    key={i}
-                                    onClick={() => handleTaskDetails(data?._id)}
+                            {mnualData?.length > 0 ? (
+                                mnualData.map((data, i) => (
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'space-between',
+                                            backgroundColor: '#f8f9fc', // light gray background
+                                            padding: '10px 15px',
+                                            borderRadius: '8px',
+                                            margin: '6px 0',
+                                            fontSize: '14px', // font size to match the example
+                                            color: '#6c757d', // muted gray text color
+                                        }}
+                                        key={i}
+                                        onClick={() => handleTaskDetails(data?._id)}
+                                    >
+                                        <div>
+                                            <div style={{ fontWeight: '500', color: '#000' }}>
+                                                {data?.createdBy?.name
+                                                    ? `${data?.createdBy?.name} commented on a task`
+                                                    : ''}
+                                            </div>
 
-                                >
-                                    <div>
-                                        <div style={{ fontWeight: '500', color: '#000' }}>
-                                            {data?.createdBy?.name ? `${data?.createdBy?.name} commented on a task` : ""}
+                                            <div style={{ color: '#6c757d', fontSize: '12px' }}>
+                                                {data?.task_description}
+                                            </div>
                                         </div>
 
-                                        <div style={{ color: '#6c757d', fontSize: '12px' }}>{data?.task_description}</div>
-                                    </div>
+                                        <div style={{ textAlign: 'right' }}>
+                                            <div style={{ fontSize: '12px', color: '#6c757d' }}>
+                                                {data?.createdAt
+                                                    ? new Date(data.createdAt).toLocaleString('en-GB', {
+                                                        day: '2-digit',
+                                                        month: 'short',
+                                                        year: 'numeric',
+                                                        hour: '2-digit',
+                                                        minute: '2-digit',
+                                                        hour12: true,
+                                                    })
+                                                    : ''}
+                                            </div>
 
-                                    <div style={{ textAlign: 'right' }}>
-                                        <div style={{ fontSize: '12px', color: '#6c757d' }}>
-                                            {data?.createdAt
-                                                ? new Date(data.createdAt).toLocaleString('en-GB', {
-                                                    day: '2-digit',
-                                                    month: 'short',
-                                                    year: 'numeric',
-                                                    hour: '2-digit',
-                                                    minute: '2-digit',
-                                                    hour12: true,
-                                                })
-                                                : ''}
+                                            <Badge
+                                                style={{
+                                                    backgroundColor: '#f0ad4e',
+                                                    color: '#fff',
+                                                    fontWeight: '500',
+                                                }}
+                                                onClick={(e) => {
+                                                    e.stopPropagation(); // Prevents triggering the parent div's onClick
+                                                    taskDeleted(data?._id);
+                                                }}
+                                            >
+                                                <i className='fa-sharp fa-solid fa-trash-can fa-2xs'></i>
+                                            </Badge>
                                         </div>
-
-                                        <Badge style={{ backgroundColor: '#f0ad4e', color: '#fff', fontWeight: '500' }} onClick={() => taskDeleted(data?._id)}>
-                                            <i class="fa-sharp fa-solid fa-trash-can fa-2xs"></i>
-                                        </Badge>
                                     </div>
+                                ))
+                            ) : (
+                                <div className=''>
+                                    <small>
+                                        <b>No Task</b>
+                                    </small>
                                 </div>
-                            })}
-
+                            )}
                         </div>
 
                         <div className='my-3'>
@@ -421,7 +436,7 @@ function TaskComent({ mnualData }) {
                                         <div>
                                             {/* <div style={{ fontWeight: 'bold', fontSize: '14px' }}>Abdul Quadir</div> */}
                                             {/* <div style={{ fontSize: '12px', color: '#6c757d' }}>5 Nov 2024, 04:48 PM</div> */}
-                                            {taskDetails?.attach_files ? <div className=''>
+                                            {taskDetails?.attach_files ? <div className='task-img'>
                                                 <img src={`${baseUrlImage}${taskDetails?.attach_files}`} alt='image' />
                                             </div> : ""}
                                             {taskDetails?.task_description ?

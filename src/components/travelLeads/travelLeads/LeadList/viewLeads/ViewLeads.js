@@ -1,5 +1,5 @@
 
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Breadcrumbs from '../../../../../common/breadcrumb/Breadcrumbs';
 import { Button, Tab, Tabs } from 'react-bootstrap';
 import { Form, Link, useParams } from 'react-router-dom';
@@ -13,6 +13,13 @@ import ServiceRequest from './serviceRequest/ServiceRequest';
 import LeadReminder from './reminder/Reminder';
 import TravelNote from './travelNote/TravelNote';
 import TravelFiles from './travelFiles/TravelFiles';
+import { getByIdTRCRM_tr_lead } from '../../../../../api/login/Login';
+import TravelTask from './travelTask/TravelTask';
+import TravelTickets from './travelTickets/TravelTickets';
+import TravelVault from './travelVault/TravelVault';
+import TravelMap from './travelMap/TravelMap';
+import TravelExpense from './travelExpense/TravelExpense';
+import TravelHistory from './travelHistory/TravelHistory';
 
 const ViewLeads = () => {
     const breadCrumbsTitle = {
@@ -24,6 +31,22 @@ const ViewLeads = () => {
 
     const paramsAll = useParams()
     // console.log(paramsAll);
+
+    const [leadIdData, setLeadIdData] = useState(null)
+
+    const leadIdGet = async () => {
+        try {
+            const res = await getByIdTRCRM_tr_lead(paramsAll?.id)
+            console.log(res);
+            setLeadIdData(res?.data)
+        } catch (error) {
+
+        }
+    }
+
+    useEffect(() => {
+        leadIdGet()
+    }, [paramsAll?.id])
 
     return (
         <>
@@ -46,7 +69,7 @@ const ViewLeads = () => {
                                 <div className="row tab-color-change">
                                     <Tabs defaultActiveKey="about" id="lead-tabs" className="mb-3">
                                         <Tab eventKey="about" title="About">
-                                            <About />
+                                            <About leadIdData={leadIdData} />
                                         </Tab>
                                         <Tab eventKey="Ledger" title="Ledger">
                                             <Ladger />
@@ -63,34 +86,25 @@ const ViewLeads = () => {
                                             </div>
                                         </Tab> */}
                                         <Tab eventKey="Tasks" title="Tasks">
-                                            <div className="p-3">
-                                                <p>Tasks</p>
-                                            </div>
+                                            <TravelTask />
                                         </Tab>
                                         <Tab eventKey="Tickets" title="Tickets">
-                                            <div className="p-3">
+                                            <TravelTickets />
+                                            {/* <div className="p-3">
                                                 <p>Tickets</p>
-                                            </div>
+                                            </div> */}
                                         </Tab>
                                         <Tab eventKey="Vault" title="Vault">
-                                            <div className="p-3">
-                                                <p>Vault</p>
-                                            </div>
+                                            <TravelVault />
                                         </Tab>
                                         <Tab eventKey="Map" title="Map">
-                                            <div className="p-3">
-                                                <p>Map</p>
-                                            </div>
+                                            <TravelMap />
                                         </Tab>
                                         <Tab eventKey="Expenses" title="Expenses">
-                                            <div className="p-3">
-                                                <p>Expenses</p>
-                                            </div>
+                                            <TravelExpense />
                                         </Tab>
                                         <Tab eventKey="history" title="History">
-                                            <div className="p-3">
-                                                <p>History Content</p>
-                                            </div>
+                                            <TravelHistory />
                                         </Tab>
                                         <Tab eventKey="reminders" title="Reminders">
                                             <LeadReminder />
