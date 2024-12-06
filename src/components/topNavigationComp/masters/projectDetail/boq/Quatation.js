@@ -2,7 +2,7 @@ import { Pagination } from "antd";
 import PdfBanks from "./pdfBank/PdfBanks";
 import { useEffect, useState } from "react";
 import { PDFViewer } from "@react-pdf/renderer";
-import { getProposalsForClient } from "../../../../../api/login/Login";
+import { getClientOrder } from "../../../../../api/login/Login";
 import { useParams } from "react-router-dom";
 
 const Quatation = () => {
@@ -14,9 +14,9 @@ const Quatation = () => {
     const parems = useParams()
     const getData = async () => {
         try {
-            const res = await getProposalsForClient(parems.id)
+            const res = await getClientOrder(parems.id)
             console.log('getProposalsForClient', res);
-
+            setData(res)
         } catch (error) {
 
         }
@@ -50,17 +50,20 @@ const Quatation = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr role="row" className="odd" >
-                                            <td >----</td>
-                                            <td >----</td>
-                                            <td >----</td>
-                                            <td >----</td>
-                                            <td >----</td>
-                                            <td >----</td>
-                                            <td >----</td>
-                                            <td >----</td>
-                                            <td ><button className="btn btn-sm btn-success ms-2" onClick={pdfGenerateDefault}>Print PDF</button></td>
-                                        </tr>
+                                        {data && data.data?.map((item, i) => {
+                                            return <tr role="row" className="odd" >
+                                                <td >{i + 1}</td>
+                                                <td >{item?.quotationNo}</td>
+                                                <td >----</td>
+                                                <td >----</td>
+                                                <td >{item?.createdBy?.name}</td>
+                                                <td >{item?.createdAt}</td>
+                                                <td >----</td>
+                                                <td >----</td>
+                                                <td ><button className="btn btn-sm btn-success ms-2" onClick={pdfGenerateDefault}>Print PDF</button></td>
+                                            </tr>
+                                        })}
+
                                     </tbody>
                                 </table>
                                 <div className="dataTables_info" id="empoloyees-tblwrapper_info" role="status" aria-live="polite">
@@ -70,7 +73,7 @@ const Quatation = () => {
                                     <Pagination
                                         defaultCurrent={1}
                                     // onChange={onChangeVal}
-                                    // total={data?.totalCount}
+                                    total={data?.totalCount}
                                     />
                                 </div>
                             </div> {pdf && <div className="pdfcs">
