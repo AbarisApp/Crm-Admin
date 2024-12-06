@@ -1125,7 +1125,7 @@ function App() {
       }
     })
   }
-  console.log(window.localStorage.getItem('dashRout') == null);
+  // console.log(window.localStorage.getItem('dashRout') == null);
 
   const [mnualData, setManualData] = useState()
 

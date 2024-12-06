@@ -45,6 +45,7 @@ function TaskComent({ mnualData }) {
         try {
             const resp = await getCommentTaskById(id);
             setEditValue(resp.data)
+            
             if (resp?.data) {
                 setTaskDetails(resp.data);
                 setInitialValues((prev) => ({
@@ -68,7 +69,7 @@ function TaskComent({ mnualData }) {
             formData.append("image", file);
 
             try {
-                const res = await clodinaryImage(formData); 
+                const res = await clodinaryImage(formData);
                 if (res?.data?.data?.url) {
                     uploadedFiles.push(res.data.data.url);
                 }
@@ -123,11 +124,11 @@ function TaskComent({ mnualData }) {
 
 
         try {
-            if (!initialValues._id ) {
+            if (!initialValues._id) {
                 const res = await postCommentAccTask(initialValues);
                 if (res?.statusCode === "200") {
                     toastSuccessMessage("Comment Added Successfully");
-                    getCommenetData(localStorage.getItem(`66565478543478654765376547`)); 
+                    getCommenetData(localStorage.getItem(`66565478543478654765376547`));
                     setInitialValues({
                         task_id: taskId,
                         comment: "",
@@ -142,7 +143,7 @@ function TaskComent({ mnualData }) {
                 const res = await updateCommentAccTask(initialValues._id, initialValues);
                 if (res?.statusCode === "200") {
                     toastSuccessMessage("Comment Edited Successfully");
-                    getCommenetData(localStorage.getItem(`66565478543478654765376547`)); 
+                    getCommenetData(localStorage.getItem(`66565478543478654765376547`));
                     setInitialValues({
                         task_id: localStorage.getItem(`66565478543478654765376547`),
                         comment: "",
