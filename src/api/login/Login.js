@@ -6289,8 +6289,8 @@ export const getTaskforMe = (page, count,) => {
 
 
 
-export const getProposalsForClient = (id) => {
-  return axiosInstance.get(`/TRCRM_tr_quotation_master/admin?${id}`, {
+export const getClientOrderNewOr = (id) => {
+  return axiosInstance.get(`/lead_sales_order_master/user?page=0&count=10&id=${id}`, {
     headers: {
       "Content-Type": "application/json; charset=UTF-8",
       Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
@@ -6299,7 +6299,7 @@ export const getProposalsForClient = (id) => {
 };
 
 export const getClientOrder = (id) => {
-  return axiosInstance.get(`/lead_quotation_master/page?page=0&count=10&id=${id}`, {
+  return axiosInstance.get(`/lead_quotation_master/user?page=0&count=10&id=${id}`, {
     headers: {
       "Content-Type": "application/json; charset=UTF-8",
       Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
@@ -6309,7 +6309,7 @@ export const getClientOrder = (id) => {
 
 
 export const getClientInvoice = (id) => {
-  return axiosInstance.get(`/lead_quotation_master/?${id}`, {
+  return axiosInstance.get(`/lead_sales_invoice_master/page?page=0&count=10&search=&id=${id}`, {
     headers: {
       "Content-Type": "application/json; charset=UTF-8",
       Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,

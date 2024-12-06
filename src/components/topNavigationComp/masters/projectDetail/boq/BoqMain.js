@@ -8,7 +8,7 @@ import PaymentForClient from './PaymentForClient';
 function BoqMain() {
 
     const data = [
-        { name: 'Proposals For Client', compo: <Quatation /> },
+        { name: 'Quatation For Client', compo: <Quatation /> },
         { name: 'Client Orders', compo: <SalseOrder/> },
         { name: 'Client Invoices', compo: <SaleInvoice/> },
         { name: 'Payments From Client', compo: <PaymentForClient/> },
