@@ -9,8 +9,6 @@ import { toast } from 'react-toastify';
 function CreateTask({ editValue, show, handleClose, setInitialValues, initialValues, handleChange, formSubmit }) {
     const [priorityState, setPriorityState] = useState([]);
     const [staffData, setStaffData] = useState([]);
-    console.log(staffData);
-    
     const [taskType, setTaskType] = useState([]);
     const [taskStage, setTaskStage] = useState([]);
     const [imgloading, setimgloading] = useState(false);
@@ -34,14 +32,17 @@ function CreateTask({ editValue, show, handleClose, setInitialValues, initialVal
         try {
             const response = await getAllAssign();
             const staffs = response?.data.map((item) => ({
-                value: item._id, 
+                value: item._id,
                 label: item.name,
             }));
-            setStaffData(staffs); 
+            setStaffData(staffs);
+            
         } catch (error) {
             console.error("Error fetching assigned staff:", error);
         }
     };
+
+
 
     const getTaskTypeSelect = async () => {
         try {
@@ -117,14 +118,11 @@ function CreateTask({ editValue, show, handleClose, setInitialValues, initialVal
     const handleMultiSelectChange = (name) => (selectedOptions) => {
         const values = selectedOptions ? selectedOptions.map(option => option.value) : [];
 
-
         setInitialValues(prevValues => ({
             ...prevValues,
             [name]: values,
         }));
-        console.log("Selected User IDs:", initialValues.assignees);
     };
-
 
     const isFormValid = () => {
         const requiredFields = [
@@ -228,7 +226,7 @@ function CreateTask({ editValue, show, handleClose, setInitialValues, initialVal
                                     value={initialValues?.repeated_no || ''} onChange={handleChange} />
                             </div>
 
-                            <div className="form-group col-xl-4">
+                            <div className="form-group col-xl-3">
                                 <label htmlFor="startDate">
                                     Start Date Time
                                 </label>
@@ -245,7 +243,7 @@ function CreateTask({ editValue, show, handleClose, setInitialValues, initialVal
                                     onChange={handleChange}
                                 />
                             </div>
-                            <div className="form-group col-xl-4">
+                            <div className="form-group col-xl-3">
                                 <label htmlFor="endDate">
                                     End Date Time <span className="text-danger">*</span>
                                 </label>
@@ -262,9 +260,9 @@ function CreateTask({ editValue, show, handleClose, setInitialValues, initialVal
                                     onChange={handleChange}
                                 />
                             </div>
-                            <div className="form-group col-xl-4">
+                            <div className="form-group col-xl-3">
                                 <label htmlFor="complition_date_time">
-                                    Completion Date Time
+                                    Completion Date 
                                 </label>
                                 <input
                                     type="date"
@@ -279,9 +277,9 @@ function CreateTask({ editValue, show, handleClose, setInitialValues, initialVal
                                     onChange={handleChange}
                                 />
                             </div>
-                            <div className="form-group col-xl-4">
+                            <div className="form-group col-xl-3">
                                 <label htmlFor="dueDate">
-                                    Expected Due Date <span className="text-danger">*</span>
+                                    Expected Date <span className="text-danger">*</span>
                                 </label>
                                 <input
                                     type="date"
@@ -323,8 +321,12 @@ function CreateTask({ editValue, show, handleClose, setInitialValues, initialVal
                                     )}
                                 </select>
                             </div>
-
                             <div className="form-group col-xl-4">
+                                <label htmlFor="total_cycle">Total Cycle </label>
+                                <input type="text" id="total_cycle" name="total_cycle" placeholder="Total Cycle" className="form-control"
+                                    value={initialValues?.total_cycle || ''} onChange={handleChange} />
+                            </div>
+                            <div className="form-group col-xl-12">
                                 <label htmlFor="tags">Tags </label>
                                 <div style={styles.tagInputContainer}>
                                     {initialValues?.tags?.map((tag, index) => (
@@ -346,13 +348,9 @@ function CreateTask({ editValue, show, handleClose, setInitialValues, initialVal
                                     />
                                 </div>
                             </div>
-                            <div className="form-group col-xl-4">
-                                <label htmlFor="total_cycle">Total Cycle </label>
-                                <input type="text" id="total_cycle" name="total_cycle" placeholder="Total Cycle" className="form-control"
-                                    value={initialValues?.total_cycle || ''} onChange={handleChange} />
-                            </div>
+                            
 
-                            <div className="form-group col-xl-4">
+                            <div className="form-group col-xl-12">
                                 <label htmlFor="assignee">
                                     Assignee <span className="text-danger">*</span>
                                 </label>
@@ -361,17 +359,17 @@ function CreateTask({ editValue, show, handleClose, setInitialValues, initialVal
                                     options={staffData}
                                     isMulti
                                     closeMenuOnSelect={false}
-                                    onChange={handleMultiSelectChange('assignees')} // Update on selection
+                                    onChange={handleMultiSelectChange('assignees')}
                                     id="assignees"
-                                    value={
-                                        staffData.filter(option =>
-                                            initialValues?.assignees?.includes(option.value) // Display selected users
-                                        )
-                                    }
+                                    value={staffData.filter(option =>
+                                        initialValues?.assignees?.includes(option.value)
+                                    )}
+
+
                                 />
                             </div>
 
-                            <div className="form-group col-xl-4">
+                            <div className="form-group col-xl-12">
                                 <label htmlFor="followers">Followers  <span classNmae="text-danger">*</span></label>
                                 <select id="followers" className="w-100" name="followers"
                                     value={initialValues?.followers || ''} onChange={handleChange}>

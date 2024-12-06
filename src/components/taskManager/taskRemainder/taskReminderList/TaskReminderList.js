@@ -1,7 +1,8 @@
 import React from 'react'
+import { Badge } from 'react-bootstrap'
 
-function TaskReminderList({ handleChange, initialValues,searchQuerry }) {
-  console.log(initialValues);
+function TaskReminderList({ handleChange, initialValues, searchQuerry }) {
+
   return (
     <>
       <div className='col-xl-4 h-100'>
@@ -9,10 +10,10 @@ function TaskReminderList({ handleChange, initialValues,searchQuerry }) {
           <div className=''>
             <div className='border-bottom'>
               <div className=''>
-                <h6>Reminders</h6>
-                <small className=''>
+                <h6 className='bg-dark text-white p-2 rounded'>Reminders</h6>
+                <Badge>
                   {initialValues?.totalCount ? `${initialValues?.totalCount} Tasks` : "0 Tasks"}
-                </small>
+                </Badge>
 
               </div>
             </div>

@@ -6281,6 +6281,11 @@ export const searchingReminderTask = (page, count, key) => {
     `${baseUrl}task/reminder?page=${page}&count=${count}&search=${key}`
   );
 };
+export const getTaskforMe = (page, count,) => {
+  return axiosInstance.get(
+    `${baseUrl}task/assignedToMe?page=${page}&count=${count}`
+  );
+};
 
 
 
