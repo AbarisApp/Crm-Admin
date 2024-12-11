@@ -6316,3 +6316,13 @@ export const getClientInvoice = (id) => {
     },
   });
 };
+
+
+export const getCompanys = (id) => {
+  return axiosInstance.get(`/company/admin`, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
