@@ -2446,7 +2446,7 @@ export const updateCallSourceById = (id, data) => {
 // API use in call ADD
 
 
-export const getAllAssign = (userId, page = 0, count = 10) => {
+export const getAllAssign = ( page = 0, count = 10) => {
   return axiosInstance.get(`/staff/admin`, {
     headers: {
       "Content-Type": "application/json; charset=UTF-8",
@@ -5513,6 +5513,10 @@ export const deleteTRCRM_tr_lead = (id) => {
   return axiosInstance.delete(`${baseUrl}TRCRM_tr_lead/delete_type/${id}`);
 };
 
+export const getByIdTRCRM_tr_lead = (id) => {
+  return axiosInstance.get(`${baseUrl}TRCRM_tr_lead/${id}`);
+};
+
 
 
 export const getTRCRM_tr_traveller = (value) => {
@@ -5606,6 +5610,16 @@ export const addTRCRM_tr_quotation_master = (data) => {
 
 export const getTRCRM_tr_quotation_master = (value) => {
   return axiosInstance.get(`${baseUrl}TRCRM_tr_quotation_master/user?page=${value?.page}&count=${value?.count}&start_date=${value?.start_date}&end_date=${value?.end_date}`);
+};
+
+export const deleteTRCRM_tr_quotation_master = (id) => {
+  return axiosInstance.delete(`${baseUrl}TRCRM_tr_quotation_master/delete_type/${id}`);
+};
+export const getIdTRCRM_tr_quotation_master = (id) => {
+  return axiosInstance.get(`${baseUrl}TRCRM_tr_quotation_master/${id}`);
+};
+export const updateTRCRM_tr_quotation_master = (id, data) => {
+  return axiosInstance.put(`${baseUrl}TRCRM_tr_quotation_master/update_type/${id}`, data);
 };
 
 
@@ -5861,11 +5875,20 @@ export const listStages = (id) => {
   });
 };
 
+export const listStagescount = (id) => {
+  return axiosInstance.get(`/acc_add_project/stageListwith_prj_count`, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
 
 
 // GET acc_add_project entries with pagination
-export const getAccAddProjectByPage = (page, count) => {
-  return axiosInstance.get(`/acc_add_project/user?page=${page}&count=${count}`);
+export const getAccAddProjectByPage = (page, count, id) => {
+  return axiosInstance.get(`/acc_add_project/user?page=${page}&count=${count}&prj_stage=${id}`);
 };
 
 // GET a specific acc_add_project entry by ID
@@ -6083,6 +6106,14 @@ export const getProductList = (data) => {
 
 
 
+export const deleteProductById = (id) => {
+  return axios.delete(`${baseproductUrl}/product/${id}`, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
 
 
 // brand
@@ -6268,3 +6299,51 @@ export const getAllPickupPointsData = () => {
 };
 // ================MOIN APIS END=======================
 
+
+
+export const searchReminderTask = (page, count) => {
+  return axiosInstance.get(
+    `${baseUrl}task/reminder?page=${page}&count=${count}`
+  );
+};
+
+export const searchingReminderTask = (page, count, key) => {
+  return axiosInstance.get(
+    `${baseUrl}task/reminder?page=${page}&count=${count}&search=${key}`
+  );
+};
+export const getTaskforMe = (page, count,) => {
+  return axiosInstance.get(
+    `${baseUrl}task/assignedToMe?page=${page}&count=${count}`
+  );
+};
+
+
+
+export const getClientOrderNewOr = (id) => {
+  return axiosInstance.get(`/lead_sales_order_master/user?page=0&count=10&id=${id}`, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
+export const getClientOrder = (id) => {
+  return axiosInstance.get(`/lead_quotation_master/user?page=0&count=10&id=${id}`, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
+
+export const getClientInvoice = (id) => {
+  return axiosInstance.get(`/lead_sales_invoice_master/page?page=0&count=10&search=&id=${id}`, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};

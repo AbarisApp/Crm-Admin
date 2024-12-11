@@ -4,11 +4,10 @@ import { ToastContainer } from 'react-toastify'
 import { Link } from 'react-router-dom'
 import ExportPdf from '../../../../../../common/exportPdf/ExportPdf'
 import TravelQuotationAddComp from './travelQuotationAdd/TravelQuotationAddComp';
-import { getTRCRM_tr_quotation_master } from '../../../../../../api/login/Login';
-import { message } from 'antd';
+import { deleteTRCRM_tr_quotation_master, getTRCRM_tr_quotation_master } from '../../../../../../api/login/Login';
+import { message, Popconfirm } from 'antd';
 
 function TravelQuoteListComp() {
-
     const [addShow, setAddShow] = useState(false);
     const [actionType, setActionType] = useState("add");
     const [editData, setEditData] = useState(null);
@@ -45,7 +44,7 @@ function TravelQuoteListComp() {
     const [page, setPage] = useState(0)
     // console.log(page);
     const [totalCount, setTotalCount] = useState(null)
-    const [data, setData] = useState(null)
+    const [data, setData] = useState([])
     const [allData, setAllData] = useState(null)
     const [filterInitial, setFilterInitial] = useState({
         user_id: '',
@@ -71,10 +70,11 @@ function TravelQuoteListComp() {
         const clone = { ...filterInitial, count: count, page: input, user_id: window.localStorage.getItem('userIdToken') }
         try {
             const res = await getTRCRM_tr_quotation_master(clone)
-            console.log(res?.data);
-
-            setTotalCount(res?.totalCount)
-            setData(res?.data)
+            // console.log(res?.data);
+            if (res?.data && res?.data) {
+                setTotalCount(res?.totalCount)
+                setData(res?.data)
+            }
         } catch (error) {
 
         }
@@ -82,25 +82,24 @@ function TravelQuoteListComp() {
     }
     const onChangeVal = (e) => {
         // console.log(e - 1);
-
         setPage(e - 1)
         getTransitionReport(e - 1)
     };
 
     const deleteBlockAdd = async (id) => {
         setLoading(true)
-        // try {
-        //     await deleteTRCRM_tr_traveller(id)
-        //     // let backList = totalCount % 11 === 0 ? page - 1 : page
-        //     getTransitionReport(0)
-        // } catch (error) {
-        //     // toastSuccessMessage(error.message)
-        // }
-        // setLoading(false)
+        try {
+            await deleteTRCRM_tr_quotation_master(id)
+            // let backList = totalCount % 11 === 0 ? page - 1 : page
+            getTransitionReport(0)
+        } catch (error) {
+            // toastSuccessMessage(error.message)
+        }
+        setLoading(false)
     }
 
     const confirm = (id) => {
-        console.log(id);
+        // console.log(id);
         deleteBlockAdd(id)
         message.success('Delete Successfull!');
 
@@ -124,7 +123,7 @@ function TravelQuoteListComp() {
                     actionType={actionType}
                     editData={editData}
                     cancelForm={cancelForm}
-                // getTransitionReport={getTransitionReport}
+                    getTransitionReport={getTransitionReport}
                 />
             )}
             {mainListcom && (
@@ -176,14 +175,30 @@ function TravelQuoteListComp() {
                                                                 })}
                                                             </td>
                                                             <td className="sorting_1" style={{ textAlign: 'center' }}>{item?.tour_start_date}</td>
-                                                            <td className="sorting_1" style={{ textAlign: 'center' }}>fdgfdgd</td>
-                                                            <td className="sorting_1" style={{ textAlign: 'center' }}>Abdul quadir</td>
+                                                            <td className="sorting_1" style={{ textAlign: 'center' }}>{item?.customer ? item?.customer : ''}</td>
+                                                            <td className="sorting_1" style={{ textAlign: 'center' }}>{item?.createdBy?.Goatx}</td>
                                                             <td className="sorting_1" style={{ textAlign: 'center' }}>Ooty,Mysore</td>
                                                             <td className="sorting_1" style={{ textAlign: 'center' }}>{item?.createdAt}</td>
-                                                            <td style={{ position: 'relative' }} className="d-flex align-item-center" >
+
+                                                            <td>
+                                                                <div className="d-flex">
+                                                                    <button type="button" className="btn btn-primary shadow btn-xs sharp me-1" onClick={() => funEditShow(item)}><i className="fa fa-pencil" /></button>
+                                                                    <Popconfirm
+                                                                        title="Delete Quotation!"
+                                                                        description="Are you sure to delete ?"
+                                                                        onConfirm={() => confirm(item?._id)}
+                                                                    // onCancel=""
+                                                                    // okText="Yes"
+                                                                    // cancelText="No"
+                                                                    >
+                                                                        <Link to="#" className="btn btn-danger shadow btn-xs sharp"><i className="fa fa-trash" /></Link>
+                                                                    </Popconfirm>
+                                                                </div>
+                                                            </td>
+                                                            {/* <td style={{ position: 'relative' }} className="d-flex align-item-center" >
                                                                 <Link to={`#`} className="btn btn-primary shadow btn-xs sharp me-1"><i className="fa fa-refresh" /></Link>
                                                                 <Link to={`#`} className="btn btn-primary shadow btn-xs sharp me-1"><i className="fa fa-pencil" /></Link>
-                                                            </td>
+                                                            </td> */}
                                                         </tr>
                                                     })}
                                                 </tbody>

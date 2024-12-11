@@ -2,7 +2,16 @@ import React, { useState } from "react";
 import TextArea from "antd/es/input/TextArea";
 import { Link } from "react-router-dom";
 
-export default function AddCancleRefundBill({ mainListFun }) {
+export default function AddCancleRefundBill({ editData, cancelForm, getTransitionReport, mainListFun }) {
+
+
+    const [initialData, setInitialData] = useState({
+
+    })
+
+
+
+
     const [costType, setCostType] = useState({
         perperson: true
     })
@@ -404,7 +413,7 @@ export default function AddCancleRefundBill({ mainListFun }) {
                         </div>
                         <div className="d-flex my-4 gap-2">
                             <button className="btn btn-primary m-0">Save</button>
-                            <button className="btn btn-outlint-primary m-0" onClick={mainListFun}>Cancle</button>
+                            <button className="btn btn-outlint-primary m-0" onClick={cancelForm}>Cancle</button>
                         </div>
                     </div>
                 </div>

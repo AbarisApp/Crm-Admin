@@ -3,7 +3,7 @@ import { Button, DatePicker } from 'antd';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import Breadcrumbs from '../../../../../common/breadcrumb/Breadcrumbs';
-import { cityAddCollageSelectList, clodinaryImage, countryList, getAccAddProjectById, getAccProjectBusinessCategoryByPage, getAllAssign, getcityUpdate, getListprojectScope, getTaxtype, getVentureByUser, listUserType, postAccAddProject, postAddBookCode, roleListAdmin, StateAddCollageSelectList, updateAccAddProjectById, updateAddBookCodeById } from '../../../../../api/login/Login';
+import { cityAddCollageSelectList, clodinaryImage, countryList, getAccAddProjectById, getAccProjectBusinessCategoryByPage, getAllAssign, getcityUpdate, getListprojectScope, getTaxtype, getVentureByUser, listStagescount, listUserType, postAccAddProject, postAddBookCode, roleListAdmin, staffList, StateAddCollageSelectList, updateAccAddProjectById, updateAddBookCodeById } from '../../../../../api/login/Login';
 import Loadar from '../../../../../common/loader/Loader'
 import { baseUrlImage } from '../../../../../baseUrl';
 function ProjectAddForm() {
@@ -27,6 +27,7 @@ function ProjectAddForm() {
         prj_area_in_sqft: '',
         client_poc_name: '',
         client_poc_nmber: '',
+        prj_stage: '',
         recce_due_date: null,
         expected_start_date: null,
         executation_due_date_assign_prj_user: null,
@@ -100,7 +101,8 @@ function ProjectAddForm() {
         const taxtype = await getTaxtype()
         const scope = await getListprojectScope()
         const roles = await listUserType()
-        const user = await getVentureByUser()
+        // const user = await getAllAssign()
+        const stage = await listStagescount()
 
         const obj = {
             ...masterStore,
@@ -110,8 +112,9 @@ function ProjectAddForm() {
             currency: currenc.data,
             tax_type: taxtype.data,
             prj_scope: scope.data,
-            user: user.data,
+            user: clients.data,
             role: roles.data,
+            stages: stage.data,
         }
         setMasterStore(obj);
     };
@@ -234,6 +237,22 @@ function ProjectAddForm() {
                                         >
                                             <option value="">Select business_category</option>
                                             {masterStore.business_category?.map((item) => {
+                                                return <option value={item._id}>{item.name}</option>
+                                            })}
+
+                                        </select>
+                                    </div>
+                                    <div className="col-xl-6 mb-3">
+                                        <label>Project Stage </label>
+
+                                        <select
+                                            name="prj_stage"
+                                            onChange={(e) => handleSelectChange("prj_stage", e.target.value)}
+                                            value={formData.prj_stage}
+                                            className="form-control"
+                                        >
+                                            <option value="">Select Stage</option>
+                                            {masterStore.stages?.map((item) => {
                                                 return <option value={item._id}>{item.name}</option>
                                             })}
 

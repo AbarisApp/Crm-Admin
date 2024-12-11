@@ -1050,6 +1050,18 @@ import TripTypeAdd from "./components/travelCRM/tripType/tripTypeAdd/TripTypeAdd
 
 import SearchAccommodations from "./pages/DesertAdventure/Searchaccommodations/index.js";
 import Availablehotelsforyourholiday from "./pages/DesertAdventure/Availablehotelsforyourholiday/Index.js";
+import TaskRemainder from "./components/taskManager/taskRemainder/TaskRemainder.js";
+import TaskForme from "./components/taskManager/taskForMe/TaskForme.js";
+
+import AutoSetReminder from "./components/PaymentView/SetReminder.js";
+import Payment from "./pages/p-report/PaymentView/index.js";
+import PaymentItemView from "./pages/p-report/PaymentItem/index.js";
+import TransactionsDayView from "./pages/p-report/TransactionsDayView/index.js";
+
+import TrendViews from "./pages/trendViews";
+import Boosts from "./pages/boosts";
+import DegreeViews from "./pages/degreeViews";
+import { BusinessView } from "./components/degreeView/businessView/BusinessViwe";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -1113,7 +1125,7 @@ function App() {
       }
     })
   }
-  console.log(window.localStorage.getItem('dashRout') == null);
+  // console.log(window.localStorage.getItem('dashRout') == null);
 
   const [mnualData, setManualData] = useState()
 
@@ -3108,16 +3120,14 @@ function App() {
               <Route path="travel-rating" element={<RatingPage />} />
               <Route path="travel-rating-add" element={<RatingAdd />} />
               <Route path="travel-rating-Update/:id" element={<RatingAdd />} />
-
-
-
               <Route path="organisation-setting/module-settings" element={<OrganisationSettings />} >
                 <Route path="" element={<Reccetemplet />} />
                 <Route path="design" element={<DesignSection />} />
               </Route>
               <Route path="my-task/task-manager" element={<Taskmanager setManualData={setManualData} />} >
-                <Route path="" element={<TaskComent mnualData={mnualData} />} />
-                {/* <Route path="design" element={<DesignSection />} /> */}
+                <Route path="task-by-me" element={<TaskComent mnualData={mnualData} />} />
+                <Route path="reminders" element={<TaskRemainder />} />
+                <Route path="task-for-me" element={<TaskForme />} />
               </Route>
               {/* Shoib's Travel Crm Report Statics */}
               <Route path="hotel-voucher-report" element={<HotelVoucherPage />} />
@@ -3138,11 +3148,21 @@ function App() {
               <Route path="billings-credit" element={<CancilaionTab />} />
               <Route path="billings-multiprinting" element={<MultiplePrintings />} />
               {/* <Route path="billings-hotel/cruisevoucher" element={<HotelCruieseVoucher />} /> */}
-              {/* <Route path="create-billings-hotel/cruisevoucher" element={<HotelVouchers/>} /> */}              <Route path="maintenance_plan" element={<MaintenancePlan />} />
+              {/* <Route path="create-billings-hotel/cruisevoucher" element={<HotelVouchers/>} /> */}
+              <Route path="maintenance_plan" element={<MaintenancePlan />} />
 
 
               <Route path="searchaccommodations" element={<SearchAccommodations />} />
               <Route path="availableholidayhotels" element={<Availablehotelsforyourholiday />} />
+              <Route path="payment" element={<Payment />} />
+              <Route path="setreminder" element={<AutoSetReminder />} />
+              <Route path="dayview" element={<TransactionsDayView />} />
+              <Route path="itemview" element={<PaymentItemView />} />
+
+              <Route path="trend-view" element={<TrendViews />} />
+              <Route path="boost-view" element={<Boosts />} />
+              <Route path="degree-view" element={<DegreeViews />} />
+              <Route path="business-view" element={<BusinessView />} />
             </Route>
           </>
         )}

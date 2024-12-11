@@ -1,8 +1,10 @@
 import { PDFViewer } from '@react-pdf/renderer'
 import { Pagination, Popconfirm } from 'antd'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ToastContainer } from 'react-toastify'
 import PdfBanks from './pdfBank/PdfBanks'
+import { getClientInvoice } from '../../../../../api/login/Login'
+import { useParams } from 'react-router-dom'
 
 function SaleInvoice() {
     const [pdf, setPdf] = useState(false)
@@ -10,12 +12,26 @@ function SaleInvoice() {
     const pdfGenerateDefault = () => {
         setPdf(!pdf)
     }
+    const parems = useParams()
+    const [data, setData] = useState(null)
+    const getData = async () => {
+        try {
+            const res = await getClientInvoice(parems.id)
+            setData(res)
+            console.log('getClientInvoice', res);
+        } catch (error) {
+
+        }
+    }
+    useEffect(() => {
+        getData()
+    }, [])
     return (
         <>
             {pdf && <div className="pdfcs">
                 <div className="loader-overlay">
                     <PDFViewer style={{ width: '100%', height: '100vh' }}>
-                        <PdfBanks titlt='Client Invoices'/>
+                        <PdfBanks titlt='Client Invoices' />
                     </PDFViewer>
                 </div>
 
@@ -74,20 +90,22 @@ function SaleInvoice() {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td> --</td>
-                                                <td> --</td>
-                                                <td> --</td>
-                                                <td> --</td>
-                                                <td> --</td>
-                                                <td> --</td>
-                                                <td> --</td>
-                                                <td> --</td>
-                                                <td> --</td>
-                                                <td>
-                                                    <button className="btn btn-sm btn-success ms-2" onClick={pdfGenerateDefault}>Print PDF</button>
-                                                </td>
-                                            </tr>
+                                            {data && data?.data?.map((item, i) => {
+                                                return <tr>
+                                                    <td>{i + 1}</td>
+                                                    <td>{item?.invoice_no}</td>
+                                                    <td>{item?.invoice_type}</td>
+                                                    <td>{item?.order_no}</td>
+                                                    <td>{item?.invoice_date}</td>
+                                                    <td>{item?.createdBy?.name}</td>
+                                                    <td>{item?.status}</td>
+                                                    <td>{item?.invoice__amount}</td>
+                                                    <td>{item?. credit_note_amount}</td>
+                                                    <td>
+                                                        <button className="btn btn-sm btn-success ms-2" onClick={pdfGenerateDefault}>Print PDF</button>
+                                                    </td>
+                                                </tr>
+                                            })}
 
                                         </tbody>
                                     </table>

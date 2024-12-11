@@ -32,15 +32,17 @@ function CreateTask({ editValue, show, handleClose, setInitialValues, initialVal
         try {
             const response = await getAllAssign();
             const staffs = response?.data.map((item) => ({
-                ...item,
                 value: item._id,
                 label: item.name,
             }));
-            setStaffData(staffs)
+            setStaffData(staffs);
+            
         } catch (error) {
             console.error("Error fetching assigned staff:", error);
         }
     };
+
+
 
     const getTaskTypeSelect = async () => {
         try {
@@ -114,13 +116,14 @@ function CreateTask({ editValue, show, handleClose, setInitialValues, initialVal
 
 
     const handleMultiSelectChange = (name) => (selectedOptions) => {
+        const values = selectedOptions ? selectedOptions.map(option => option.value) : [];
 
-        const values = selectedOptions.map(option => option.value);
         setInitialValues(prevValues => ({
             ...prevValues,
-            [name]: values
+            [name]: values,
         }));
     };
+
     const isFormValid = () => {
         const requiredFields = [
             'task_name',
@@ -167,7 +170,6 @@ function CreateTask({ editValue, show, handleClose, setInitialValues, initialVal
         },
     };
 
-    console.log(initialValues);
     const submitData = () => {
         formSubmit(initialValues)
     }
@@ -224,20 +226,24 @@ function CreateTask({ editValue, show, handleClose, setInitialValues, initialVal
                                     value={initialValues?.repeated_no || ''} onChange={handleChange} />
                             </div>
 
-                            <div className="form-group col-xl-4">
+                            <div className="form-group col-xl-3">
                                 <label htmlFor="startDate">
-                                    Start Date Time 
+                                    Start Date Time
                                 </label>
                                 <input
                                     type="date"
                                     name="start_date_time"
                                     id="startDate"
                                     className="form-control"
-                                    value={initialValues?.start_date_time || new Date().toISOString().split('T')[0]}
+                                    value={
+                                        initialValues?.start_date_time
+                                            ? new Date(initialValues.end_date_time).toISOString().split('T')[0]
+                                            : new Date().toISOString().split('T')[0]
+                                    }
                                     onChange={handleChange}
                                 />
                             </div>
-                            <div className="form-group col-xl-4">
+                            <div className="form-group col-xl-3">
                                 <label htmlFor="endDate">
                                     End Date Time <span className="text-danger">*</span>
                                 </label>
@@ -246,33 +252,45 @@ function CreateTask({ editValue, show, handleClose, setInitialValues, initialVal
                                     id="endDate"
                                     name="end_date_time"
                                     className="form-control"
-                                    value={initialValues?.end_date_time || new Date().toISOString().split('T')[0]}
+                                    value={
+                                        initialValues?.end_date_time
+                                            ? new Date(initialValues.end_date_time).toISOString().split('T')[0]
+                                            : new Date().toISOString().split('T')[0]
+                                    }
                                     onChange={handleChange}
                                 />
                             </div>
-                            <div className="form-group col-xl-4">
+                            <div className="form-group col-xl-3">
                                 <label htmlFor="complition_date_time">
-                                    Completion Date Time 
+                                    Completion Date 
                                 </label>
                                 <input
                                     type="date"
                                     id="complition_date_time"
                                     name="complition_date_time"
                                     className="form-control"
-                                    value={initialValues?.complition_date_time || new Date().toISOString().split('T')[0]}
+                                    value={
+                                        initialValues?.complition_date_time
+                                            ? new Date(initialValues.complition_date_time).toISOString().split('T')[0]
+                                            : new Date().toISOString().split('T')[0]
+                                    }
                                     onChange={handleChange}
                                 />
                             </div>
-                            <div className="form-group col-xl-4">
+                            <div className="form-group col-xl-3">
                                 <label htmlFor="dueDate">
-                                    Expected Due Date <span className="text-danger">*</span>
+                                    Expected Date <span className="text-danger">*</span>
                                 </label>
                                 <input
                                     type="date"
                                     name="expect_due_date_time"
                                     id="dueDate"
                                     className="form-control"
-                                    value={initialValues?.expect_due_date_time || new Date().toISOString().split('T')[0]}
+                                    value={
+                                        initialValues?.start_date_time
+                                            ? new Date(initialValues.start_date_time).toISOString().split('T')[0]
+                                            : new Date().toISOString().split('T')[0]
+                                    }
                                     onChange={handleChange}
                                 />
                             </div>
@@ -296,14 +314,19 @@ function CreateTask({ editValue, show, handleClose, setInitialValues, initialVal
                             <div className="form-group col-xl-4">
                                 <label htmlFor="priority">Priority </label>
                                 <select id="priority" className="w-100" name="priority"
-                                    value={initialValues?.priority ? initialValues?.priority : "" || ''} onChange={handleChange}>
+                                    value={
+                                        initialValues?.priority ? initialValues?.priority : "" || ''} onChange={handleChange}>
                                     {priorityState?.map((item, i) =>
                                         <option value={item?._id}>{item?.priority}</option>
                                     )}
                                 </select>
                             </div>
-
                             <div className="form-group col-xl-4">
+                                <label htmlFor="total_cycle">Total Cycle </label>
+                                <input type="text" id="total_cycle" name="total_cycle" placeholder="Total Cycle" className="form-control"
+                                    value={initialValues?.total_cycle || ''} onChange={handleChange} />
+                            </div>
+                            <div className="form-group col-xl-12">
                                 <label htmlFor="tags">Tags </label>
                                 <div style={styles.tagInputContainer}>
                                     {initialValues?.tags?.map((tag, index) => (
@@ -325,14 +348,12 @@ function CreateTask({ editValue, show, handleClose, setInitialValues, initialVal
                                     />
                                 </div>
                             </div>
-                            <div className="form-group col-xl-4">
-                                <label htmlFor="total_cycle">Total Cycle </label>
-                                <input type="text" id="total_cycle" name="total_cycle" placeholder="Total Cycle" className="form-control"
-                                    value={initialValues?.total_cycle || ''} onChange={handleChange} />
-                            </div>
+                            
 
-                            <div className="form-group col-xl-4">
-                                <label htmlFor="assignee">Assignee <span classNmae="text-danger">*</span></label>
+                            <div className="form-group col-xl-12">
+                                <label htmlFor="assignee">
+                                    Assignee <span className="text-danger">*</span>
+                                </label>
                                 <Select
                                     name="assignees"
                                     options={staffData}
@@ -340,18 +361,21 @@ function CreateTask({ editValue, show, handleClose, setInitialValues, initialVal
                                     closeMenuOnSelect={false}
                                     onChange={handleMultiSelectChange('assignees')}
                                     id="assignees"
-                                    value={staffData.filter(option => initialValues?.assignees?.includes(option.value))}
-                                    defaultValue={staffData.filter(option => initialValues?.assignees?.includes(option.value))}
+                                    value={staffData.filter(option =>
+                                        initialValues?.assignees?.includes(option.value)
+                                    )}
+
+
                                 />
                             </div>
 
-                            <div className="form-group col-xl-4">
+                            <div className="form-group col-xl-12">
                                 <label htmlFor="followers">Followers  <span classNmae="text-danger">*</span></label>
                                 <select id="followers" className="w-100" name="followers"
                                     value={initialValues?.followers || ''} onChange={handleChange}>
                                     <option value="">Select Follower</option>
                                     {staffData.map((item, i) =>
-                                        <option value={item?._id}>{item?.name}</option>
+                                        <option value={item?.value}>{item?.label}</option>
                                     )}
                                 </select>
                             </div>
@@ -456,8 +480,8 @@ function CreateTask({ editValue, show, handleClose, setInitialValues, initialVal
 
                         {/* Form Actions */}
                         <div className="button-group d-flex justify-content-end">
-                            <Button type="button" 
-                             onClick={submitData} className="btn btn-primary">
+                            <Button type="button"
+                                onClick={submitData} className="btn btn-primary">
                                 Submit
                             </Button>
                             <Button type="button" variant="outline-secondary" onClick={handleClose} className="cancel-button">Cancel</Button>

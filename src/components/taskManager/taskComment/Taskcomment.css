@@ -1,6 +1,6 @@
 .message {
     max-width: 85%;
-    padding: 6px 15px;
+    padding: 0px 6px;
     border-radius: 10px;
     font-size: 14px;
     line-height: 1.5;
@@ -61,4 +61,7 @@
 
 .tScrollbarHide::-webkit-scrollbar {
     display: none !important;
+}
+.task-img img{
+ width: 8rem;
 }
