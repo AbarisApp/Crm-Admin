@@ -306,6 +306,21 @@ function TaskComent({ mnualData }) {
                                                 }}
                                             >
                                                 <i className='fa-sharp fa-solid fa-trash-can fa-2xs'></i>
+                                               
+                                            </Badge>
+                                            <Badge
+                                                style={{
+                                                    backgroundColor: '#afe1af	',
+                                                    color: '#fff',
+                                                    fontWeight: '500',
+                                                }}
+                                                onClick={(e) => {
+                                                    e.stopPropagation(); // Prevents triggering the parent div's onClick
+                                                    taskDeleted(data?._id);
+                                                }}
+                                            >
+                                               <i class="fa-sharp fa-solid fa-clock fa-shake"></i>
+                                               
                                             </Badge>
                                         </div>
                                     </div>
@@ -346,11 +361,11 @@ function TaskComent({ mnualData }) {
                             <div className="d-flex justify-content-between align-items-center mb-3">
                                 <div>
                                     <Button variant="outline-secondary" size="sm" className="mr-2">Mark as Done</Button>
-                                    <Button variant="outline-secondary" size="sm" onClick={() => setModalShow(true)}>Remind Later</Button>
+                                    {/* <Button variant="outline-secondary" size="sm" onClick={() => setModalShow(true)}>Remind Later</Button>
                                     <ReminderLater
                                         show={modalShow}
                                         onHide={() => setModalShow(false)}
-                                    />
+                                    /> */}
                                 </div>
                                 <Button className='btn-outline' variant="link" size="m" onClick={() => setShow(!show)}>
                                     Edit Task <i class="fa-solid fa-pen-to-square"></i>
