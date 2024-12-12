@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Breadcrumbs from "../../../../../common/breadcrumb/Breadcrumbs";
+import { getAllAccountData, getAllLocationsData, getAllPickupPointsData, getAllProductsData, getAllTaxTypeData, getAllTransportersData, getAttTaxTypeData } from "../../../../../api/login/Login";
 
 
 const PurchageOrderAdd = () => {
@@ -10,11 +11,16 @@ const PurchageOrderAdd = () => {
         title_3: `Add Purchase Order`,
         path_2: ``
     };
+    const [allAccounts, setAllAccounts] = useState();
+    const [allTaxes, setAllTaxes] = useState();
+    const [allTransports, setAllTransports] = useState();
+    const [allProducts, setAllProducts] = useState();
+    const [allPickupPoints, setAllPickupPoints] = useState();
 
     const [formData, setFormData] = useState({
-        voucher: '',
         date: '',
-        voucherAmount: '',
+        account: '',
+        order_no: '',
         taxType: ''
     });
 
@@ -52,38 +58,261 @@ const PurchageOrderAdd = () => {
     };
 
 
-    ////////
+
     const [rows, setRows] = useState([
-        { id: 1, item: '', Tax: 0, Location: '', Quantity2: '', Quantity: 0, Rate: 0, DiscRs: '', DiscType: '', Amount: 0 },
-        { id: 2, item: '', Tax: 0, Location: '', Quantity2: '', Quantity: 0, Rate: 0, DiscRs: '', DiscType: '', Amount: 0 },
-        { id: 3, item: '', Tax: 0, Location: '', Quantity2: '', Quantity: 0, Rate: 0, DiscRs: '', DiscType: '', Amount: 0 },
-        { id: 4, item: '', Tax: 0, Location: '', Quantity2: '', Quantity: 0, Rate: 0, DiscRs: '', DiscType: '', Amount: 0 },
+        { id: 1, item: '', variant: '', sku: "", Tax: 0, pickupPoint: '', Quantity2: '', Quantity: 0, Rate: 0, DiscRs: '', DiscType: '', Amount: 0 },
     ]);
 
-    // Function to handle value changes in the input fields
-    const handleChange = (index, key, value) => {
-        const updatedRows = rows.map((row, i) =>
-            i === index ? { ...row, [key]: value } : row
-        );
+    // const handleChange = (index, key, value, varArr) => {
+    //     if (key === "item") {
+    //         const variantItem = allProducts?.find((item) => {
+    //             return item?._id?.uid == value
+    //         })
+    //         console.log("variantItem--", variantItem)
+    //         const updatedRows = rows.map((row, i) =>
+    //             i === index ? { ...row, [key]: value, variant: '', variantArr: variantItem?.product?.variations } : row
+    //         );
+    //         setRows(updatedRows);
+    //         return
+    //     } if (key === "variant") {
+    //         const skuD = varArr?.find((item) => {
+    //             return item?._id == value
+    //         })
+    //         console.log('skud---', skuD)
+    //         const updatedRows = rows.map((row, i) =>
+    //             i === index ? { ...row, [key]: value, sku: skuD?.sku } : row
+    //         );
+    //         setRows(updatedRows);
+    //         return
+    //     } else {
+    //         const updatedRows = rows.map((row, i) =>
+    //             i === index ? { ...row, [key]: value } : row
+    //         );
+    //         setRows(updatedRows);
+    //     }
+    // };
+
+    // const renderRow = (row, index) => (
+    //     <tr key={row.id}>
+    //         <td>
+    //             <select
+    //                 value={row.item}
+    //                 onChange={(e) => handleChange(index, 'item', e.target.value)}
+    //             >
+    //                 <option value="">Select Product</option>
+    //                 {allProducts && allProducts?.map((item, i) => {
+    //                     return <option value={item?._id?.uid}>{item?.product?.name}</option>
+    //                 })}
+    //             </select>
+    //         </td>
+
+    //         <td>
+    //             <select
+    //                 value={row.variant}
+    //                 name="variant"
+    //                 onChange={(e) => handleChange(index, 'variant', e.target.value, row.variantArr)}
+    //             >
+    //                 <option value="">Select Variant</option>
+    //                 {row?.variantArr && row?.variantArr?.map((item, i) => {
+    //                     return <option value={item?._id}>{item?.weight}</option>
+    //                 })}
+    //             </select>
+    //         </td>
+
+    //         <td>
+    //             <input
+    //                 type="text"
+    //                 disabled
+    //                 value={row.sku}
+    //                 onChange={(e) => handleChange(index, 'sku', e.target.value)}
+    //             />
+    //         </td>
+
+    //         <td>
+    //             <input
+    //                 type="number"
+    //                 value={row.Tax}
+    //                 onChange={(e) => handleChange(index, 'Tax', e.target.value)}
+    //             />
+    //         </td>
+
+    //         <td>
+    //             <select
+    //                 value={row.pickupPoint}
+    //                 onChange={(e) => handleChange(index, 'pickupPoint', e.target.value)}
+    //             >
+    //                 <option value="">Select PickupPoint</option>
+    //                 {allPickupPoints && allPickupPoints?.map((item, i) => {
+    //                     return <option value={item?._id}>{item?.name}</option>
+    //                 })}
+    //             </select>
+    //         </td>
+    //         <td>
+    //             <input
+    //                 type="number"
+    //                 value={row.Quantity2}
+    //                 onChange={(e) => handleChange(index, 'Quantity2', e.target.value)}
+    //             />
+    //         </td>
+    //         <td>
+    //             <input
+    //                 type="number"
+    //                 value={row.Quantity}
+    //                 onChange={(e) => handleChange(index, 'Quantity', e.target.value)}
+    //             />
+    //         </td>
+
+    //         <td>
+    //             <input
+    //                 type="number"
+    //                 value={row.Rate}
+    //                 onChange={(e) => handleChange(index, 'Rate', e.target.value)}
+    //             />
+    //         </td>
+
+    //         <td>
+    //             <input
+    //                 type="number"
+    //                 value={row.DiscRs}
+    //                 onChange={(e) => handleChange(index, 'DiscRs', e.target.value)}
+    //             />
+    //         </td>
+    //         <td>
+    //             <select
+    //                 value={row.DiscType}
+    //                 onChange={(e) => handleChange(index, 'DiscType', e.target.value)}
+    //             >
+    //                 <option value="">Select Disc Type</option>
+    //                 <option value="Fixed">Fixed</option>
+    //                 <option value="per">Per</option>
+    //                 <option value="Quantity">Quantity</option>
+    //             </select>
+    //         </td>
+    //         <td>
+    //             <input
+    //                 type="number"
+    //                 value={row.Amount}
+    //                 onChange={(e) => handleChange(index, 'Amount', e.target.value)}
+    //             />
+    //         </td>
+    //         <td>
+    //             <button onClick={() => handleDeleteRow(index)}>🗑️</button>
+    //         </td>
+    //     </tr>
+    // );
+
+    const handleDeleteRow = (index) => {
+        const updatedRows = rows.filter((_, i) => i !== index);
+        setRows(updatedRows);
+    };
+    const handleAddRow = () => {
+        setRows([
+            ...rows,
+            { id: rows.length + 1, item: '', variant: '', sku: "", Tax: 0, pickupPoint: '', Quantity2: '', Quantity: 0, Rate: 0, DiscRs: '', DiscType: '', Amount: 0 },
+        ]);
+    };
+
+
+
+    const handleChange = (index, key, value, varArr) => {
+        if (key === "item") {
+            const variantItem = allProducts?.find((item) => item?._id?.uid === value);
+            const updatedRows = rows.map((row, i) =>
+                i === index
+                    ? {
+                        ...row,
+                        [key]: value,
+                        variant: '',
+                        variantArr: variantItem?.product?.variations,
+                    }
+                    : row
+            );
+            setRows(updatedRows);
+            return;
+        }
+
+        if (key === "variant") {
+            const skuD = varArr?.find((item) => item?._id === value);
+            const updatedRows = rows.map((row, i) =>
+                i === index
+                    ? {
+                        ...row,
+                        [key]: value,
+                        sku: skuD?.sku,
+                    }
+                    : row
+            );
+            setRows(updatedRows);
+            return;
+        }
+
+        const updatedRows = rows.map((row, i) => {
+            if (i === index) {
+                const updatedRow = { ...row, [key]: value };
+
+                // Perform calculations for Amount based on Quantity, Quantity2, Rate, Discount, etc.
+                const totalQuantity = parseFloat(updatedRow.Quantity || 0) + parseFloat(updatedRow.Quantity2 || 0);
+                const rate = parseFloat(updatedRow.Rate || 0);
+                let discount = 0;
+
+                if (updatedRow.DiscType === "Fixed") {
+                    discount = parseFloat(updatedRow.DiscRs || 0);
+                } else if (updatedRow.DiscType === "per") {
+                    discount = (parseFloat(updatedRow.DiscRs || 0) / 100) * (rate * totalQuantity);
+                }
+
+                // Calculate Amount
+                const amount = (rate * totalQuantity) - discount;
+                updatedRow.Amount = amount > 0 ? amount.toFixed(2) : 0;
+
+                return updatedRow;
+            }
+            return row;
+        });
+
         setRows(updatedRows);
     };
 
-    // Function to render each row of the table
+
+
+
     const renderRow = (row, index) => (
         <tr key={row.id}>
-            {/* Cr/Db Select */}
             <td>
                 <select
                     value={row.item}
                     onChange={(e) => handleChange(index, 'item', e.target.value)}
                 >
-                    <option value="">Select</option>
-                    <option value="Cr">Cr</option>
-                    <option value="Db">Db</option>
+                    <option value="">Select Product</option>
+                    {allProducts?.map((item, i) => (
+                        <option key={i} value={item?._id?.uid}>
+                            {item?.product?.name}
+                        </option>
+                    ))}
                 </select>
             </td>
-
-            {/* Account Name Select */}
+            <td>
+                <select
+                    value={row.variant}
+                    name="variant"
+                    onChange={(e) => handleChange(index, 'variant', e.target.value, row.variantArr)}
+                >
+                    <option value="">Select Variant</option>
+                    {row?.variantArr?.map((item, i) => (
+                        <option key={i} value={item?._id}>
+                            {item?.weight}
+                        </option>
+                    ))}
+                </select>
+            </td>
+            <td>
+                <input
+                    type="text"
+                    disabled
+                    value={row.sku}
+                    onChange={(e) => handleChange(index, 'sku', e.target.value)}
+                />
+            </td>
             <td>
                 <input
                     type="number"
@@ -92,11 +321,17 @@ const PurchageOrderAdd = () => {
                 />
             </td>
             <td>
-                <input
-                    type="number"
-                    value={row.Location}
-                    onChange={(e) => handleChange(index, 'Location', e.target.value)}
-                />
+                <select
+                    value={row.pickupPoint}
+                    onChange={(e) => handleChange(index, 'pickupPoint', e.target.value)}
+                >
+                    <option value="">Select PickupPoint</option>
+                    {allPickupPoints?.map((item, i) => (
+                        <option key={i} value={item?._id}>
+                            {item?.name}
+                        </option>
+                    ))}
+                </select>
             </td>
             <td>
                 <input
@@ -105,8 +340,6 @@ const PurchageOrderAdd = () => {
                     onChange={(e) => handleChange(index, 'Quantity2', e.target.value)}
                 />
             </td>
-
-            {/* HSNCode Input */}
             <td>
                 <input
                     type="number"
@@ -114,7 +347,6 @@ const PurchageOrderAdd = () => {
                     onChange={(e) => handleChange(index, 'Quantity', e.target.value)}
                 />
             </td>
-
             <td>
                 <input
                     type="number"
@@ -122,7 +354,6 @@ const PurchageOrderAdd = () => {
                     onChange={(e) => handleChange(index, 'Rate', e.target.value)}
                 />
             </td>
-
             <td>
                 <input
                     type="number"
@@ -131,47 +362,88 @@ const PurchageOrderAdd = () => {
                 />
             </td>
             <td>
-                <input
-                    type="number"
+                <select
                     value={row.DiscType}
                     onChange={(e) => handleChange(index, 'DiscType', e.target.value)}
-                />
+                >
+                    <option value="">Select Disc Type</option>
+                    <option value="Fixed">Fixed</option>
+                    <option value="per">Per</option>
+                    <option value="Quantity">Quantity</option>
+                </select>
             </td>
-
-
-            {/* Amount Input */}
-
             <td>
-                <input
-                    type="number"
-                    value={row.Amount}
-                    onChange={(e) => handleChange(index, 'Amount', e.target.value)}
-                />
+                <input type="number" value={row.Amount} disabled />
             </td>
-
-            {/* Delete Button */}
             <td>
                 <button onClick={() => handleDeleteRow(index)}>🗑️</button>
             </td>
         </tr>
     );
 
-    // Function to handle row deletion
-    const handleDeleteRow = (index) => {
-        const updatedRows = rows.filter((_, i) => i !== index);
-        setRows(updatedRows);
+
+
+
+
+
+    const getAllAccount = async () => {
+        try {
+            const res = await getAllAccountData();
+            setAllAccounts(res?.data?.voucher)
+        } catch (error) {
+
+        }
+    };
+    const getAllTaxType = async () => {
+        try {
+            const res = await getAllTaxTypeData();
+            setAllTaxes(res?.data)
+        } catch (error) {
+
+        }
+    };
+    const getAllTransporters = async () => {
+        try {
+            const res = await getAllTransportersData();
+            setAllTransports(res?.data)
+        } catch (error) {
+
+        }
+    };
+    const getAllProducts = async () => {
+        try {
+            const res = await getAllProductsData();
+            console.log('Products---', res)
+            setAllProducts(res)
+        } catch (error) {
+
+        }
+    };
+    const getAllPickupPoints = async () => {
+        try {
+            const res = await getAllPickupPointsData();
+            console.log('Locations---', res)
+            setAllPickupPoints(res)
+        } catch (error) {
+
+        }
     };
 
-    // Function to add a new row
-    const handleAddRow = () => {
-        setRows([
-            ...rows,
-            { id: rows.length + 1, ExpenseAc: '', Product: '', HSNCode: 0, Commodity: 0, Amount: 0 },
-        ]);
+    useEffect(() => {
+        getAllAccount();
+        getAllTaxType();
+        getAllTransporters();
+        getAllProducts();
+        getAllPickupPoints();
+    }, []);
+
+
+    const handleSubmitData = () => {
+        console.log("ROWS----", rows)
     };
 
 
-    /////
+
     return (
         <>
             <Breadcrumbs
@@ -191,40 +463,36 @@ const PurchageOrderAdd = () => {
                                             type="date"
                                             className="form-control"
                                             name="voucher"
-                                            value={formData.voucher}
+                                            value={formData.date}
                                             onChange={handleInputChange}
-                                            placeholder="Enter Voucher"
+                                            placeholder="Enter Date"
                                         />
                                     </div>
 
-
-
                                     <div className="col-md-3 mb-3">
-                                        <label htmlFor="taxType">Account</label>
+                                        <label htmlFor="account">Account</label>
                                         <select
                                             className="form-control"
-                                            name="taxType"
-
+                                            name="account"
+                                            value={formData.account}
                                         >
-                                            <option value="">Select Tax Type</option>
-                                            <option value="GST 5%">GST 5%</option>
-                                            <option value="GST 12%">GST 12%</option>
-                                            <option value="GST MULTIPLE">GST MULTIPLE</option>
+                                            <option value="">Select Account</option>
+                                            {allAccounts && allAccounts?.map((item, i) => {
+                                                return <option value={item?._id}>{item?.name}</option>
+                                            })}
                                         </select>
                                     </div>
 
                                     <div className="col-md-3 mb-3">
                                         <label htmlFor="taxType">Order No</label>
-                                        <select
+                                        <input
+                                            type="number"
                                             className="form-control"
-                                            name="taxType"
-
-                                        >
-                                            <option value="">Select Tax Type</option>
-                                            <option value="GST 5%">GST 5%</option>
-                                            <option value="GST 12%">GST 12%</option>
-                                            <option value="GST MULTIPLE">GST MULTIPLE</option>
-                                        </select>
+                                            name="order_no"
+                                            value={formData.order_no}
+                                            onChange={handleInputChange}
+                                            placeholder="Enter Order No"
+                                        />
                                     </div>
 
                                     <div className="col-md-3 mb-3">
@@ -236,35 +504,34 @@ const PurchageOrderAdd = () => {
                                             onChange={handleInputChange}
                                         >
                                             <option value="">Select Tax Type</option>
-                                            <option value="GST 5%">GST 5%</option>
-                                            <option value="GST 12%">GST 12%</option>
-                                            <option value="GST MULTIPLE">GST MULTIPLE</option>
+                                            {allTaxes && allTaxes?.map((item, i) => {
+                                                return <option value={item?._id}>{item?.name}</option>
+                                            })}
                                         </select>
                                     </div>
+
                                     <div className="col-md-3 mb-3">
                                         <label htmlFor="taxType">Transporter</label>
                                         <select
                                             className="form-control"
                                             name="taxType"
-
                                         >
-                                            <option value="">Select Tax Type</option>
-                                            <option value="GST 5%">GST 5%</option>
-                                            <option value="GST 12%">GST 12%</option>
-                                            <option value="GST MULTIPLE">GST MULTIPLE</option>
+                                            <option value="">Select Transporter</option>
+                                            {allTransports && allTransports?.map((item, i) => {
+                                                return <option value={item?._id}>{item?.name}</option>
+                                            })}
                                         </select>
                                     </div>
-
-
-
-
                                 </div>
+
 
                                 <div className="col-lg-12">
                                     <table border="1" cellPadding="10">
                                         <thead>
                                             <tr>
-                                                <th>	Item</th>
+                                                <th>Item</th>
+                                                <th>Variants</th>
+                                                <th>SKU</th>
                                                 <th>Tax %</th>
                                                 <th>Location</th>
                                                 <th>Quantity2</th>
@@ -280,7 +547,7 @@ const PurchageOrderAdd = () => {
                                             {rows.map((row, index) => renderRow(row, index))}
                                         </tbody>
                                     </table>
-                                    {/* <button type="button" onClick={handleAddRow}>Add Row</button>    */}
+                                    <button type="button" onClick={handleAddRow}>Add Row</button>
                                 </div>
 
 
@@ -328,7 +595,7 @@ const PurchageOrderAdd = () => {
                                     </h4>
                                 </div>
                                 <div className="col-lg-12 text-center">
-                                    <button type="button" className="btn btn-primary">Save</button>
+                                    <button type="button" className="btn btn-primary" onClick={handleSubmitData}>Save</button>
                                 </div>
                             </div>
                         </div>

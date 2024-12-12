@@ -6270,6 +6270,37 @@ export const GetUpdatetravelInvoiceByid = (id) => {
   );
 };
 
+
+// ================MOIN APIS START=====================
+export const getAllAccountData = () => {
+  return axiosInstance.get(
+    `${baseUrl}Accledger/admin`
+  );
+};
+export const getAllTaxTypeData = () => {
+  return axiosInstance.get(
+    `${baseUrl}acc_tax_type_master/admin`
+  );
+};
+export const getAllTransportersData = () => {
+  return axiosInstance.get(
+    `${baseUrl}lead_transporter_master/admin`
+  );
+};
+export const getAllProductsData = () => {
+  return axiosInstance.get(
+    `${baseproductUrl}product/admin`
+  );
+};
+export const getAllPickupPointsData = () => {
+  return axiosInstance.get(
+    `${baseproductUrl}pickuppoints/admin`
+  );
+};
+// ================MOIN APIS END=======================
+
+
+
 export const searchReminderTask = (page, count) => {
   return axiosInstance.get(
     `${baseUrl}task/reminder?page=${page}&count=${count}`
