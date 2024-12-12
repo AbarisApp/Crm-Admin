@@ -59,33 +59,33 @@ function TaskManagerAside({ setManualData }) {
 
     const navLinksData = [
         { label: "Important", icon: "fa-sharp fa-regular fa-star", route: "" },
-        { label: "Reminders", icon: "fa-sharp fa-regular fa-clock", route: "design" },
-        { label: "Mentions", icon: "fa-sharp fa-solid fa-at", route: "mentions" },
+        { label: "Reminders", icon: "fa-sharp fa-regular fa-clock", route: "reminders" },
+        { label: "Mentions", icon: "fa-sharp fa-solid fa-at", route: "" },
         {
             id: "taskforme1234", label: "Task For me", icon: "fa-sharp fa-solid fa-clipboard-list", route: "task-for-me",
-            subItems: [
+            /* subItems: [
                 { label: "Active", count: 1 }, { label: "Archived", count: 0 }
-            ]
+            ] */
         },
         {
             id: "taskbyme678", label: "Task By me", icon: "fa-sharp fa-solid fa-clipboard", route: "task-by-me",
-            subItems: [
+            /* subItems: [
                 { label: "Active", count: 1 }, { label: "Archived", count: 0 }
-            ]
+            ] */
         },
         {
-            label: "My Request", icon: "fa-sharp fa-regular fa-circle-check", route: "my-request", subItems: [
+            label: "My Request", icon: "fa-sharp fa-regular fa-circle-check", route: "", subItems: [
                 { label: "Pending Requests", count: 1 }, { label: "Draft Requests", count: 0 },
                 { label: "Archived Requests", count: 0 }, { label: "Immediate", count: 0 }
             ]
         },
         {
-            label: "My Approvals", icon: "fa-sharp fa-solid fa-circle-check fa-fade", route: "my-approvals", subItems: [
+            label: "My Approvals", icon: "fa-sharp fa-solid fa-circle-check fa-fade", route: "", subItems: [
                 { label: "All Approvals", count: 0 }, { label: "Upcoming", count: 0 },
                 { label: "Immediate", count: 0 }
             ]
         },
-        { label: "My Comments", icon: "fa-solid fa-comments fa-bounce", route: "my-comments" }
+        { label: "My Comments", icon: "fa-solid fa-comments fa-bounce", route: "" }
     ];
 
 
@@ -183,7 +183,7 @@ function TaskManagerAside({ setManualData }) {
                         repeated_no: null,
                         assignees: [],
                         followers: { type: "", ref: "staff" },
-                        tags: [], // Initialize as an empty array
+                        tags: [], 
                         task_description: "",
                         total_cycle: null,
 

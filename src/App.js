@@ -1050,6 +1050,8 @@ import TripTypeAdd from "./components/travelCRM/tripType/tripTypeAdd/TripTypeAdd
 
 import SearchAccommodations from "./pages/DesertAdventure/Searchaccommodations/index.js";
 import Availablehotelsforyourholiday from "./pages/DesertAdventure/Availablehotelsforyourholiday/Index.js";
+import TaskRemainder from "./components/taskManager/taskRemainder/TaskRemainder.js";
+import TaskForme from "./components/taskManager/taskForMe/TaskForme.js";
 
 import AutoSetReminder from "./components/PaymentView/SetReminder.js";
 import Payment from "./pages/p-report/PaymentView/index.js";
@@ -1060,6 +1062,8 @@ import TrendViews from "./pages/trendViews";
 import Boosts from "./pages/boosts";
 import DegreeViews from "./pages/degreeViews";
 import { BusinessView } from "./components/degreeView/businessView/BusinessViwe";
+import PickUpMaster from "./components/topNavigationComp/masters/pickuppoint/PickUpMaster.js";
+import CreatePickUp from "./components/topNavigationComp/masters/pickuppoint/MasterForm/CreatePickUp.js";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -1123,7 +1127,7 @@ function App() {
       }
     })
   }
-  console.log(window.localStorage.getItem('dashRout') == null);
+  // console.log(window.localStorage.getItem('dashRout') == null);
 
   const [mnualData, setManualData] = useState()
 
@@ -2073,6 +2077,13 @@ function App() {
 
 
 
+
+
+              <Route path="pickup-point" element={<PickUpMaster />} />
+              <Route path="create-pickup-point" element={<CreatePickUp />} />
+              <Route path="create-pickup-point/:id" element={<CreatePickUp />} />
+
+
               <Route path="contest-type" element={<ContestTypeMaster />} />
               <Route path="create-contest-type" element={<CreateType />} />
               <Route path="create-contest-type/:id" element={<CreateType />} />
@@ -2274,6 +2285,7 @@ function App() {
               <Route path="salesorder/add" element={<SalseOrderAdd />} />
               <Route path="purchaseorder/list" element={<PurchageOrderPage />} />
               <Route path="purchaseorder/Add" element={<PurchageOrderAdd />} />
+              <Route path="purchaseorder/edit/:id" element={<PurchageOrderAdd />} />
               <Route path="salesorderfrm/list" element={<OrderFromQuationPage />} />
               <Route path="salesorderfrm/Add" element={<OrderFromQuationAdd />} />
               <Route path="purchaseorderfrm/list" element={<PurchaseOrderFromQuotationPage />} />
@@ -3119,16 +3131,14 @@ function App() {
               <Route path="travel-rating" element={<RatingPage />} />
               <Route path="travel-rating-add" element={<RatingAdd />} />
               <Route path="travel-rating-Update/:id" element={<RatingAdd />} />
-
-
-
               <Route path="organisation-setting/module-settings" element={<OrganisationSettings />} >
                 <Route path="" element={<Reccetemplet />} />
                 <Route path="design" element={<DesignSection />} />
               </Route>
               <Route path="my-task/task-manager" element={<Taskmanager setManualData={setManualData} />} >
-                <Route path="" element={<TaskComent mnualData={mnualData} />} />
-                {/* <Route path="design" element={<DesignSection />} /> */}
+                <Route path="task-by-me" element={<TaskComent mnualData={mnualData} />} />
+                <Route path="reminders" element={<TaskRemainder />} />
+                <Route path="task-for-me" element={<TaskForme />} />
               </Route>
               {/* Shoib's Travel Crm Report Statics */}
               <Route path="hotel-voucher-report" element={<HotelVoucherPage />} />

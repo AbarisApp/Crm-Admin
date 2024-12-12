@@ -143,80 +143,81 @@ const SalseOrderAdd = () => {
                 <div className="col-xl-12">
                     <div className="card">
                         <div className="card-body p-0">
-                            <div className="table-responsive active-projects style-1">
-                                <div className="tbl-caption tbl-caption-2">
-                                    <h4 className="heading mb-0">Add Sales Order</h4>
+
+                            <div className="tbl-caption tbl-caption-2">
+                                <h4 className="heading mb-0">Add Sales Order</h4>
+                            </div>
+                            <div className="row">
+                                <div className="col-md-3 mb-3">
+                                    <label htmlFor="date">Date</label>
+                                    <input
+                                        type="date"
+                                        className="form-control"
+                                        name="date"
+                                        value={formData.date}
+                                        onChange={handleInputChange}
+                                    />
                                 </div>
-                                <div className="row">
-                                    <div className="col-md-3 mb-3">
-                                        <label htmlFor="date">Date</label>
-                                        <input
-                                            type="date"
-                                            className="form-control"
-                                            name="date"
-                                            value={formData.date}
-                                            onChange={handleInputChange}
-                                        />
-                                    </div>
-                                    <div className="col-md-3 mb-3">
-                                        <label htmlFor="taxType">Account</label>
-                                        <select
-                                            className="form-control"
-                                            name="taxType"
-                                            value={formData.taxType}
-                                            onChange={handleInputChange}
-                                        >
-                                            <option value="">Select Tax Type</option>
-                                            <option value="GST 5%">GST 5%</option>
-                                            <option value="GST 12%">GST 12%</option>
-                                            <option value="GST MULTIPLE">GST MULTIPLE</option>
-                                        </select>
-                                    </div>
-                                    <div className="col-md-3 mb-3">
-                                        <label htmlFor="orderNo">Order No</label>
-                                        <input
-                                            type="number"
-                                            className="form-control"
-                                            name="orderNo"
-                                            value={formData.orderNo}
-                                            onChange={handleInputChange}
-                                            placeholder="Enter Order No"
-                                        />
-                                    </div>
-                                    <div className="col-md-3 mb-3">
-                                        <label htmlFor="broker">Broker</label>
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            name="broker"
-                                            value={formData.broker}
-                                            onChange={handleInputChange}
-                                            placeholder="Enter Broker"
-                                        />
-                                    </div>
-                                    <div className="col-md-3 mb-3">
-                                        <label htmlFor="transportName">Transport Name</label>
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            name="transportName"
-                                            value={formData.transportName}
-                                            onChange={handleInputChange}
-                                            placeholder="Enter Transport Name"
-                                        />
-                                    </div>
-                                    <div className="col-md-3 mb-3">
-                                        <label htmlFor="deliveryDestination">Delivery Destination</label>
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            name="deliveryDestination"
-                                            value={formData.deliveryDestination}
-                                            onChange={handleInputChange}
-                                            placeholder="Enter Delivery Destination"
-                                        />
-                                    </div>
+                                <div className="col-md-3 mb-3">
+                                    <label htmlFor="taxType">Account</label>
+                                    <select
+                                        className="form-control"
+                                        name="taxType"
+                                        value={formData.taxType}
+                                        onChange={handleInputChange}
+                                    >
+                                        <option value="">Select Tax Type</option>
+                                        <option value="GST 5%">GST 5%</option>
+                                        <option value="GST 12%">GST 12%</option>
+                                        <option value="GST MULTIPLE">GST MULTIPLE</option>
+                                    </select>
                                 </div>
+                                <div className="col-md-3 mb-3">
+                                    <label htmlFor="orderNo">Order No</label>
+                                    <input
+                                        type="number"
+                                        className="form-control"
+                                        name="orderNo"
+                                        value={formData.orderNo}
+                                        onChange={handleInputChange}
+                                        placeholder="Enter Order No"
+                                    />
+                                </div>
+                                <div className="col-md-3 mb-3">
+                                    <label htmlFor="broker">Broker</label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        name="broker"
+                                        value={formData.broker}
+                                        onChange={handleInputChange}
+                                        placeholder="Enter Broker"
+                                    />
+                                </div>
+                                <div className="col-md-3 mb-3">
+                                    <label htmlFor="transportName">Transport Name</label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        name="transportName"
+                                        value={formData.transportName}
+                                        onChange={handleInputChange}
+                                        placeholder="Enter Transport Name"
+                                    />
+                                </div>
+                                <div className="col-md-3 mb-3">
+                                    <label htmlFor="deliveryDestination">Delivery Destination</label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        name="deliveryDestination"
+                                        value={formData.deliveryDestination}
+                                        onChange={handleInputChange}
+                                        placeholder="Enter Delivery Destination"
+                                    />
+                                </div>
+                            </div>
+                            <div className="table-responsive dataTables_wrapper style-1">
                                 <div className="col-lg-12">
                                     <table border="1" cellPadding="10">
                                         <thead>
@@ -237,20 +238,21 @@ const SalseOrderAdd = () => {
                                     </table>
                                     {/* <button type="button" onClick={handleAddRow}>Add Row</button> */}
                                 </div>
-                                <div className="col-lg-12">
-                                    <label htmlFor="narration">Narration:</label>
-                                    <textarea
-                                        name="narration"
-                                        id="narration"
-                                        cols="180"
-                                        value={formData.narration}
-                                        onChange={handleInputChange}
-                                    ></textarea>
-                                </div>
-                                <div className="col-lg-12">
-                                    <button type="button" className="btn btn-success" onClick={submitData}>Save</button>
-                                </div>
                             </div>
+                            <div className="col-lg-12">
+                                <label htmlFor="narration">Narration:</label>
+                                <textarea
+                                    name="narration"
+                                    id="narration"
+                                    cols="180"
+                                    value={formData.narration}
+                                    onChange={handleInputChange}
+                                ></textarea>
+                            </div>
+                            <div className="col-lg-12">
+                                <button type="button" className="btn btn-success" onClick={submitData}>Save</button>
+                            </div>
+
                         </div>
                     </div>
                 </div>

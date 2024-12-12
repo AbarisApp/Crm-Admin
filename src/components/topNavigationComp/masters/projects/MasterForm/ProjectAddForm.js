@@ -3,7 +3,7 @@ import { Button, DatePicker } from 'antd';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import Breadcrumbs from '../../../../../common/breadcrumb/Breadcrumbs';
-import { cityAddCollageSelectList, clodinaryImage, countryList, getAccAddProjectById, getAccProjectBusinessCategoryByPage, getAllAssign, getcityUpdate, getListprojectScope, getTaxtype, getVentureByUser, listStagescount, listUserType, postAccAddProject, postAddBookCode, roleListAdmin, StateAddCollageSelectList, updateAccAddProjectById, updateAddBookCodeById } from '../../../../../api/login/Login';
+import { cityAddCollageSelectList, clodinaryImage, countryList, getAccAddProjectById, getAccProjectBusinessCategoryByPage, getAllAssign, getcityUpdate, getListprojectScope, getTaxtype, getVentureByUser, listStagescount, listUserType, postAccAddProject, postAddBookCode, roleListAdmin, staffList, StateAddCollageSelectList, updateAccAddProjectById, updateAddBookCodeById } from '../../../../../api/login/Login';
 import Loadar from '../../../../../common/loader/Loader'
 import { baseUrlImage } from '../../../../../baseUrl';
 function ProjectAddForm() {
@@ -101,7 +101,7 @@ function ProjectAddForm() {
         const taxtype = await getTaxtype()
         const scope = await getListprojectScope()
         const roles = await listUserType()
-        const user = await getVentureByUser()
+        // const user = await getAllAssign()
         const stage = await listStagescount()
 
         const obj = {
@@ -112,7 +112,7 @@ function ProjectAddForm() {
             currency: currenc.data,
             tax_type: taxtype.data,
             prj_scope: scope.data,
-            user: user.data,
+            user: clients.data,
             role: roles.data,
             stages: stage.data,
         }

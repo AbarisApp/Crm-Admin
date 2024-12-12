@@ -8,7 +8,9 @@ import "./Taskcomment.css"
 import CreateTask from './CreateTask';
 import { message, Popconfirm } from 'antd';
 function TaskComent({ mnualData }) {
-    const [modalShow, setModalShow] = React.useState(false);
+    console.log(mnualData);
+
+    const [editComment, setEditComment] = useState(false);
     const [show, setShow] = React.useState(false);
     const [count, setCount] = React.useState(100);
     const [page, setPage] = React.useState(0);
@@ -45,6 +47,7 @@ function TaskComent({ mnualData }) {
         try {
             const resp = await getCommentTaskById(id);
             setEditValue(resp.data)
+
             if (resp?.data) {
                 setTaskDetails(resp.data);
                 setInitialValues((prev) => ({
@@ -68,7 +71,7 @@ function TaskComent({ mnualData }) {
             formData.append("image", file);
 
             try {
-                const res = await clodinaryImage(formData); // Replace with actual upload function
+                const res = await clodinaryImage(formData);
                 if (res?.data?.data?.url) {
                     uploadedFiles.push(res.data.data.url);
                 }
@@ -101,61 +104,65 @@ function TaskComent({ mnualData }) {
 
     const formSubmits = async (e) => {
         e.preventDefault();
-
+    
         try {
             const taskId = localStorage.getItem("66565478543478654765376547");
             if (!taskId) {
-                toastErrorMessage("Task ID is missing!");
+                toastErrorMessage("First Select Task");
                 return;
             }
-
-            setInitialValues((prev) => ({
-                ...prev,
+    
+            // Prepare updatedInitialValues
+            const updatedInitialValues = {
+                ...initialValues,
                 task_id: taskId,
-            }));
-
-            // Submit form with `initialValues`
-            console.log("Form submitted:", initialValues);
-            // Add your API call or submission logic here
-        } catch (error) {
-            console.error("Form submission error:", error);
-        }
-
-        try {
-            if (!initialValues._id) {
-                const res = await postCommentAccTask(initialValues);
+            };
+    
+            // Remove _id field for adding new comments
+            if (!editComment) {
+                delete updatedInitialValues._id;
+            }
+    
+            console.log(updatedInitialValues.task_id);
+    
+            if (!editComment) {
+                // Add comment logic
+                const res = await postCommentAccTask(updatedInitialValues);
                 if (res?.statusCode === "200") {
-                    // toastSuccessMessage("Task Create Successfully");
-                    getCommenetData(localStorage.getItem(`66565478543478654765376547`))
+                    toastSuccessMessage("Comment Added Successfully");
+                    getCommenetData(taskId);
                     setInitialValues({
                         task_id: "",
                         comment: "",
                         attachments: [],
-
                     });
-                    // getListData(page);
                 } else {
-                    // toastErrorMessage("Failed to Post Comment");
+                    toastErrorMessage("Failed to Add Comment");
                 }
             } else {
-                const res = await updateCommentAccTask(initialValues._id, initialValues);
+                // Edit comment logic
+                const res = await updateCommentAccTask(updatedInitialValues._id, updatedInitialValues);
                 if (res?.statusCode === "200") {
                     toastSuccessMessage("Comment Edited Successfully");
-                    getCommenetData(localStorage.getItem(`66565478543478654765376547`))
+                    getCommenetData(taskId);
                     setInitialValues({
-                        task_id: localStorage.getItem(`66565478543478654765376547`),
+                        task_id: taskId,
                         comment: "",
                         attachments: [],
-                    })
+                    });
+                    setEditComment(false); // Reset edit mode after successful update
                 } else {
-                    toastErrorMessage("Failed to Comment Edited");
+                    toastErrorMessage("Failed to Edit Comment");
                 }
             }
         } catch (error) {
+            console.error("Form submission error:", error);
             toastErrorMessage("Error processing the form.");
         }
+    };
+    
 
-    }
+
     const confirm = (id) => {
         deleteCommentAccTask(id);
         message.success(' Chat Delete Successful!');
@@ -165,22 +172,27 @@ function TaskComent({ mnualData }) {
     const cancel = async (id) => {
         try {
             if (id) {
-                const response = await GetUpdateCommentAccTaskByid(id)
-                setInitialValues(response?.data)
+                const response = await GetUpdateCommentAccTaskByid(id);
+                if (response?.data) {
+                    setInitialValues(response.data);
+                    setEditComment(true); // Set edit mode when editing
+                } else {
+                    toastErrorMessage("Failed to load comment for editing.");
+                }
             } else {
-                setInitialValues(
-                    {
-                        task_id: "",
-                        comment: "",
-                        attachments: [],
-                    }
-                )
+                setInitialValues({
+                    task_id: "",
+                    comment: "",
+                    attachments: [],
+                });
+                setEditComment(false); // Reset edit mode
             }
         } catch (error) {
-
+            console.error("Error in cancel function:", error);
+            toastErrorMessage("Error resetting form.");
         }
-        // message.error('Edit Successful!');
     };
+
     const taskDeleted = async (id) => {
         if (1) {
             try {
@@ -230,13 +242,12 @@ function TaskComent({ mnualData }) {
                                     <span>
                                         <i class="fa-sharp fa-solid fa-magnifying-glass"></i>
                                     </span>
-                                    <div className=''>
+                                    <div className='w-100'>
                                         <input
                                             type='search'
                                             placeholder='search'
                                             className='px-2 py-0 w-100 border-0 w-100'
                                             name='name'
-
                                         />
                                     </div>
                                 </div>
@@ -249,59 +260,87 @@ function TaskComent({ mnualData }) {
                                     </button>
                                 </div>
                             </div>
-                            <div className=''>
-                                <small>
-                                    <b>
-                                        No Task
-                                    </b>
-                                </small>
-                            </div>
-                            {mnualData?.map((data, i) => {
-                                return <div
-                                    style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'space-between',
-                                        backgroundColor: '#f8f9fc', // light gray background
-                                        padding: '10px 15px',
-                                        borderRadius: '8px',
-                                        margin: "6px 0",
-                                        fontSize: '14px', // font size to match the example
-                                        color: '#6c757d'  // muted gray text color
-                                    }}
-                                    key={i}
-                                    onClick={() => handleTaskDetails(data?._id)}
+                            {mnualData?.length > 0 ? (
+                                mnualData.map((data, i) => (
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'space-between',
+                                            backgroundColor: '#f8f9fc', // light gray background
+                                            padding: '10px 15px',
+                                            borderRadius: '8px',
+                                            margin: '6px 0',
+                                            fontSize: '14px', // font size to match the example
+                                            color: '#6c757d', // muted gray text color
+                                        }}
+                                        key={i}
+                                        onClick={() => handleTaskDetails(data?._id)}
+                                    >
+                                        <div>
+                                            <div style={{ fontWeight: '500', color: '#000' }}>
+                                                {data?.createdBy?.name
+                                                    ? `${data?.createdBy?.name} commented on a task`
+                                                    : ''}
+                                            </div>
 
-                                >
-                                    <div>
-                                        <div style={{ fontWeight: '500', color: '#000' }}>
-                                            {data?.createdBy?.name ? `${data?.createdBy?.name} commented on a task` : ""}
+                                            <div style={{ color: '#6c757d', fontSize: '12px' }}>
+                                                {data?.task_description}
+                                            </div>
                                         </div>
 
-                                        <div style={{ color: '#6c757d', fontSize: '12px' }}>{data?.task_description}</div>
-                                    </div>
+                                        <div style={{ textAlign: 'right' }}>
+                                            <div style={{ fontSize: '12px', color: '#6c757d' }}>
+                                                {data?.createdAt
+                                                    ? new Date(data.createdAt).toLocaleString('en-GB', {
+                                                        day: '2-digit',
+                                                        month: 'short',
+                                                        year: 'numeric',
+                                                        hour: '2-digit',
+                                                        minute: '2-digit',
+                                                        hour12: true,
+                                                    })
+                                                    : ''}
+                                            </div>
 
-                                    <div style={{ textAlign: 'right' }}>
-                                        <div style={{ fontSize: '12px', color: '#6c757d' }}>
-                                            {data?.createdAt
-                                                ? new Date(data.createdAt).toLocaleString('en-GB', {
-                                                    day: '2-digit',
-                                                    month: 'short',
-                                                    year: 'numeric',
-                                                    hour: '2-digit',
-                                                    minute: '2-digit',
-                                                    hour12: true,
-                                                })
-                                                : ''}
+                                            <Badge
+                                                style={{
+                                                    backgroundColor: '#f0ad4e',
+                                                    color: '#fff',
+                                                    fontWeight: '500',
+                                                }}
+                                                onClick={(e) => {
+                                                    e.stopPropagation(); // Prevents triggering the parent div's onClick
+                                                    taskDeleted(data?._id);
+                                                }}
+                                            >
+                                                <i className='fa-sharp fa-solid fa-trash-can fa-2xs'></i>
+
+                                            </Badge>
+                                            <Badge
+                                                style={{
+                                                    backgroundColor: '#afe1af	',
+                                                    color: '#fff',
+                                                    fontWeight: '500',
+                                                }}
+                                                onClick={(e) => {
+                                                    e.stopPropagation(); // Prevents triggering the parent div's onClick
+                                                    taskDeleted(data?._id);
+                                                }}
+                                            >
+                                                <i class="fa-sharp fa-solid fa-clock fa-shake"></i>
+
+                                            </Badge>
                                         </div>
-
-                                        <Badge style={{ backgroundColor: '#f0ad4e', color: '#fff', fontWeight: '500' }} onClick={() => taskDeleted(data?._id)}>
-                                            <i class="fa-sharp fa-solid fa-trash-can fa-2xs"></i>
-                                        </Badge>
                                     </div>
+                                ))
+                            ) : (
+                                <div className=''>
+                                    <small>
+                                        <b>No Task</b>
+                                    </small>
                                 </div>
-                            })}
-
+                            )}
                         </div>
 
                         <div className='my-3'>
@@ -331,11 +370,11 @@ function TaskComent({ mnualData }) {
                             <div className="d-flex justify-content-between align-items-center mb-3">
                                 <div>
                                     <Button variant="outline-secondary" size="sm" className="mr-2">Mark as Done</Button>
-                                    <Button variant="outline-secondary" size="sm" onClick={() => setModalShow(true)}>Remind Later</Button>
+                                    {/* <Button variant="outline-secondary" size="sm" onClick={() => setModalShow(true)}>Remind Later</Button>
                                     <ReminderLater
                                         show={modalShow}
                                         onHide={() => setModalShow(false)}
-                                    />
+                                    /> */}
                                 </div>
                                 <Button className='btn-outline' variant="link" size="m" onClick={() => setShow(!show)}>
                                     Edit Task <i class="fa-solid fa-pen-to-square"></i>
@@ -421,7 +460,7 @@ function TaskComent({ mnualData }) {
                                         <div>
                                             {/* <div style={{ fontWeight: 'bold', fontSize: '14px' }}>Abdul Quadir</div> */}
                                             {/* <div style={{ fontSize: '12px', color: '#6c757d' }}>5 Nov 2024, 04:48 PM</div> */}
-                                            {taskDetails?.attach_files ? <div className=''>
+                                            {taskDetails?.attach_files ? <div className='task-img'>
                                                 <img src={`${baseUrlImage}${taskDetails?.attach_files}`} alt='image' />
                                             </div> : ""}
                                             {taskDetails?.task_description ?
@@ -463,12 +502,11 @@ function TaskComent({ mnualData }) {
                                                         <p>{item?.comment || "No comment provided"}</p>
                                                         <span className="arrow-icon">
                                                             <Popconfirm
-                                                                title="Edit Delete Chat"
-                                                                // description="Are you sure to delete?"
+                                                                title="Edit or Delete Chat"
                                                                 onConfirm={() => confirm(item?._id)}
                                                                 onCancel={() => cancel(item?._id)}
-                                                                okText={<i class="fa-solid fa-trash fa-2xs"></i>}
-                                                                cancelText={<i class="fa-solid fa-pen fa-2xs"></i>}
+                                                                okText={<i className="fa-solid fa-trash fa-2xs"></i>}
+                                                                cancelText={<i className="fa-solid fa-pen fa-2xs"></i>}
                                                             >
                                                                 <i className="fa-solid fa-angle-down"></i>
                                                             </Popconfirm>

@@ -4,7 +4,7 @@ import Select from 'react-select';
 import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import CustomInputField from "../../../common/CustomInputField";
-import { addRolee, getControler, mainModuleList, updategetId, updatesaddRole } from "../../../api/login/Login";
+import { addRolee, getCompanys, getControler, mainModuleList, updategetId, updatesaddRole } from "../../../api/login/Login";
 import { MdDelete, MdDeleteSweep } from "react-icons/md";
 
 const moduleOptions = [
@@ -23,6 +23,7 @@ function AddRole() {
     const [initialValues, setInitialValues] = useState({
         role_name: "",
         slug: '',
+        companyId: '',
         permits: [],
     });
 
@@ -69,7 +70,17 @@ function AddRole() {
         setSelectedModules(selectedOptions);
     };
 
+    const [compony, setCompany] = useState()
     const curencyidget = async () => {
+        try {
+            const res = await getCompanys();
+
+            setCompany(res.data);
+        } catch (error) {
+            alert(error.message);
+        }
+    };
+    const getComp = async () => {
         try {
             const res = await mainModuleList(page, count);
             const mapped = res?.data?.map((item) => {
@@ -115,6 +126,7 @@ function AddRole() {
         const transformedValues = {
             role_name: values.role_name,
             slug: values.slug,
+            companyId: values.companyId,
             permits,
         };
 
@@ -143,6 +155,7 @@ function AddRole() {
 
     useEffect(() => {
         curencyidget();
+        getComp();
     }, []);
 
     useEffect(() => {
@@ -264,6 +277,16 @@ function AddRole() {
                                             </div>
                                             <form className="tbl-captionn" onSubmit={handleSubmit}>
                                                 <div className="row">
+                                                    <div className="col-xl-3 mb-3">
+                                                        <select onChange={handleChange} className="form-select" aria-label="Default select example" value={values.companyId} name="companyId">
+                                                            <option selected="">select company</option>
+                                                            {compony && compony?.map((item) => {
+                                                                return <option value={item?._id}>{item.directory}</option>
+                                                            })}
+
+                                                        </select>
+
+                                                    </div>
                                                     <div className="col-xl-3 mb-3">
                                                         <CustomInputField
                                                             type="text"
