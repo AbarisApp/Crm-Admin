@@ -5517,6 +5517,14 @@ export const getByIdTRCRM_tr_lead = (id) => {
   return axiosInstance.get(`${baseUrl}TRCRM_tr_lead/${id}`);
 };
 
+export const getByIdTRCRMOnlyUpdate = (id) => {
+  return axiosInstance.get(`${baseUrl}trcrm_tr_lead/getTypeByIdForForm/${id}`);
+};
+
+export const trcrm_tr_leadUpdate = (id, value) => {
+  return axiosInstance.put(`${baseUrl}trcrm_tr_lead/update_type//${id}`, value);
+};
+
 
 
 export const getTRCRM_tr_traveller = (value) => {
@@ -5637,6 +5645,9 @@ export const TRCRM_visa_category_masterGet = () => {
 };
 export const TTRCRM_visa_type_masterGet = () => {
   return axiosInstance.get(`${baseUrl}TRCRM_visa_type_master/admin`);
+};
+export const TTRCRM_tr_travellerGet = () => {
+  return axiosInstance.get(`${baseUrl}TRCRM_tr_traveller/admin`);
 };
 
 
@@ -5887,7 +5898,7 @@ export const listStagescount = (id) => {
 
 
 // GET acc_add_project entries with pagination
-export const getAccAddProjectByPage = (page, count ,id) => {
+export const getAccAddProjectByPage = (page, count, id) => {
   return axiosInstance.get(`/acc_add_project/user?page=${page}&count=${count}&prj_stage=${id}`);
 };
 

@@ -1,6 +1,10 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Breadcrumbs from "../../../../../common/breadcrumb/Breadcrumbs";
 import JoditEditor from "jodit-react";
+import { useParams } from "react-router-dom";
+import { addTravelRoomType, getAirlLine, getByIdTRCRM_tr_lead, getTravelAllCountry, getTRCRM_hotel_type_master, TTRCRM_tr_travellerGet } from "../../../../../api/login/Login";
+import { Select } from "antd";
+const { Option } = Select;
 
 
 const AddHotelVoucher = () => {
@@ -11,13 +15,169 @@ const AddHotelVoucher = () => {
         path_2: ``
     };
 
+    const params = useParams()
+
     const editor = useRef(null);
     const [content, setContent] = useState('');
 
-    const config = useMemo(() => ({
-        readonly: false, // All settings to be defined here
-        placeholder: 'Start typing...'
-    }), []);
+    const [initialData, setInitialData] = useState({
+        lead_id: '',
+        traveller_name: '',
+        country: '',
+        city: '',
+        hotel: '',
+        co_passanger: [],
+        room_type: '',
+        voucher_number: '',
+        no_of_rooms: '',
+        adult: '',
+        child: '',
+        infant: '',
+        checkin_date: '',
+        checkin_time: '',
+        checkout_date: '',
+        checkout_time: '',
+        hotel_confirmation: '',
+        internal_confirmation: '',
+        child_with_bed: '',
+        child_without_bed: '',
+        below_five_child: '',
+        extra_bed: '',
+        booking_date: '',
+        breakfast: false,
+        lunch: false,
+        dinner: false,
+        payment_description: '',
+        remark: '',
+        inclusion: '',
+        exclusion: '',
+        terms_condition: '',
+        others: '',
+    })
+
+    const changeHandle = (e) => {
+        const { name, value, type, checked } = e.target;
+        setInitialData((prevData) => ({
+            ...prevData,
+            [name]: type === 'checkbox' ? checked : value,
+        }));
+    }
+
+    const handleSelectChange = (value, field) => {
+        setInitialData((prevData) => ({
+            ...prevData,
+            [field]: value,
+        }));
+    };
+
+    const handleEditorChange = (field, value) => {
+        setInitialData((prevData) => ({
+            ...prevData,
+            [field]: value,
+        }));
+    };
+
+
+
+    const [leadIdData, setLeadIdData] = useState(null)
+    // console.log(leadIdData);
+    const leadIdGet = async () => {
+        try {
+            const res = await getByIdTRCRM_tr_lead(params?.id)
+            // console.log(res);
+            setLeadIdData(res?.data)
+        } catch (error) {
+
+        }
+    }
+
+    useEffect(() => {
+        leadIdGet()
+    }, [params?.id])
+
+    const [countryData, setCountryData] = useState([])
+    const [coPassanger, setCoPassanger] = useState([])
+    const [roomType, setroomType] = useState([])
+    const [hotelData, setHotelData] = useState([])
+    // console.log(coPassanger);
+
+    const getAllCountryListData = async () => {
+        try {
+            const res = await getTravelAllCountry();
+            setCountryData(res?.data)
+            const res2 = await TTRCRM_tr_travellerGet()
+            setCoPassanger(res2?.data)
+            const res3 = await addTravelRoomType()
+            setroomType(res3?.data)
+            const res4 = await getTRCRM_hotel_type_master()
+            setHotelData(res4?.data)
+        } catch (error) {
+
+        }
+    };
+    const [locations, setLocations] = useState([]);
+    const searchAirlLine = async () => {
+        try {
+            const res = await getAirlLine()
+            setLocations(res?.data);
+        } catch (error) {
+
+        }
+    }
+
+
+    // const config = useMemo(() => ({
+    //     readonly: false, // All settings to be defined here
+    //     placeholder: 'Start typing...'
+    // }), []);
+
+
+    const submitData = async () => {
+        const clone = { ...initialData, lead_id: params?.id }
+        console.log(clone);
+        try {
+        } catch (error) {
+
+        }
+    }
+
+
+    // useEffect(() => {
+    //     const getIdData = async () => {
+    //         try {
+    //             const res = await getIdTRCRM_tr_quotation_master(editData._id)
+    //             console.log(res);
+    //             // setInitialState(res?.data)
+    //             setInitialData(res?.data)
+    //             setRows(res?.data?.cities)
+    //             setRowsHotelInfo(res?.data?.options)
+    //             setRowsItinerary(res?.data?.days)
+    //             setImage(res.data?.attach_file)
+    //         } catch (error) {
+
+    //         }
+    //     }
+    //     if (editData && editData._id) {
+    //         getIdData();
+    //     }
+    // }, [editData])
+
+    useEffect(() => {
+        getAllCountryListData()
+        searchAirlLine()
+    }, [])
+
+    useEffect(() => {
+        if (leadIdData) {
+            const fullName = [leadIdData.first_name, leadIdData.last_name]
+                .filter(Boolean)
+                .join(' ');
+            setInitialData((prevData) => ({
+                ...prevData,
+                traveller_name: fullName,
+            }));
+        }
+    }, [leadIdData]);
     return (
         <>
             <Breadcrumbs breadCrumbsTitle={breadCrumbsTitle} />
@@ -31,156 +191,175 @@ const AddHotelVoucher = () => {
                             <form className="tbl-captionn">
                                 <div className="row">
                                     <div className="col-xl-3 mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Name</label>
-                                        <p>Mustafa Ashraf</p>
+                                        <label for="exampleFormControlInput1" className="form-label">Name</label>
+                                        <p>{leadIdData?.first_name} {leadIdData?.last_name}</p>
                                     </div>
                                     <div className="col-xl-3 mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Mobile Number</label>
-                                        <p>9787898778</p>
+                                        <label for="exampleFormControlInput1" className="form-label">Mobile Number</label>
+                                        <p>{leadIdData?.mobile_number}</p>
                                     </div>
                                     <div className="col-xl-3 mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Assigned User</label>
-                                        <p>Junaid</p>
+                                        <label for="exampleFormControlInput1" className="form-label">Assigned User</label>
+                                        <p>{leadIdData?.assigned_to?.name}</p>
                                     </div>
                                     <div className="col-xl-3 mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Present User</label>
-                                        <p>Suhaib</p>
+                                        <label for="exampleFormControlInput1" className="form-label">Present User</label>
+                                        <p>{leadIdData?.first_name}</p>
                                     </div>
                                     <div className="col-xl-4 mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Traveller Name</label>
-                                        <select className="form-control" aria-label="Default select example">
-                                            <option selected>Open this select Traveller Name</option>
-                                            <option value={1}>One</option>
-                                            <option value={2}>Two</option>
-                                            <option value={3}>Three</option>
-                                        </select>
+                                        <label for="exampleFormControlInput1" className="form-label">Traveller Name</label>
+                                        <input type="text" className="form-control" disabled value={initialData.traveller_name} />
                                     </div>
                                     <div className="col-xl-4 mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Country</label>
-                                        <select className="form-control" aria-label="Default select example">
+                                        <label for="exampleFormControlInput1" className="form-label">Country</label>
+                                        <select className="form-control" aria-label="Default select example" name="country" value={initialData?.country} onChange={changeHandle}>
                                             <option selected>Open this select Country</option>
-                                            <option value={1}>One</option>
-                                            <option value={2}>Two</option>
-                                            <option value={3}>Three</option>
+                                            {countryData && countryData?.map((item) => {
+                                                return <option value={item?._id} key={item?._id}>{item?.name}</option>
+                                            })}
                                         </select>
                                     </div>
                                     <div className="col-xl-4 mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">State</label>
-                                        <select className="form-control" aria-label="Default select example">
-                                            <option selected>Open this select Country</option>
-                                            <option value={1}>One</option>
-                                            <option value={2}>Two</option>
-                                            <option value={3}>Three</option>
-                                        </select>
+                                        <label for="exampleFormControlInput1" className="form-label">City</label>
+                                        <Select
+                                            showSearch
+                                            style={{ width: "100%" }}
+                                            placeholder="Select City"
+                                            optionFilterProp="city"
+                                            value={initialData.city}
+                                            onChange={(value) => handleSelectChange(value, 'city')}
+                                        >
+                                            {locations?.map((loc) => (
+                                                <Option key={loc._id} value={loc._id}>
+                                                    {loc.city_name}
+                                                </Option>
+                                            ))}
+                                        </Select>
                                     </div>
                                     <div className="col-xl-4 mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">City</label>
-                                        <select className="form-control" aria-label="Default select example">
-                                            <option selected>Open this select City</option>
-                                            <option value={1}>One</option>
-                                            <option value={2}>Two</option>
-                                            <option value={3}>Three</option>
-                                        </select>
-                                    </div>
-                                    <div className="col-xl-4 mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Hotels</label>
-                                        <select className="form-control" aria-label="Default select example">
+                                        <label for="exampleFormControlInput1" className="form-label">Hotels</label>
+                                        <select className="form-control" aria-label="Default select example" name="hotel" value={initialData?.hotel} onChange={changeHandle}>
                                             <option selected>Open this select Hotels</option>
-                                            <option value={1}>One</option>
-                                            <option value={2}>Two</option>
-                                            <option value={3}>Three</option>
+                                            {hotelData && hotelData?.map((item) => {
+                                                return <option value={item?._id}>{item?.hotel_type}</option>
+                                            })}
                                         </select>
                                     </div>
                                     <div className="col-xl-4 mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Co Passanger</label>
-                                        <input type="text" className="form-control" name="title" placeholder="Enter Co Passanger" />
+                                        <label for="exampleFormControlInput1" className="form-label">Co Passanger</label>
+                                        <Select
+                                            mode="multiple"
+                                            showSearch
+                                            style={{ width: "100%" }}
+                                            placeholder="Select Co Passanger"
+                                            optionFilterProp="co_passanger"
+                                            value={initialData.co_passanger}
+                                            onChange={(value) => handleSelectChange(value, 'co_passanger')}
+                                        >
+                                            {coPassanger?.map((loc) => (
+                                                <Option key={loc._id} value={loc._id}>
+                                                    {loc.given_name}
+                                                </Option>
+                                            ))}
+                                        </Select>
                                     </div>
                                     <div className="col-xl-4 mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Room Type</label>
-                                        <input type="text" className="form-control" name="title" placeholder="Enter Room Type" />
+                                        <label for="exampleFormControlInput1" className="form-label">Room Type</label>
+                                        <select className="form-control" aria-label="Default select example" name="room_type" value={initialData?.room_type} onChange={changeHandle}>
+                                            <option selected>Open this select Hotels</option>
+                                            {roomType && roomType?.map((item) => {
+                                                return <option value={item?._id} key={item?._id}>{item?.name}</option>
+                                            })}
+                                        </select>
                                     </div>
                                     <div className="col-xl-4 mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Voucher Number</label>
-                                        <input type="text" className="form-control" name="title" placeholder="Enter Voucher Number" />
+                                        <label for="exampleFormControlInput1" className="form-label">Voucher Number</label>
+                                        <input type="text" className="form-control" placeholder="Enter Voucher Number" name="voucher_number" value={initialData?.voucher_number} onChange={changeHandle} />
                                     </div>
                                     <div className="col-xl-4 mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Number Of Room</label>
-                                        <input type="text" className="form-control" name="title" placeholder="Enter Number Of Room" />
+                                        <label for="exampleFormControlInput1" className="form-label">Number Of Room</label>
+                                        <input type="number" className="form-control" placeholder="Enter Number Of Room" name="no_of_rooms" value={initialData?.no_of_rooms} onChange={changeHandle} />
                                     </div>
                                     <div className="col-xl-4 mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Adult</label>
-                                        <input type="text" className="form-control" name="title" placeholder="Enter Adult" />
+                                        <label for="exampleFormControlInput1" className="form-label">Adult</label>
+                                        <input type="number" className="form-control" placeholder="Enter Adult" name="adult" value={initialData?.adult} onChange={changeHandle} />
                                     </div>
                                     <div className="col-xl-4 mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Child</label>
-                                        <input type="text" className="form-control" name="title" placeholder="Enter Child" />
+                                        <label for="exampleFormControlInput1" className="form-label">Child</label>
+                                        <input type="number" className="form-control" placeholder="Enter Child" name="child" value={initialData?.child} onChange={changeHandle} />
                                     </div>
                                     <div className="col-xl-4 mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Infact</label>
-                                        <input type="text" className="form-control" name="title" placeholder="Enter Infact" />
+                                        <label for="exampleFormControlInput1" className="form-label">Infact</label>
+                                        <input type="number" className="form-control" placeholder="Enter Infact" name="infant" value={initialData?.infant} onChange={changeHandle} />
                                     </div>
                                     <div className="col-xl-4 mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Checking Date</label>
-                                        <input type="text" className="form-control" name="title" placeholder="Enter Co Passanger" />
+                                        <label for="exampleFormControlInput1" className="form-label">Checking Date</label>
+                                        <input type="date" className="form-control" placeholder="Enter Co Passanger" name="checkin_date" value={initialData?.checkin_date} onChange={changeHandle} />
                                     </div>
                                     <div className="col-xl-4 mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Checking Time</label>
-                                        <input type="time" className="form-control" name="title" placeholder="Enter Co Passanger" />
+                                        <label for="exampleFormControlInput1" className="form-label">Checking Time</label>
+                                        <input type="time" className="form-control" placeholder="Enter Co Passanger" name="checkin_time" value={initialData?.checkin_time} onChange={changeHandle} />
                                     </div>
                                     <div className="col-xl-4 mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Checkout Date</label>
-                                        <input type="date" className="form-control" name="title" placeholder="Enter Co Passanger" />
+                                        <label for="exampleFormControlInput1" className="form-label">Checkout Date</label>
+                                        <input type="date" className="form-control" placeholder="Enter Co Passanger" name="checkout_date" value={initialData?.checkout_date} onChange={changeHandle} />
                                     </div>
                                     <div className="col-xl-4 mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Checkout Time</label>
-                                        <input type="time" className="form-control" name="title" placeholder="Enter Co Passanger" />
+                                        <label for="exampleFormControlInput1" className="form-label">Checkout Time</label>
+                                        <input type="time" className="form-control" placeholder="Enter Co Passanger" name="checkout_time" value={initialData?.checkout_time} onChange={changeHandle} />
                                     </div>
                                     <div className="col-xl-4 mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Hotal Confirmation</label>
-                                        <input type="text" className="form-control" name="title" placeholder="Enter Hotal Confirmation" />
+                                        <label for="exampleFormControlInput1" className="form-label">Hotal Confirmation</label>
+                                        <input type="text" className="form-control" placeholder="Enter Hotal Confirmation" name="hotel_confirmation" value={initialData?.hotel_confirmation} onChange={changeHandle} />
                                     </div>
                                     <div className="col-xl-4 mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Internal Confirmation</label>
-                                        <input type="text" className="form-control" name="title" placeholder="Enter Internal Confirmation" />
+                                        <label for="exampleFormControlInput1" className="form-label">Internal Confirmation</label>
+                                        <input type="text" className="form-control" placeholder="Enter Internal Confirmation" name="internal_confirmation" value={initialData?.internal_confirmation} onChange={changeHandle} />
                                     </div>
                                     <div className="col-xl-4 mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Child With Bed</label>
-                                        <input type="text" className="form-control" name="title" placeholder="Enter Child With Bed" />
+                                        <label for="exampleFormControlInput1" className="form-label">Child With Bed</label>
+                                        <input type="text" className="form-control" placeholder="Enter Child With Bed" name="child_with_bed" value={initialData?.child_with_bed} onChange={changeHandle} />
                                     </div>
                                     <div className="col-xl-4 mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Child With Out Bed</label>
-                                        <input type="text" className="form-control" name="title" placeholder="Enter Child With Bed" />
+                                        <label for="exampleFormControlInput1" className="form-label">Child With Out Bed</label>
+                                        <input type="text" className="form-control" placeholder="Enter Child With Bed" name="child_without_bed" value={initialData?.child_without_bed} onChange={changeHandle} />
                                     </div>
                                     <div className="col-xl-4 mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Below 5 years Child</label>
-                                        <input type="text" className="form-control" name="title" placeholder="Enter Below 5 years Child" />
+                                        <label for="exampleFormControlInput1" className="form-label">Below 5 years Child</label>
+                                        <input type="text" className="form-control" placeholder="Enter Below 5 years Child" name="below_five_child" value={initialData?.below_five_child} onChange={changeHandle} />
                                     </div>
                                     <div className="col-xl-4 mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Extra Bed</label>
-                                        <input type="text" className="form-control" name="title" placeholder="Enter Extra Bed" />
+                                        <label for="exampleFormControlInput1" className="form-label">Extra Bed</label>
+                                        <input type="text" className="form-control" placeholder="Enter Extra Bed" name="extra_bed" value={initialData?.extra_bed} onChange={changeHandle} />
                                     </div>
                                     <div className="col-xl-4 mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Booking Date</label>
-                                        <input type="text" className="form-control" name="title" placeholder="Enter Extra Bed" />
+                                        <label for="exampleFormControlInput1" className="form-label">Booking Date</label>
+                                        <input type="date" className="form-control" placeholder="Enter Extra Bed" name="booking_date" value={initialData?.booking_date} onChange={changeHandle} />
                                     </div>
                                     <div className="col-xl-4 mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Include</label>
+                                        <label for="exampleFormControlInput1" className="form-label">Include</label>
                                         <div style={{ display: 'flex', alignItems: 'center' }}>
                                             <div className="form-check me-3">
-                                                <input className="form-check-input" type="checkbox" defaultValue id="flexCheckDefault" />
-                                                <label className="form-check-label" htmlFor="flexCheckDefault">
+                                                <input className="form-check-input" type="checkbox" id="breakfast" name="breakfast"
+                                                    checked={initialData.breakfast}
+                                                    onChange={changeHandle} />
+                                                <label className="form-check-label" htmlFor="breakfast">
                                                     BreakFast
                                                 </label>
                                             </div>
                                             <div className="form-check me-3">
-                                                <input className="form-check-input" type="checkbox" defaultValue id="flexCheckChecked" defaultChecked />
-                                                <label className="form-check-label" htmlFor="flexCheckChecked">
+                                                <input className="form-check-input" type="checkbox" id="lunch" name="lunch"
+                                                    checked={initialData.lunch}
+                                                    onChange={changeHandle} />
+                                                <label className="form-check-label" htmlFor="lunch">
                                                     Lunch
                                                 </label>
                                             </div>
                                             <div className="form-check">
-                                                <input className="form-check-input" type="checkbox" defaultValue id="flexCheckChecked" defaultChecked />
-                                                <label className="form-check-label" htmlFor="flexCheckChecked">
+                                                <input className="form-check-input" type="checkbox" id="dinner" name="dinner"
+                                                    checked={initialData.dinner}
+                                                    onChange={changeHandle} />
+                                                <label className="form-check-label" htmlFor="dinner">
                                                     Dinner
                                                 </label>
                                             </div>
@@ -188,65 +367,59 @@ const AddHotelVoucher = () => {
 
                                     </div>
                                     <div className="col-xl-6 mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Payment Description</label>
-                                        <input type="text" className="form-control" name="title" placeholder="Enter Extra Bed" />
+                                        <label for="exampleFormControlInput1" className="form-label">Payment Description</label>
+                                        <input type="text" className="form-control" placeholder="Enter Extra Bed" name="payment_description" value={initialData?.payment_description} onChange={changeHandle} />
                                     </div>
                                     <div className="col-xl-6 mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Remarks</label>
-                                        <textarea className="form-control" id="exampleFormControlTextarea1" rows="1"></textarea>
+                                        <label for="exampleFormControlInput1" className="form-label">Remarks</label>
+                                        <textarea className="form-control" id="exampleFormControlTextarea1" rows="1" name="remark" value={initialData?.remark} onChange={changeHandle} ></textarea>
                                     </div>
                                     <div className="col-xl-6 mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Inclusions</label>
+                                        <label for="exampleFormControlInput1" className="form-label">Inclusions</label>
                                         <JoditEditor
                                             ref={editor}
-                                            value={content}
-                                            config={config}
+                                            value={initialData.inclusion}
+                                            config={{ readonly: false }}
                                             tabIndex={1}
-                                            onBlur={newContent => setContent(newContent)}
-                                            onChange={newContent => { }}
+                                            onBlur={(newContent) => handleEditorChange('inclusion', newContent)}
                                             className="form-control"
                                         />
                                     </div>
                                     <div className="col-xl-6 mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Exclusions</label>
+                                        <label for="exampleFormControlInput1" className="form-label">Exclusions</label>
                                         <JoditEditor
                                             ref={editor}
-                                            value={content}
-                                            config={config}
+                                            value={initialData.exclusion}
+                                            config={{ readonly: false }}
                                             tabIndex={1}
-                                            onBlur={newContent => setContent(newContent)}
-                                            onChange={newContent => { }}
+                                            onBlur={(newContent) => handleEditorChange('exclusion', newContent)}
                                             className="form-control"
                                         />
                                     </div>
                                     <div className="col-xl-6 mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Terms And Condition</label>
+                                        <label for="exampleFormControlInput1" className="form-label">Terms And Condition</label>
                                         <JoditEditor
                                             ref={editor}
-                                            value={content}
-                                            config={config}
+                                            value={initialData.terms_condition}
+                                            config={{ readonly: false }}
                                             tabIndex={1}
-                                            onBlur={newContent => setContent(newContent)}
-                                            onChange={newContent => { }}
+                                            onBlur={(newContent) => handleEditorChange('terms_condition', newContent)}
                                             className="form-control"
                                         />
                                     </div>
                                     <div className="col-xl-6 mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Other</label>
+                                        <label for="exampleFormControlInput1" className="form-label">Other</label>
                                         <JoditEditor
                                             ref={editor}
-                                            value={content}
-                                            config={config}
+                                            value={initialData.others}
+                                            config={{ readonly: false }}
                                             tabIndex={1}
-                                            onBlur={newContent => setContent(newContent)}
-                                            onChange={newContent => { }}
+                                            onBlur={(newContent) => handleEditorChange('others', newContent)}
                                             className="form-control"
                                         />
                                     </div>
-
-
                                     <div className="col-xl-12 text-center">
-                                        <button type="button" className="btn btn-primary">
+                                        <button type="button" className="btn btn-primary" onClick={submitData}>
                                             Save
                                         </button>
                                     </div>
@@ -254,8 +427,8 @@ const AddHotelVoucher = () => {
                             </form>
                         </div>
                     </div>
-                </div>
-            </div>
+                </div >
+            </div >
         </>
     )
 }

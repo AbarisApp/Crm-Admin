@@ -2958,10 +2958,11 @@ function App() {
 
               <Route path="travel-leads" element={<TravelLeadPage />} />
               <Route path="travel-leads-add" element={<AddLeadForm />} />
+              <Route path="travel-leads-update/:id" element={<AddLeadForm />} />
               <Route path="leads-details/:referId/:id" element={<ViewLeads />} />
-              <Route path="travel-Vouchers-list" element={<TravelVoucherPage />} />
-              <Route path="travel-Vouchers-Add" element={<AddHotelVoucher />} />
-              <Route path="travel-service-Add" element={<AddServiceVoucher />} />
+              <Route path="travel-Vouchers-list/:id" element={<TravelVoucherPage />} />
+              <Route path="travel-Vouchers-Add/:id" element={<AddHotelVoucher />} />
+              <Route path="travel-service-Add/:id" element={<AddServiceVoucher />} />
               <Route path="travel-flight-Add" element={<AddFlightVoucher />} />
               <Route path="travel-invoice-list" element={<TravelInvoice />} />
               <Route path="travel-invoice-create" element={<InvoiceAdd />} />

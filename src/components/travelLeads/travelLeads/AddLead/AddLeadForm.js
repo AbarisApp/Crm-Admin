@@ -16,7 +16,7 @@ import Adventure from "./Adventure";
 import Package from "./Package";
 import Other from "./Other";
 import debounce from "lodash.debounce";
-import { addTravelRoomType, addTRCRM_tr_leadaddType, countryList, currencyList, getAirlLine, getLead_proposal_status, getpackageId, getsource, getStateMaster, gettask_priorityadmin, getTRCRM_customer_type_master_admin, getTRCRM_flight_classadmin, getTRCRM_preferenceadmin, getTRCRM_service_masteradmin, getTRCRM_sight_seeing_masteradmin, getTRCRM_star_rating_master, getTRCRM_trip_type_master_admin, getTRCRMstaff_admin, staffList, TRCRM_visa_category_masterGet, TTRCRM_visa_type_masterGet } from "../../../../api/login/Login";
+import { addTravelRoomType, addTRCRM_tr_leadaddType, countryList, currencyList, getAirlLine, getByIdTRCRM_tr_lead, getByIdTRCRMOnlyUpdate, getLead_proposal_status, getpackageId, getsource, getStateMaster, gettask_priorityadmin, getTRCRM_customer_type_master_admin, getTRCRM_flight_classadmin, getTRCRM_preferenceadmin, getTRCRM_service_masteradmin, getTRCRM_sight_seeing_masteradmin, getTRCRM_star_rating_master, getTRCRM_trip_type_master_admin, getTRCRMstaff_admin, staffList, trcrm_tr_leadUpdate, TRCRM_visa_category_masterGet, TTRCRM_visa_type_masterGet } from "../../../../api/login/Login";
 import { Select } from "antd";
 import { toast, ToastContainer } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
@@ -236,6 +236,7 @@ export default function AddLeadForm() {
     })
     const handleEnquiry = (str, val) => {
         // setEnquiry(!run)
+
         const clone = { ...Enquiry, [str]: val }
         // console.log(clone);
         setEnquiry(clone)
@@ -912,7 +913,23 @@ export default function AddLeadForm() {
 
         }
     }
-    const debouncedFetch = useCallback(debounce((query) => packageDataGet(query), 300), []);
+    // const debouncedFetch = useCallback(debounce((query) => packageDataGet(query), 300), []);
+
+    const debouncedFetch = useCallback(
+        debounce(async (query) => {
+            if (query.length >= 2) {
+                try {
+                    const res = await getpackageId(query);
+                    setPackageData(res?.data || []);
+                } catch (error) {
+                    console.error("Error fetching package data:", error);
+                }
+            } else {
+                setPackageData([]);
+            }
+        }, 300),
+        []
+    );
 
     const [rowsGroupPackage, setGroupPackage] = useState([
         {
@@ -950,7 +967,13 @@ export default function AddLeadForm() {
     };
     // groupPackage
     const toastSuccessMessage = (message) => {
-        toast.success(`${params?.id ? `${message}` : `${message}`} ${'Success'}`, {
+        toast.success(`${params?.id ? `${message}` : `${message}`}`, {
+            position: "top-right",
+        });
+    };
+
+    const toastErroeMessage = (message) => {
+        toast.error(`${message}`, {
             position: "top-right",
         });
     };
@@ -961,25 +984,92 @@ export default function AddLeadForm() {
     const submitData = async () => {
         // console.log(initialData);
         setLoader(true)
-        try {
-            const res = await addTRCRM_tr_leadaddType(initialData)
-            // console.log(res?.error == false);
-            if (res?.error == false) {
-                toastSuccessMessage('Add')
-                setLoader(false)
-                setTimeout(() => {
-                    naviagte('/travel-leads')
-                }, 2000)
-            } else {
-                toastSuccessMessage(res?.message)
+        if (!params?.id) {
+            try {
+                const res = await addTRCRM_tr_leadaddType(initialData)
+                // console.log(res?.error == false);
+                if (res?.error == false) {
+                    toastSuccessMessage(res?.message)
+                    setLoader(false)
+                    setTimeout(() => {
+                        naviagte('/travel-leads')
+                    }, 2000)
+                } else {
+                    toastErroeMessage(res?.message)
+                    setLoader(false)
+                }
+            } catch (error) {
                 setLoader(false)
             }
-        } catch (error) {
-            setLoader(false)
+            // console.log(flightrows);
+            // console.log(Enquiry);
+        } else {
+            try {
+                const res = await trcrm_tr_leadUpdate(params?.id, initialData)
+                // console.log(res?.error == false);
+                if (res?.error == false) {
+                    toastSuccessMessage(res?.message)
+                    setLoader(false)
+                    setTimeout(() => {
+                        naviagte('/travel-leads')
+                    }, 2000)
+                } else {
+                    toastErroeMessage(res?.message)
+                    setLoader(false)
+                }
+            } catch (error) {
+                setLoader(false)
+            }
         }
-        // console.log(flightrows);
-        // console.log(Enquiry);
+
     }
+
+    useEffect(() => {
+        const getByIdData = async () => {
+            try {
+                const res = await getByIdTRCRMOnlyUpdate(params?.id)
+                setInitialData(res?.data)
+                setEnquiry(res?.data)
+                // setflightrowsRows(Array.isArray(res?.data?.lead_flight) ? res.data.lead_flight : [])
+                // setHotelRow(Array.isArray(res?.data?.lead_hotel) ? res.data.lead_hotel : [])
+                // setRowsVisa(Array.isArray(res?.data?.lead_visa) ? res.data.lead_visa : [])
+                // setRowsTravelIns(Array.isArray(res?.data?.lead_travel_in) ? res.data.lead_travel_in : [])
+                // setRowsForex(Array.isArray(res?.data?.lead_forex) ? res.data.lead_forex : [])
+                // setRowsSightseeing(Array.isArray(res?.data?.lead_sightseeing) ? res.data.lead_sightseeing : [])
+                // setRowsTrasport(Array.isArray(res?.data?.lead_transport) ? res.data.lead_transport : [])
+                // setOther(Array.isArray(res?.data?.lead_other) ? res.data.lead_other : [])
+                // setRowsCustomisePackage(Array.isArray(res?.data?.lead_customisePackage) ? res.data.lead_customisePackage : [])
+                // setRowsBus(Array.isArray(res?.data?.lead_bus) ? res.data.lead_bus : [])
+                // setRowsTrain(Array.isArray(res?.data?.lead_bus) ? res.data.lead_bus : [])
+                // setRowsPassport(Array.isArray(res?.data?.lead_passport) ? res.data.lead_passport : [])
+                // setRowsCruise(Array.isArray(res?.data?.lead_cruise) ? res.data.lead_cruise : [])
+                // setRowsAdventure(Array.isArray(res?.data?.lead_adventure) ? res.data.lead_adventure : [])
+                // setGroupPackage(Array.isArray(res?.data?.lead_group) ? res.data.lead_group : [])
+                // setGroupPackage(
+                //     Array.isArray(res?.data?.lead_group)
+                //         ? res.data.lead_group.map((group) => ({
+                //             ...group,
+                //             package_id: group.package_id?.package || "",
+                //         }))
+                //         : []
+                // );
+                // setpackageRow(Array.isArray(res?.data?.enquiry_type_package) ? res.data.enquiry_type_package : [])
+                // setpackageRow(
+                //     Array.isArray(res?.data?.enquiry_type_package)
+                //         ? res.data.enquiry_type_package.map((group) => ({
+                //             ...group,
+                //             package_id: group.package_id?.package || "",
+                //         }))
+                //         : []
+                // );
+            } catch (error) {
+
+            }
+        }
+        getByIdData()
+    }, [params?.id])
+
+
     useEffect(() => {
         comboDataGet()
         searchAirlLine()
@@ -1213,109 +1303,109 @@ export default function AddLeadForm() {
                                                 <div className="col-4">
                                                     <div className="d-flex mt-2 align-items-center gap-2">
                                                         <input type={"checkbox"} checked={Enquiry?.enquiry_type_visa}
-                                                            onChange={() => { handleEnquiry("enquiry_type_visa", !Enquiry.enquiry_type_visa) }}
+                                                            onChange={() => { handleEnquiry("enquiry_type_visa", !Enquiry?.enquiry_type_visa) }}
                                                         />
                                                         <label className=" m-0 fs-6">Visa</label>
                                                     </div>
                                                 </div>
                                                 <div className="col-4">
                                                     <div className="d-flex mt-2 align-items-center gap-2">
-                                                        <input type={"checkbox"} checked={Enquiry.enquiry_type_travel_insurance}
-                                                            onChange={() => { handleEnquiry('enquiry_type_travel_insurance', !Enquiry.enquiry_type_travel_insurance) }}
+                                                        <input type={"checkbox"} checked={Enquiry?.enquiry_type_travel_insurance}
+                                                            onChange={() => { handleEnquiry('enquiry_type_travel_insurance', !Enquiry?.enquiry_type_travel_insurance) }}
                                                         />
                                                         <label className=" m-0 fs-6">Travel Insurance</label>
                                                     </div>
                                                 </div>
                                                 <div className="col-4">
                                                     <div className="d-flex mt-2 align-items-center gap-2">
-                                                        <input type={"checkbox"} checked={Enquiry.enquiry_type_forex}
-                                                            onChange={() => { handleEnquiry("enquiry_type_forex", !Enquiry.enquiry_type_forex) }}
+                                                        <input type={"checkbox"} checked={Enquiry?.enquiry_type_forex}
+                                                            onChange={() => { handleEnquiry("enquiry_type_forex", !Enquiry?.enquiry_type_forex) }}
                                                         />
                                                         <label className=" m-0 fs-6">Forex</label>
                                                     </div>
                                                 </div>
                                                 <div className="col-4">
                                                     <div className="d-flex mt-2 align-items-center gap-2">
-                                                        <input type={"checkbox"} checked={Enquiry.enquiry_type_sightseeing}
-                                                            onChange={() => { handleEnquiry("enquiry_type_sightseeing", !Enquiry.enquiry_type_sightseeing) }}
+                                                        <input type={"checkbox"} checked={Enquiry?.enquiry_type_sightseeing}
+                                                            onChange={() => { handleEnquiry("enquiry_type_sightseeing", !Enquiry?.enquiry_type_sightseeing) }}
                                                         />
                                                         <label className=" m-0 fs-6">Sightseeing</label>
                                                     </div>
                                                 </div>
                                                 <div className="col-4">
                                                     <div className="d-flex mt-2 align-items-center gap-2">
-                                                        <input type={"checkbox"} checked={Enquiry.enquiry_type_transport}
-                                                            onChange={() => { handleEnquiry("enquiry_type_transport", !Enquiry.enquiry_type_transport) }}
+                                                        <input type={"checkbox"} checked={Enquiry?.enquiry_type_transport}
+                                                            onChange={() => { handleEnquiry("enquiry_type_transport", !Enquiry?.enquiry_type_transport) }}
                                                         />
                                                         <label className=" m-0 fs-6">Transport</label>
                                                     </div>
                                                 </div>
                                                 <div className="col-4">
                                                     <div className="d-flex mt-2 align-items-center gap-2">
-                                                        <input type={"checkbox"} Checked={Enquiry.enquiry_type_other}
-                                                            onChange={() => { handleEnquiry("enquiry_type_other", !Enquiry.enquiry_type_other) }}
+                                                        <input type={"checkbox"} Checked={Enquiry?.enquiry_type_other}
+                                                            onChange={() => { handleEnquiry("enquiry_type_other", !Enquiry?.enquiry_type_other) }}
                                                         />
                                                         <label className=" m-0 fs-6">Other</label>
                                                     </div>
                                                 </div>
                                                 <div className="col-4">
                                                     <div className="d-flex mt-2 align-items-center gap-2">
-                                                        <input type={"checkbox"} checked={Enquiry.package}
-                                                            onChange={() => { handleEnquiry("package", !Enquiry.package) }}
+                                                        <input type={"checkbox"} checked={Enquiry?.package}
+                                                            onChange={() => { handleEnquiry("package", !Enquiry?.package) }}
                                                         />
                                                         <label className=" m-0 fs-6">Package</label>
                                                     </div>
                                                 </div>
                                                 <div className="col-4">
                                                     <div className="d-flex mt-2 align-items-center gap-2">
-                                                        <input type={"checkbox"} checked={Enquiry.enquiry_type_customise_package}
-                                                            onChange={() => { handleEnquiry('enquiry_type_customise_package', !Enquiry.enquiry_type_customise_package) }}
+                                                        <input type={"checkbox"} checked={Enquiry?.enquiry_type_customise_package}
+                                                            onChange={() => { handleEnquiry('enquiry_type_customise_package', !Enquiry?.enquiry_type_customise_package) }}
                                                         />
                                                         <label className=" m-0 fs-6">Customise Package</label>
                                                     </div>
                                                 </div>
                                                 <div className="col-4">
                                                     <div className="d-flex mt-2 align-items-center gap-2">
-                                                        <input type={"checkbox"} checked={Enquiry.enquiry_type_bus}
-                                                            onChange={() => { handleEnquiry('enquiry_type_bus', !Enquiry.enquiry_type_bus) }}
+                                                        <input type={"checkbox"} checked={Enquiry?.enquiry_type_bus}
+                                                            onChange={() => { handleEnquiry('enquiry_type_bus', !Enquiry?.enquiry_type_bus) }}
                                                         />
                                                         <label className=" m-0 fs-6">Bus</label>
                                                     </div>
                                                 </div>
                                                 <div className="col-4">
                                                     <div className="d-flex mt-2 align-items-center gap-2">
-                                                        <input type={"checkbox"} checked={Enquiry.enquiry_type_train}
-                                                            onChange={() => { handleEnquiry('enquiry_type_train', !Enquiry.enquiry_type_train) }}
+                                                        <input type={"checkbox"} checked={Enquiry?.enquiry_type_train}
+                                                            onChange={() => { handleEnquiry('enquiry_type_train', !Enquiry?.enquiry_type_train) }}
                                                         />
                                                         <label className=" m-0 fs-6">Train</label>
                                                     </div>
                                                 </div>
                                                 <div className="col-4">
                                                     <div className="d-flex mt-2 align-items-center gap-2">
-                                                        <input type={"checkbox"} checked={Enquiry.enquiry_type_passport} onChange={() => { handleEnquiry('enquiry_type_passport', !Enquiry.enquiry_type_passport) }} />
+                                                        <input type={"checkbox"} checked={Enquiry?.enquiry_type_passport} onChange={() => { handleEnquiry('enquiry_type_passport', !Enquiry?.enquiry_type_passport) }} />
                                                         <label className=" m-0 fs-6">Passport</label>
                                                     </div>
                                                 </div>
                                                 <div className="col-4">
                                                     <div className="d-flex mt-2 align-items-center gap-2">
-                                                        <input type={"checkbox"} checked={Enquiry.enquiry_type_cruise}
-                                                            onClick={() => handleEnquiry('enquiry_type_cruise', !Enquiry.enquiry_type_cruise)}
+                                                        <input type={"checkbox"} checked={Enquiry?.enquiry_type_cruise}
+                                                            onClick={() => handleEnquiry('enquiry_type_cruise', !Enquiry?.enquiry_type_cruise)}
                                                         />
                                                         <label className=" m-0 fs-6">Cruise</label>
                                                     </div>
                                                 </div>
                                                 <div className="col-4">
                                                     <div className="d-flex mt-2 align-items-center gap-2">
-                                                        <input type={"checkbox"} checked={Enquiry.enquiry_type_adventure}
-                                                            onChange={() => handleEnquiry('enquiry_type_adventure', !Enquiry.enquiry_type_adventure)}
+                                                        <input type={"checkbox"} checked={Enquiry?.enquiry_type_adventure}
+                                                            onChange={() => handleEnquiry('enquiry_type_adventure', !Enquiry?.enquiry_type_adventure)}
                                                         />
                                                         <label className=" m-0 fs-6">Adventure</label>
                                                     </div>
                                                 </div>
                                                 <div className="col-4">
                                                     <div className="d-flex mt-2 align-items-center gap-2">
-                                                        <input type={"checkbox"} Checked={Enquiry.enquiry_type_group}
-                                                            onClick={() => handleEnquiry('enquiry_type_group', !Enquiry.enquiry_type_group)}
+                                                        <input type={"checkbox"} Checked={Enquiry?.enquiry_type_group}
+                                                            onClick={() => handleEnquiry('enquiry_type_group', !Enquiry?.enquiry_type_group)}
                                                         />
                                                         <label className=" m-0 fs-6">Group</label>
                                                     </div>
@@ -1324,52 +1414,52 @@ export default function AddLeadForm() {
                                         </div>
                                     </div>
                                     <div className="col-12">
-                                        {Enquiry.enquiry_type_flight_booking && <div className="my-4">
+                                        {Enquiry?.enquiry_type_flight_booking && <div className="my-4">
                                             <FlightBooking preference={preference} classData={classData} addRowFlight={addRowFlight} flightrows={flightrows} setflightrowsRows={setflightrowsRows} handleRowChangeFlight={handleRowChangeFlight} locations={locations} />
                                         </div>}
-                                        {Enquiry.enquiry_type_hotelbooking && <div className="my-4">
+                                        {Enquiry?.enquiry_type_hotelbooking && <div className="my-4">
                                             <HotelBooking countryData={countryData} starRatting={starRatting} roomType={roomType} addHotelRow={addHotelRow} hotelRow={hotelRow} setHotelRow={setHotelRow} handleInputChangeHotel={handleInputChangeHotel} locations={locations} />
                                         </div>}
-                                        {Enquiry.enquiry_type_visa && <div className="my-4">
+                                        {Enquiry?.enquiry_type_visa && <div className="my-4">
                                             <Visa countryData={countryData} visaTypeData={visaTypeData} visaCatData={visaCatData} AddVisaRow={AddVisaRow} handleInputChangeVisa={handleInputChangeVisa} setRowsVisa={setRowsVisa} rowsVisa={rowsVisa} />
                                         </div>}
-                                        {Enquiry.enquiry_type_travel_insurance && <div className="my-4">
+                                        {Enquiry?.enquiry_type_travel_insurance && <div className="my-4">
                                             <TrvelInsurance countryData={countryData} handleInputChangeTravelInsurence={handleInputChangeTravelInsurence} AddRowTravelIns={AddRowTravelIns} rowsTravelIns={rowsTravelIns} setRowsTravelIns={setRowsTravelIns} />
                                         </div>}
-                                        {Enquiry.enquiry_type_forex && <div className="my-4">
+                                        {Enquiry?.enquiry_type_forex && <div className="my-4">
                                             <Forex countryData={countryData} currencyData={currencyData} rowsForex={rowsForex} AddRowForex={AddRowForex} handleInputChangeForex={handleInputChangeForex} />
                                         </div>}
-                                        {Enquiry.enquiry_type_sightseeing && <div className="my-4">
+                                        {Enquiry?.enquiry_type_sightseeing && <div className="my-4">
                                             <Sightseeing countryData={countryData} locations={locations} preference={preference} sight_seeingData={sight_seeingData} handleInputChangeSightseeing={handleInputChangeSightseeing} rowsSightseeing={rowsSightseeing} setRowsSightseeing={setRowsSightseeing} AddRowSightseeing={AddRowSightseeing} />
                                         </div>}
-                                        {Enquiry.enquiry_type_transport && <div className="my-4">
+                                        {Enquiry?.enquiry_type_transport && <div className="my-4">
                                             <Transport countryData={countryData} locations={locations} preference={preference} handleInputChangeTranport={handleInputChangeTranport} rowsTrasport={rowsTrasport} setRowsTrasport={setRowsTrasport} AddRowtTrasport={AddRowtTrasport} />
                                         </div>}
-                                        {Enquiry.enquiry_type_other && <div className="my-4">
+                                        {Enquiry?.enquiry_type_other && <div className="my-4">
                                             <Other countryData={countryData} handleInputChangeOther={handleInputChangeOther} rowsOther={rowsOther} setOther={setOther} />
                                         </div>}
-                                        {Enquiry.package && <div className="my-4">
+                                        {Enquiry?.package && <div className="my-4">
                                             <Package countryData={countryData} packageData={packageData} handleSearch={handleSearch} handleInputChangePackage={handleInputChangePackage} packageRow={packageRow} setpackageRow={setpackageRow} addPackageRow={addPackageRow} />
                                         </div>}
-                                        {Enquiry.enquiry_type_customise_package && <div className="my-4">
+                                        {Enquiry?.enquiry_type_customise_package && <div className="my-4">
                                             <CoustumPackage countryData={countryData} locations={locations} services={services} starRatting={starRatting} preference={preference} rowsCustomisePackage={rowsCustomisePackage} setRowsCustomisePackage={setRowsCustomisePackage} AddRowCustomisePackage={AddRowCustomisePackage} handleInputChangeGroupCustomisePackage={handleInputChangeGroupCustomisePackage} addStayCityField={addStayCityField} handleStayCityChange={handleStayCityChange} />
                                         </div>}
-                                        {Enquiry.enquiry_type_bus && <div className="my-4">
+                                        {Enquiry?.enquiry_type_bus && <div className="my-4">
                                             <Bus countryData={countryData} locations={locations} preference={preference} handleInputChangeBuss={handleInputChangeBuss} rowsBus={rowsBus} setRowsBus={setRowsBus} AddRowBuss={AddRowBuss} />
                                         </div>}
-                                        {Enquiry.enquiry_type_train && <div className="my-4">
+                                        {Enquiry?.enquiry_type_train && <div className="my-4">
                                             <Train countryData={countryData} locations={locations} preference={preference} handleInputChangeTrain={handleInputChangeTrain} rowsTrain={rowsTrain} setRowsTrain={setRowsTrain} AddRowTrain={AddRowTrain} />
                                         </div>}
-                                        {Enquiry.enquiry_type_passport && <div className="my-4">
+                                        {Enquiry?.enquiry_type_passport && <div className="my-4">
                                             <Passport countryData={countryData} AddRowPassport={AddRowPassport} handleInputChangePassport={handleInputChangePassport} setRowsPassport={setRowsPassport} rowsPassport={rowsPassport} />
                                         </div>}
-                                        {Enquiry.enquiry_type_cruise && <div className="my-4">
+                                        {Enquiry?.enquiry_type_cruise && <div className="my-4">
                                             <Cruise countryData={countryData} preference={preference} locations={locations} handleInputChangeCruise={handleInputChangeCruise} AddRowCruise={AddRowCruise} setRowsCruise={setRowsCruise} rowsCruise={rowsCruise} />
                                         </div>}
-                                        {Enquiry.enquiry_type_adventure && <div className="my-4">
+                                        {Enquiry?.enquiry_type_adventure && <div className="my-4">
                                             <Adventure countryData={countryData} locations={locations} handleInputChangeAdventure={handleInputChangeAdventure} AddRowAdventure={AddRowAdventure} setRowsAdventure={setRowsAdventure} rowsAdventure={rowsAdventure} />
                                         </div>}
-                                        {Enquiry.enquiry_type_group && <div className="my-4">
+                                        {Enquiry?.enquiry_type_group && <div className="my-4">
                                             <GroupPackage countryData={countryData} packageData={packageData} state={state} handleSearch={handleSearch} preference={preference} handleInputChangeGroupPackage={handleInputChangeGroupPackage} AddRowGroupPackage={AddRowGroupPackage} setGroupPackage={setGroupPackage} rowsGroupPackage={rowsGroupPackage} />
                                         </div>}
                                     </div>
@@ -1386,7 +1476,9 @@ export default function AddLeadForm() {
                         </div>
                         <div className="d-flex gap-2 mt-3">
                             <div>
-                                <button type="button" disabled={disabled} className="btn btn-danger m-0" onClick={submitData}>Add</button>
+                                <button type="button" disabled={disabled} className="btn btn-danger m-0" onClick={submitData}>
+                                    {params?.id ? 'Update' : 'Add'}
+                                </button>
                             </div>
                             {/* <div>
                             <button className="btn btn-light m-0">Clear</button>
