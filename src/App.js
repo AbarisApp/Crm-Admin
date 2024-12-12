@@ -1062,6 +1062,8 @@ import TrendViews from "./pages/trendViews";
 import Boosts from "./pages/boosts";
 import DegreeViews from "./pages/degreeViews";
 import { BusinessView } from "./components/degreeView/businessView/BusinessViwe";
+import PickUpMaster from "./components/topNavigationComp/masters/pickuppoint/PickUpMaster.js";
+import CreatePickUp from "./components/topNavigationComp/masters/pickuppoint/MasterForm/CreatePickUp.js";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -2075,6 +2077,13 @@ function App() {
 
 
 
+
+
+              <Route path="pickup-point" element={<PickUpMaster />} />
+              <Route path="create-pickup-point" element={<CreatePickUp />} />
+              <Route path="create-pickup-point/:id" element={<CreatePickUp />} />
+
+
               <Route path="contest-type" element={<ContestTypeMaster />} />
               <Route path="create-contest-type" element={<CreateType />} />
               <Route path="create-contest-type/:id" element={<CreateType />} />
@@ -2276,6 +2285,7 @@ function App() {
               <Route path="salesorder/add" element={<SalseOrderAdd />} />
               <Route path="purchaseorder/list" element={<PurchageOrderPage />} />
               <Route path="purchaseorder/Add" element={<PurchageOrderAdd />} />
+              <Route path="purchaseorder/edit/:id" element={<PurchageOrderAdd />} />
               <Route path="salesorderfrm/list" element={<OrderFromQuationPage />} />
               <Route path="salesorderfrm/Add" element={<OrderFromQuationAdd />} />
               <Route path="purchaseorderfrm/list" element={<PurchaseOrderFromQuotationPage />} />

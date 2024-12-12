@@ -2446,7 +2446,7 @@ export const updateCallSourceById = (id, data) => {
 // API use in call ADD
 
 
-export const getAllAssign = ( page = 0, count = 10) => {
+export const getAllAssign = (page = 0, count = 10) => {
   return axiosInstance.get(`/staff/admin`, {
     headers: {
       "Content-Type": "application/json; charset=UTF-8",
@@ -6356,4 +6356,77 @@ export const getCompanys = (id) => {
       Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
     },
   });
+};
+
+
+
+
+
+
+
+// pickup point
+
+export const deletePickupById = (id) => {
+  return axios.delete(`${baseproductUrl}pickupPoints/${id}`, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
+export const getPickupByPage = (page, count) => {
+  return axios.get(`${baseproductUrl}pickupPoints/admin`, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
+export const getPickupById = (id) => {
+  return axios.get(`${baseproductUrl}pickupPoints/${id}`, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
+export const postPickupPonit = (data) => {
+  return axios.post(`${baseproductUrl}pickupPoints/add`, data, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
+
+
+export const updatePickupById = (id, data) => {
+  return axios.put(`${baseproductUrl}pickupPoints/${id}`, data , {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
+
+
+
+export const postPurchase = (data) => {
+  return axiosInstance.post(`/lead_purchase_order_master/addType`, data, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
+export const getAllPurchaseData = (page,count) => {
+  return axiosInstance.get(
+    `${baseUrl}lead_purchase_order_master/user?page=${page}&count=${count}`
+  );
 };
