@@ -1083,6 +1083,22 @@ import NoSaleProducts from "./components/Empoyee/Report/NoSaleProducts.js";
 import ProductPricelistState from "./components/Empoyee/Report/ProductPricelistState.js";
 import Productlist from "./components/Empoyee/Report/ProductList.js";
 
+// Meraj  --------  13/12/2024---------start Imports  
+import ExistingPartyVisit from "./components/partyDealer/ExistingPartyVisit.js";
+import NewPartyVisit from "./components/partyDealer/NewPartyVisit";
+import NewPartyVisitSummery from "./components/partyDealer/NewPartyVisitSummery";
+import PartyDealerList from "./components/partyDealer/PartyDealerList";
+import PartyDealerSite from "./components/partyDealer/PartyDealerSite";
+import PartyDealerDetail from "./components/partyDealer/PartyDealerDetail";
+import CollectionSummery from "./components/partyDealer/CollectionSummery";
+import DayWiseVisit from "./components/partyDealer/DayWiseVisit";
+import EmployeeWiseVisit from "./components/partyDealer/EmployeeWiseVisit";
+import PartyBusinessAnalytics from "./components/partyDealer/PartyBusinessAnalytics";
+import CustomerDirectory from "./components/cropProductions/CustomerDirectory";
+import Orderslr from "./pages/order-lr/Orderslr";
+import AllReports from "./pages/allReports";
+// Meraj  --------  13/12/2024---------End Imports 
+
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [navigateState, setNavigateState] = useState(null);
@@ -3212,6 +3228,27 @@ function App() {
               <Route path="nosaleProducts" element={<NoSaleProducts />} />
               <Route path="priceliststate" element={<ProductPricelistState />} />
               <Route path="priceproductlist" element={<Productlist />} />
+
+
+
+              {/* Meraj Routes start ----- 13/12/24------------------ */}
+
+              <Route path="order-lr" element={<Orderslr />} />
+              <Route path="all-report" element={<AllReports />} />
+              {/* Party/Dealer */}
+              <Route path="existing-party-visit" element={<ExistingPartyVisit />} />
+              <Route path="new-party-visit" element={<NewPartyVisit />} />
+              <Route path="new-party-visit-summery" element={<NewPartyVisitSummery />} />
+              <Route path="party-dealer-list" element={<PartyDealerList />} />
+              <Route path="party-dealer-site" element={<PartyDealerSite />} />
+              <Route path="party-dealer-detail" element={<PartyDealerDetail />} />
+              <Route path="collection-summery" element={<CollectionSummery />} />
+              <Route path="day-wise-visit" element={<DayWiseVisit />} />
+              <Route path="employee-wise-visit" element={<EmployeeWiseVisit />} />
+              <Route path="Party-business-analytics" element={<PartyBusinessAnalytics />} />
+              {/* Crop Productions */}
+              <Route path="customer-directory" element={<CustomerDirectory />} />
+              {/* Meraj Routes  ----- 13/12/24-------END----------- */}
             </Route>
           </>
         )}

@@ -6451,3 +6451,38 @@ export const getAllPurchaseData = (page, count) => {
     `${baseUrl}lead_purchase_order_master/user?page=${page}&count=${count}`
   );
 };
+
+
+
+// Sales order Apis  start //
+
+export const postSalesOrder = (data) => {
+  return axiosInstance.post(`/lead_sales_order_master/addType`, data, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
+export const getAllSalesData = (page,count) => {
+  return axiosInstance.get(
+    `${baseUrl}lead_sales_order_master/user?page=${page}&count=${count}`
+  );
+};
+// Sales quotationMaster api Apis  start //
+
+export const postquotationMaster = (data) => {
+  return axiosInstance.post(`/lead_quotation_master/addType`, data, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
+export const getAllquotationMasterData = (page,count) => {
+  return axiosInstance.get(
+    `${baseUrl}lead_quotation_master/?page=${page}&count=${count}`
+  );
+};
