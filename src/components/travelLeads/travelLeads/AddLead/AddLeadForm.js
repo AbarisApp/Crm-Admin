@@ -213,7 +213,24 @@ export default function AddLeadForm() {
             remark: ''
         }],
 
+        flightDeleted: [],
+        hotelBookingDeleted: [],
+        travelInsuranceDeleted: [],
+        sightDeleted: [],
+        forexDeleted: [],
+        transportDeleted: [],
+        otherDeleted: [],
+        busDeleted: [],
+        trainDeleted: [],
+        passportDeleted: [],
+        cruiseDeleted: [],
+        adventureDeleted: [],
+        groupDeleted: [],
+
     })
+
+    // console.log(initialData);
+
 
 
     const [Enquiry, setEnquiry] = useState({
@@ -234,6 +251,9 @@ export default function AddLeadForm() {
         enquiry_type_adventure: false,
         enquiry_type_group: false
     })
+
+    // console.log(Enquiry);
+
     const handleEnquiry = (str, val) => {
         // setEnquiry(!run)
 
@@ -982,7 +1002,7 @@ export default function AddLeadForm() {
 
 
     const submitData = async () => {
-        // console.log(initialData);
+        console.log(initialData);
         setLoader(true)
         if (!params?.id) {
             try {
@@ -1024,50 +1044,154 @@ export default function AddLeadForm() {
 
     }
 
+
     useEffect(() => {
         const getByIdData = async () => {
             try {
-                const res = await getByIdTRCRMOnlyUpdate(params?.id)
-                setInitialData(res?.data)
-                setEnquiry(res?.data)
-                // setflightrowsRows(Array.isArray(res?.data?.lead_flight) ? res.data.lead_flight : [])
-                // setHotelRow(Array.isArray(res?.data?.lead_hotel) ? res.data.lead_hotel : [])
-                // setRowsVisa(Array.isArray(res?.data?.lead_visa) ? res.data.lead_visa : [])
-                // setRowsTravelIns(Array.isArray(res?.data?.lead_travel_in) ? res.data.lead_travel_in : [])
-                // setRowsForex(Array.isArray(res?.data?.lead_forex) ? res.data.lead_forex : [])
-                // setRowsSightseeing(Array.isArray(res?.data?.lead_sightseeing) ? res.data.lead_sightseeing : [])
-                // setRowsTrasport(Array.isArray(res?.data?.lead_transport) ? res.data.lead_transport : [])
-                // setOther(Array.isArray(res?.data?.lead_other) ? res.data.lead_other : [])
-                // setRowsCustomisePackage(Array.isArray(res?.data?.lead_customisePackage) ? res.data.lead_customisePackage : [])
-                // setRowsBus(Array.isArray(res?.data?.lead_bus) ? res.data.lead_bus : [])
-                // setRowsTrain(Array.isArray(res?.data?.lead_bus) ? res.data.lead_bus : [])
-                // setRowsPassport(Array.isArray(res?.data?.lead_passport) ? res.data.lead_passport : [])
-                // setRowsCruise(Array.isArray(res?.data?.lead_cruise) ? res.data.lead_cruise : [])
-                // setRowsAdventure(Array.isArray(res?.data?.lead_adventure) ? res.data.lead_adventure : [])
-                // setGroupPackage(Array.isArray(res?.data?.lead_group) ? res.data.lead_group : [])
-                // setGroupPackage(
-                //     Array.isArray(res?.data?.lead_group)
-                //         ? res.data.lead_group.map((group) => ({
-                //             ...group,
-                //             package_id: group.package_id?.package || "",
-                //         }))
-                //         : []
-                // );
-                // setpackageRow(Array.isArray(res?.data?.enquiry_type_package) ? res.data.enquiry_type_package : [])
-                // setpackageRow(
-                //     Array.isArray(res?.data?.enquiry_type_package)
-                //         ? res.data.enquiry_type_package.map((group) => ({
-                //             ...group,
-                //             package_id: group.package_id?.package || "",
-                //         }))
-                //         : []
-                // );
-            } catch (error) {
+                const res = await getByIdTRCRMOnlyUpdate(params?.id);
 
+                if (!res || !res.data) return;
+
+                const data = res.data;
+
+                // Clone and update initial data
+                const updatedData = {
+                    ...initialData,
+                    address: data.address,
+                    customer_type: data.customer_type,
+                    mobile_number: data.mobile_number,
+                    email_id: data.email_id,
+                    salutation: data.salutation,
+                    first_name: data.first_name,
+                    last_name: data.last_name,
+                    city: data.city,
+                    alternate_mobile_number: data.alternate_mobile_number,
+                    alternate_email_id: data.alternate_email_id,
+                    lead_source: data.lead_source,
+                    lead_priority: data.lead_priority,
+                    lead_status: data.lead_status,
+                    no_of_adults: data.no_of_adults,
+                    no_of_children: data.no_of_children,
+                    no_of_infant: data.no_of_infant,
+                    trip_type: data.trip_type,
+                    tag: data.tag,
+                    assigned_to: data.assigned_to,
+                    notes: data.notes,
+                    flightBookings: data.lead_flight,
+                    enquiry_type_package: data.lead_flight,
+                    hotelBookingModels: data.lead_hotel,
+                    visaModel: data.lead_visa,
+                    travelInsuranceModel: data.lead_travel_in,
+                    forexModel: data.lead_forex,
+                    sightseeingModel: data.lead_sightseeing,
+                    transportModel: data.lead_transport,
+                    otherModel: data.lead_other,
+                    customisePackageModel: data.lead_customisePackage,
+                    busModel: data.lead_bus,
+                    trainModel: data.lead_train,
+                    passportModel: data.lead_passport,
+                    cruiseModel: data.lead_cruise,
+                    adventureModel: data.lead_adventure,
+                    groupModel: data.lead_group
+                };
+                setInitialData(updatedData);
+
+                // Set individual state updates for rows
+                const arrayOrEmpty = (arr) => (Array.isArray(arr) ? arr : []);
+
+                setEnquiry(data);
+                setflightrowsRows(arrayOrEmpty(data.lead_flight));
+                setHotelRow(arrayOrEmpty(data.lead_hotel));
+                setRowsVisa(arrayOrEmpty(data.lead_visa));
+                setRowsTravelIns(arrayOrEmpty(data.lead_travel_in));
+                setRowsForex(arrayOrEmpty(data.lead_forex));
+                setRowsSightseeing(arrayOrEmpty(data.lead_sightseeing));
+                setRowsTrasport(arrayOrEmpty(data.lead_transport));
+                setOther(arrayOrEmpty(data.lead_other));
+                setRowsCustomisePackage(arrayOrEmpty(data.lead_customisePackage));
+                setRowsBus(arrayOrEmpty(data.lead_bus));
+                setRowsTrain(arrayOrEmpty(data.lead_train));
+                setRowsPassport(arrayOrEmpty(data.lead_passport));
+                setRowsCruise(arrayOrEmpty(data.lead_cruise));
+                setRowsAdventure(arrayOrEmpty(data.lead_adventure));
+
+                const groupData = arrayOrEmpty(data.lead_group).map((group) => ({
+                    ...group,
+                    package_id: group.package_id?.package || "",
+                }));
+                setGroupPackage(groupData);
+
+                const packageData = arrayOrEmpty(data.enquiry_type_package).map((pkg) => ({
+                    ...pkg,
+                    package_id: pkg.package_id?.package || "",
+                }));
+                setpackageRow(packageData);
+            } catch (error) {
+                console.error("Failed to fetch data: ", error);
             }
+        };
+
+        if (params?.id) {
+            getByIdData();
         }
-        getByIdData()
-    }, [params?.id])
+    }, [params?.id]);
+
+
+
+
+    // useEffect(() => {
+    //     const getByIdData = async () => {
+    //         try {
+    //             const res = await getByIdTRCRMOnlyUpdate(params?.id)
+    //             // setInitialData(res?.data)
+
+    //             const clone = { ...initialData, address: res?.data?.address, customer_type: res?.data?.customer_type, mobile_number: res?.data?.mobile_number, email_id: res?.data?.email_id, salutation: res?.data?.salutation, first_name: res?.data?.first_name, last_name: res?.data?.last_name, city: res?.data?.city, alternate_mobile_number: res?.data?.alternate_mobile_number, alternate_email_id: res?.data?.alternate_email_id, lead_source: res?.data?.lead_source, lead_priority: res?.data?.lead_priority, lead_status: res?.data?.lead_status, no_of_adults: res?.data?.no_of_adults, no_of_children: res?.data?.no_of_children, no_of_infant: res?.data?.no_of_infant, trip_type: res?.data?.trip_type, tag: res?.data?.tag, assigned_to: res?.data?.assigned_to, notes: res?.data?.notes, flightBookings: res?.data?.lead_flight, enquiry_type_package: res?.data?.lead_flight, hotelBookingModels: res?.data?.lead_hotel, visaModel: res?.data?.lead_visa, travelInsuranceModel: res?.data?.lead_travel_in, forexModel: res?.data?.lead_forex, sightseeingModel: res?.data?.lead_sightseeing, transportModel: res?.data?.lead_transport, otherModel: res?.data?.lead_other, customisePackageModel: res?.data?.lead_customisePackage, busModel: res?.data?.lead_bus, trainModel: res?.data?.lead_train, passportModel: res?.data?.lead_passport, cruiseModel: res?.data?.lead_cruise, adventureModel: res?.data?.lead_adventure, groupModel: res?.data?.lead_group }
+    //             setInitialData(clone)
+
+    //             setEnquiry(res?.data)
+
+
+    //             setflightrowsRows(Array.isArray(res?.data?.lead_flight) ? res.data.lead_flight : [])
+
+    //             setHotelRow(Array.isArray(res?.data?.lead_hotel) ? res.data.lead_hotel : [])
+    //             setRowsVisa(Array.isArray(res?.data?.lead_visa) ? res.data.lead_visa : [])
+    //             setRowsTravelIns(Array.isArray(res?.data?.lead_travel_in) ? res.data.lead_travel_in : [])
+    //             setRowsForex(Array.isArray(res?.data?.lead_forex) ? res.data.lead_forex : [])
+    //             setRowsSightseeing(Array.isArray(res?.data?.lead_sightseeing) ? res.data.lead_sightseeing : [])
+    //             setRowsTrasport(Array.isArray(res?.data?.lead_transport) ? res.data.lead_transport : [])
+    //             setOther(Array.isArray(res?.data?.lead_other) ? res.data.lead_other : [])
+    //             setRowsCustomisePackage(Array.isArray(res?.data?.lead_customisePackage) ? res.data.lead_customisePackage : [])
+    //             setRowsBus(Array.isArray(res?.data?.lead_bus) ? res.data.lead_bus : [])
+    //             setRowsTrain(Array.isArray(res?.data?.lead_bus) ? res.data.lead_bus : [])
+    //             setRowsPassport(Array.isArray(res?.data?.lead_passport) ? res.data.lead_passport : [])
+    //             setRowsCruise(Array.isArray(res?.data?.lead_cruise) ? res.data.lead_cruise : [])
+    //             setRowsAdventure(Array.isArray(res?.data?.lead_adventure) ? res.data.lead_adventure : [])
+    //             setGroupPackage(Array.isArray(res?.data?.lead_group) ? res.data.lead_group : [])
+    //             setGroupPackage(
+    //                 Array.isArray(res?.data?.lead_group)
+    //                     ? res.data.lead_group.map((group) => ({
+    //                         ...group,
+    //                         package_id: group.package_id?.package || "",
+    //                     }))
+    //                     : []
+    //             );
+    //             setpackageRow(Array.isArray(res?.data?.enquiry_type_package) ? res.data.enquiry_type_package : [])
+    //             setpackageRow(
+    //                 Array.isArray(res?.data?.enquiry_type_package)
+    //                     ? res.data.enquiry_type_package.map((group) => ({
+    //                         ...group,
+    //                         package_id: group.package_id?.package || "",
+    //                     }))
+    //                     : []
+    //             );
+    //         } catch (error) {
+
+    //         }
+    //     }
+    //     if (params?.id) {
+    //         getByIdData();
+    //     }
+    // }, [params?.id])
 
 
     useEffect(() => {
@@ -1476,6 +1600,7 @@ export default function AddLeadForm() {
                         </div>
                         <div className="d-flex gap-2 mt-3">
                             <div>
+                                {/* disabled={disabled} */}
                                 <button type="button" disabled={disabled} className="btn btn-danger m-0" onClick={submitData}>
                                     {params?.id ? 'Update' : 'Add'}
                                 </button>

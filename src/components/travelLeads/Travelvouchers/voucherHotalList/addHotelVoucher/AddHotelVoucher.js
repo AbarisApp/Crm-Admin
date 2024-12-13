@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Breadcrumbs from "../../../../../common/breadcrumb/Breadcrumbs";
 import JoditEditor from "jodit-react";
-import { useParams } from "react-router-dom";
-import { addTravelRoomType, getAirlLine, getByIdTRCRM_tr_lead, getTravelAllCountry, getTRCRM_hotel_type_master, TTRCRM_tr_travellerGet } from "../../../../../api/login/Login";
+import { useNavigate, useParams } from "react-router-dom";
+import { addhotelVoucher, addTravelRoomType, getAirlLine, getByIdTRCRM_tr_lead, getTravelAllCountry, getTRCRM_hotel_type_master, TTRCRM_tr_travellerGet } from "../../../../../api/login/Login";
 import { Select } from "antd";
+import { toast, ToastContainer } from "react-toastify";
 const { Option } = Select;
 
 
@@ -16,6 +17,8 @@ const AddHotelVoucher = () => {
     };
 
     const params = useParams()
+
+    const navigate = useNavigate()
 
     const editor = useRef(null);
     const [content, setContent] = useState('');
@@ -131,11 +134,39 @@ const AddHotelVoucher = () => {
     //     placeholder: 'Start typing...'
     // }), []);
 
+    const toastSuccessMessage = (message) => {
+        toast.success(`${params?.id ? `${message}` : `${message}`}`, {
+            position: "top-right",
+        });
+    };
+
+    const toastErroeMessage = (message) => {
+        toast.error(`${message}`, {
+            position: "top-right",
+        });
+    };
+
 
     const submitData = async () => {
         const clone = { ...initialData, lead_id: params?.id }
         console.log(clone);
         try {
+            if (!params?.idd) {
+                const res = await addhotelVoucher(clone)
+                // console.log(res);
+                if (res?.error == false) {
+                    toastSuccessMessage(res?.message)
+                    // setLoader(false)
+                    setTimeout(() => {
+                        navigate(`/travel-Vouchers-list/${params?.id}`)
+                    }, 2000)
+                }
+            } else {
+                // const res = await addhotelVoucher(clone)
+                // console.log(res);
+            }
+
+
         } catch (error) {
 
         }
@@ -178,6 +209,9 @@ const AddHotelVoucher = () => {
             }));
         }
     }, [leadIdData]);
+
+    console.log(params);
+
     return (
         <>
             <Breadcrumbs breadCrumbsTitle={breadCrumbsTitle} />
@@ -429,6 +463,7 @@ const AddHotelVoucher = () => {
                     </div>
                 </div >
             </div >
+            <ToastContainer />
         </>
     )
 }

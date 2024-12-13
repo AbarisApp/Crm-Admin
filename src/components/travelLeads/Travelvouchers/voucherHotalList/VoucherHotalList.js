@@ -10,6 +10,7 @@ import { PDFDownloadLink } from "@react-pdf/renderer"
 import { Button } from "react-bootstrap"
 import { VoucherAfterPayment } from "../../../../common/voucherAfterPaymentPdf/voucherAfterPaymentPdf/VoucherAfterPaymentPdf"
 import { toast } from "react-toastify"
+import { deleteHotelVoucher, getHotelVoucher } from "../../../../api/login/Login"
 
 
 const VoucherHotalList = () => {
@@ -49,15 +50,15 @@ const VoucherHotalList = () => {
     const getTransitionReport = async (input) => {
         // console.log('iojijip');
         setLoading(true)
-        // const clone = { ...filterInitial, count: count, page: input, user_id: window.localStorage.getItem('userIdToken') }
-        // try {
-        //     const res = await getTRCRM_tr_lead(clone)
-        //     setTotalCount(res?.totalCount)
-        //     setData(res?.data)
-        // } catch (error) {
+        const clone = { ...filterInitial, count: count, page: input, user_id: window.localStorage.getItem('userIdToken') }
+        try {
+            const res = await getHotelVoucher(clone)
+            setTotalCount(res?.totalCount)
+            setData(res?.data)
+        } catch (error) {
 
-        // }
-        // setLoading(false)
+        }
+        setLoading(false)
     }
     const onChangeVal = (e) => {
         // console.log(e - 1);
@@ -79,14 +80,14 @@ const VoucherHotalList = () => {
 
     const deleteData = async (id) => {
         try {
-            // const res = await deleteTRCRM_tr_lead(id)
-            // // console.log(res);
-            // if (res?.error == false) {
-            //     toastSuccessMessage()
-            //     getTransitionReport(0)
-            // } else {
-            //     alert(res?.message)
-            // }
+            const res = await deleteHotelVoucher(id)
+            // console.log(res);
+            if (res?.error == false) {
+                toastSuccessMessage()
+                getTransitionReport(0)
+            } else {
+                alert(res?.message)
+            }
         } catch (error) {
 
         }
@@ -115,53 +116,75 @@ const VoucherHotalList = () => {
                             <th style={{ width: '150px' }}>City</th>
                             <th style={{ width: '150px' }}>Hotal</th>
                             <th style={{ width: '150px' }}>Checkin</th>
+                            <th style={{ width: '150px' }}>Checkin Time</th>
                             <th style={{ width: '150px' }}>Stay (Days)</th>
                             <th style={{ width: '150px' }}>Create Date</th>
                             <th style={{ width: '150px' }}>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr role="row" >
-                            <td className="text-center" colSpan={6}>No data available in table</td>
-                            <td>
-                                <div className="d-flex">
-                                    <Link to={`#`} className="btn btn-primary shadow btn-xs sharp me-1">
-                                        <TiTick style={{ marginBottom: '8px' }} />
-                                    </Link>
-                                    <button type="button" className="btn btn-primary shadow btn-xs sharp me-1" onClick={() => setModalShow(true)}>
-                                        <CiMail style={{ marginBottom: '8px' }} />
-                                    </button>
-                                    {/* <Link to={`#`} className="btn btn-primary shadow btn-xs sharp me-1">
+                        {data && data?.map((item, i) => {
+                            return <tr role="row" >
+                                <td valign="top" className="dataTables_empty">{(i + 1) + (page * count)}</td>
+                                <td className="text-center">
+                                    {item?._id}
+                                </td>
+                                <td className="text-center">
+                                    {item?.hotel}
+                                </td>
+                                <td className="text-center">
+                                    {item?.checkin_date}
+                                </td>
+                                <td className="text-center">
+                                    {item?.checkin_time}
+                                </td>
+                                <td className="text-center">
+                                    ---
+                                </td>
+                                <td className="text-center">
+                                    {item?.createdAt}
+                                </td>
+                                <td>
+                                    <div className="d-flex">
+                                        <Link to={`#`} className="btn btn-primary shadow btn-xs sharp me-1">
+                                            <TiTick style={{ marginBottom: '8px' }} />
+                                        </Link>
+                                        <button type="button" className="btn btn-primary shadow btn-xs sharp me-1" onClick={() => setModalShow(true)}>
+                                            <CiMail style={{ marginBottom: '8px' }} />
+                                        </button>
+                                        {/* <Link to={`#`} className="btn btn-primary shadow btn-xs sharp me-1">
                                         <TiDownload style={{ marginBottom: '8px' }} />
                                     </Link> */}
-                                    <Button variant="" className="btn-sm py-1 px-2 bg-primary">
-                                        <PDFDownloadLink style={{ color: 'white', textDecoration: 'none' }} document={<VoucherAfterPayment abc={'Downloaded pdf'} />} fileName="invoice.pdf">
-                                            {({ loading }) => (loading ? 'Loading document...' : 'VOUCHER AFTER PAYMENT')}
-                                        </PDFDownloadLink>
-                                    </Button>
-                                    <Link to={`#`} className="btn btn-primary shadow btn-xs sharp me-1">
-                                        <i className="fa fa-pencil" />
-                                    </Link>
-                                    <Popconfirm
-                                        title="Delete cow feed!"
-                                        description="Are you sure to delete?"
-                                        // onConfirm={() => confirm(item?._id)}
-                                        // onCancel={cancel}
-                                        okText="Yes"
-                                        cancelText="No"
-                                    >
-                                        <Link to="#" className="btn btn-danger shadow btn-xs sharp">
-                                            <i className="fa fa-trash" />
+                                        <Button variant="" className="btn-sm py-1 px-2 bg-primary">
+                                            <PDFDownloadLink style={{ color: 'white', textDecoration: 'none' }} document={<VoucherAfterPayment abc={'Downloaded pdf'} />} fileName="invoice.pdf">
+                                                {({ loading }) => (loading ? 'Loading document...' : 'VOUCHER AFTER PAYMENT')}
+                                            </PDFDownloadLink>
+                                        </Button>
+                                        <Link to={`#`} className="btn btn-primary shadow btn-xs sharp me-1">
+                                            <i className="fa fa-pencil" />
                                         </Link>
-                                    </Popconfirm>
-                                </div>
-                            </td>
-                        </tr>
+                                        <Popconfirm
+                                            title="Delete cow feed!"
+                                            description="Are you sure to VOUCHERS HOTEL?"
+                                            onConfirm={() => confirm(item?._id)}
+                                            // onCancel={cancel}
+                                            okText="Yes"
+                                            cancelText="No"
+                                        >
+                                            <Link to="#" className="btn btn-danger shadow btn-xs sharp">
+                                                <i className="fa fa-trash" />
+                                            </Link>
+                                        </Popconfirm>
+                                    </div>
+                                </td>
+                            </tr>
+                        })}
+
                     </tbody>
                 </table>
 
                 <div className="dataTables_info" role="status" aria-live="polite">
-                    Total 0 entries
+                    Total {totalCount} entries
                 </div>
                 <div className="dataTables_paginate paging_simple_numbers">
                     <Pagination

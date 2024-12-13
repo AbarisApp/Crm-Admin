@@ -5522,7 +5522,17 @@ export const getByIdTRCRMOnlyUpdate = (id) => {
 };
 
 export const trcrm_tr_leadUpdate = (id, value) => {
-  return axiosInstance.put(`${baseUrl}trcrm_tr_lead/update_type//${id}`, value);
+  return axiosInstance.put(`${baseUrl}trcrm_tr_lead/update_type/${id}`, value);
+};
+export const addhotelVoucher = (data) => {
+  return axiosInstance.post(`${baseUrl}hotelVoucher/addType`, data);
+}
+
+export const getHotelVoucher = (value) => {
+  return axiosInstance.get(`${baseUrl}hotelVoucher/user?page=${value?.page}&count=${value?.count}&start_date=${value?.start_date}&end_date=${value?.end_date}`);
+};
+export const deleteHotelVoucher = (id) => {
+  return axiosInstance.delete(`${baseUrl}hotelVoucher/delete_type/${id}`);
 };
 
 
@@ -6416,7 +6426,7 @@ export const postPickupPonit = (data) => {
 
 
 export const updatePickupById = (id, data) => {
-  return axios.put(`${baseproductUrl}pickupPoints/${id}`, data , {
+  return axios.put(`${baseproductUrl}pickupPoints/${id}`, data, {
     headers: {
       "Content-Type": "application/json; charset=UTF-8",
       Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
@@ -6436,7 +6446,7 @@ export const postPurchase = (data) => {
   });
 };
 
-export const getAllPurchaseData = (page,count) => {
+export const getAllPurchaseData = (page, count) => {
   return axiosInstance.get(
     `${baseUrl}lead_purchase_order_master/user?page=${page}&count=${count}`
   );
