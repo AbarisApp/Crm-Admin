@@ -6452,6 +6452,21 @@ export const getAllPurchaseData = (page, count) => {
   );
 };
 
+export const getbyIdPurchase = (id) => {
+  return axiosInstance.get(
+    `${baseUrl}lead_purchase_order_master/${id}`
+  );
+};
+
+export const updatePurchase = (data, id) => {
+  return axiosInstance.put(`/lead_purchase_order_master/update_type/${id}`, data, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
 
 
 // Sales order Apis  start //
@@ -6465,7 +6480,18 @@ export const postSalesOrder = (data) => {
   });
 };
 
-export const getAllSalesData = (page,count) => {
+export const deletetravelPurchase = (id) => {
+  return axiosInstance.delete(
+    `${baseUrl}lead_purchase_order_master/delete_type/${id}`,
+    {
+      headers: {
+        "Content-Type": "application/json; charset=UTF-8",
+        Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+      },
+    });
+};
+
+export const getAllSalesData = (page, count) => {
   return axiosInstance.get(
     `${baseUrl}lead_sales_order_master/user?page=${page}&count=${count}`
   );
@@ -6481,7 +6507,7 @@ export const postquotationMaster = (data) => {
   });
 };
 
-export const getAllquotationMasterData = (page,count) => {
+export const getAllquotationMasterData = (page, count) => {
   return axiosInstance.get(
     `${baseUrl}lead_quotation_master/?page=${page}&count=${count}`
   );

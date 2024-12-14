@@ -5,7 +5,7 @@ import { PDFViewer } from "@react-pdf/renderer";
 import PdfBanks from "./pdfBank/PdfBanks";
 import { useEffect, useState } from "react";
 import Loadar from "../../../../common/loader/Loader";
-import { getAllPurchaseData } from "../../../../api/login/Login";
+import { deletetravelPurchase, getAllPurchaseData } from "../../../../api/login/Login";
 
 
 const PurchageOrder = () => {
@@ -55,9 +55,9 @@ const PurchageOrder = () => {
     const deleteBlockAdd = async (id) => {
         setLoading(true)
         try {
-            // await deleteAccGroupById(id)
-            // let backList = totalCount % 11 === 0 ? page - 1 : page
-            // getFloorMasters(backList)
+            await deletetravelPurchase(id)
+            let backList = totalCount % 11 === 0 ? page - 1 : page
+            getFloorMasters(backList)
         } catch (error) {
             // toastSuccessMessage(error.message)
         }
@@ -145,7 +145,7 @@ const PurchageOrder = () => {
                                                             <i className="fa fa-pencil" />
                                                         </Link>
                                                         <Popconfirm
-                                                            title="Delete group!"
+                                                            title="Delete !"
                                                             description="Are you sure to delete?"
                                                             onConfirm={() => confirm(item?._id)}
                                                             onCancel={cancel}
