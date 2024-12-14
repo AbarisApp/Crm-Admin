@@ -114,7 +114,7 @@ import { Link } from "react-router-dom";
 import { PDFViewer } from "@react-pdf/renderer";
 import { useEffect, useState } from "react";
 import Loadar from "../../../../common/loader/Loader";
-import {getAllquotationMasterData } from "../../../../api/login/Login";
+import {getAllquotationMasterData, getPurchaseChallan } from "../../../../api/login/Login";
 import Breadcrumbs from "../../../../common/breadcrumb/Breadcrumbs";
 import { message, Pagination, Popconfirm } from "antd";
 
@@ -147,7 +147,7 @@ const PurchaseChallan = () => {
 
         setLoading(true)
         try {
-            const res = await getAllquotationMasterData(page, count)
+            const res = await getPurchaseChallan(page, count)
             setTotalCount(res?.totalCount)
             setData(res?.data)
             setPage(page)
