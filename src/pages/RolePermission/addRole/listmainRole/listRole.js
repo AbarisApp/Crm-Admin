@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Loadar from "../../../../common/loader/Loader";
 import { listRoleDelete } from "../../../../api/login/Login";
 import { toast, ToastContainer } from "react-toastify";
+import { useState } from "react";
 
 function ListRole({ onChangeVal, dmtTtxn, loading, dmtExcelTtxn, getDmtTxnData, total, page }) {
     const curdmtTtxn = dmtTtxn
@@ -36,10 +37,74 @@ function ListRole({ onChangeVal, dmtTtxn, loading, dmtExcelTtxn, getDmtTxnData, 
     const cancel = (e) => {
         message.error('Cancle Successfull!');
     };
+    const [options, setOptions] = useState(["Option 1", "Option 2", "Option 3"]); 
+    const [selectedOption, setSelectedOption] = useState("");
+    const [inputValue, setInputValue] = useState("");
+
+    const handleSelectChange = (e) => {
+        setSelectedOption(e.target.value);
+        console.log("Selected Option:", e.target.value);
+    };
+
+    const handleInputChange = (e) => {
+        setInputValue(e.target.value);
+        console.log("Input Value:", e.target.value);
+    };
     return (
         <>
             <section className="ListDistributer exppdf">
                 <div className="row m-4">
+                    <div className="col-xl-12">
+                        <div className="card">
+                            <div className="card-body p-0">
+                                <div className="table-responsive active-projects style-1">
+                                    <div className="tbl-caption">
+                                        <h4 className="heading mb-0"><b>  Role Filter </b></h4>
+                                        <form className="row">
+                                            <div className="col-4">
+                                                <div className="form-group">
+                                                    <label htmlFor="dynamicSelector" className="form-label">
+                                                        Select an Option
+                                                    </label>
+                                                    <select
+                                                        className="form-control"
+                                                        id="dynamicSelector"
+                                                        name="dynamicSelector"
+                                                        onChange={handleSelectChange}
+                                                        value={selectedOption}
+                                                    >
+                                                        <option value="">Choose...</option>
+                                                        {options.map((option, index) => (
+                                                            <option key={index} value={option}>
+                                                                {option}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div className="col-4">
+                                                <div className="form-group">
+                                                    <label htmlFor="inputField" className="form-label">
+                                                        Enter Value
+                                                    </label>
+                                                    <input
+                                                        type="text"
+                                                        className="form-control"
+                                                        id="inputField"
+                                                        name="inputField"
+                                                        placeholder="Enter text"
+                                                        onChange={handleInputChange}
+                                                        value={inputValue}
+                                                    />
+                                                </div>
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div className="col-xl-12">
                         <div className="card">
                             <div className="card-body p-0">

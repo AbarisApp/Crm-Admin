@@ -2,7 +2,7 @@ import { Pagination } from "antd";
 import Breadcrumbs from "../../../common/breadcrumb/Breadcrumbs";
 import { Tab, Tabs } from "react-bootstrap";
 import VoucherHotalList from "./voucherHotalList/VoucherHotalList";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import VoucherServiceList from "./voucherServiceList/VoucherServiceList";
 import VoucherFlightList from "./voucherFlightList/VoucherFlightList";
 
@@ -14,6 +14,9 @@ const Travelvouchers = () => {
         title_2: 'Vouchers',
         path_2: ``
     };
+    const params = useParams()
+    console.log(params);
+
     return (
         <>
             <Breadcrumbs breadCrumbsTitle={breadCrumbsTitle} />
@@ -26,8 +29,8 @@ const Travelvouchers = () => {
                                     <div className="tbl-caption">
                                         <h4 className="heading mb-0 p-2">Vouchers</h4>
                                         <div>
-                                            <Link to='/travel-Vouchers-Add' className="btn btn-primary">Add Hotel Voucher</Link>
-                                            <Link to='/travel-service-Add' className="btn btn-primary">Add Service Voucher</Link>
+                                            <Link to={`/travel-Vouchers-Add/${params?.id}`} className="btn btn-primary">Add Hotel Voucher</Link>
+                                            <Link to={`/travel-service-Add/${params?.id}`} className="btn btn-primary">Add Service Voucher</Link>
                                             <Link to='/travel-flight-Add' className="btn btn-primary">Add Flight Voucher</Link>
                                         </div>
 

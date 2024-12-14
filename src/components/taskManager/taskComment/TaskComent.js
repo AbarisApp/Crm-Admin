@@ -8,7 +8,9 @@ import "./Taskcomment.css"
 import CreateTask from './CreateTask';
 import { message, Popconfirm } from 'antd';
 function TaskComent({ mnualData }) {
-    const [modalShow, setModalShow] = React.useState(false);
+    console.log(mnualData);
+
+    const [editComment, setEditComment] = useState(false);
     const [show, setShow] = React.useState(false);
     const [count, setCount] = React.useState(100);
     const [page, setPage] = React.useState(0);
@@ -45,7 +47,7 @@ function TaskComent({ mnualData }) {
         try {
             const resp = await getCommentTaskById(id);
             setEditValue(resp.data)
-            
+
             if (resp?.data) {
                 setTaskDetails(resp.data);
                 setInitialValues((prev) => ({
@@ -102,63 +104,65 @@ function TaskComent({ mnualData }) {
 
     const formSubmits = async (e) => {
         e.preventDefault();
-
+    
         try {
             const taskId = localStorage.getItem("66565478543478654765376547");
             if (!taskId) {
                 toastErrorMessage("First Select Task");
                 return;
             }
-
-            setInitialValues((prev) => ({
-                ...prev,
+    
+            // Prepare updatedInitialValues
+            const updatedInitialValues = {
+                ...initialValues,
                 task_id: taskId,
-            }));
-
-            // Submit form with `initialValues`
-            console.log("Form submitted:", initialValues);
-            // Add your API call or submission logic here
-        } catch (error) {
-            console.error("Form submission error:", error);
-        }
-
-
-        try {
-            if (!initialValues._id) {
-                const res = await postCommentAccTask(initialValues);
+            };
+    
+            // Remove _id field for adding new comments
+            if (!editComment) {
+                delete updatedInitialValues._id;
+            }
+    
+            console.log(updatedInitialValues.task_id);
+    
+            if (!editComment) {
+                // Add comment logic
+                const res = await postCommentAccTask(updatedInitialValues);
                 if (res?.statusCode === "200") {
                     toastSuccessMessage("Comment Added Successfully");
-                    getCommenetData(localStorage.getItem(`66565478543478654765376547`));
+                    getCommenetData(taskId);
+                    setInitialValues({
+                        task_id: "",
+                        comment: "",
+                        attachments: [],
+                    });
+                } else {
+                    toastErrorMessage("Failed to Add Comment");
+                }
+            } else {
+                // Edit comment logic
+                const res = await updateCommentAccTask(updatedInitialValues._id, updatedInitialValues);
+                if (res?.statusCode === "200") {
+                    toastSuccessMessage("Comment Edited Successfully");
+                    getCommenetData(taskId);
                     setInitialValues({
                         task_id: taskId,
                         comment: "",
                         attachments: [],
                     });
-                    // getListData(page); // Refresh the task list
-                } else {
-                    toastErrorMessage("Failed to Add Comment");
-                }
-            } else {
-                // Edit existing comment
-                const res = await updateCommentAccTask(initialValues._id, initialValues);
-                if (res?.statusCode === "200") {
-                    toastSuccessMessage("Comment Edited Successfully");
-                    getCommenetData(localStorage.getItem(`66565478543478654765376547`));
-                    setInitialValues({
-                        task_id: localStorage.getItem(`66565478543478654765376547`),
-                        comment: "",
-                        attachments: [],
-                    });
+                    setEditComment(false); // Reset edit mode after successful update
                 } else {
                     toastErrorMessage("Failed to Edit Comment");
                 }
             }
         } catch (error) {
+            console.error("Form submission error:", error);
             toastErrorMessage("Error processing the form.");
         }
+    };
+    
 
 
-    }
     const confirm = (id) => {
         deleteCommentAccTask(id);
         message.success(' Chat Delete Successful!');
@@ -168,22 +172,27 @@ function TaskComent({ mnualData }) {
     const cancel = async (id) => {
         try {
             if (id) {
-                const response = await GetUpdateCommentAccTaskByid(id)
-                setInitialValues(response?.data)
+                const response = await GetUpdateCommentAccTaskByid(id);
+                if (response?.data) {
+                    setInitialValues(response.data);
+                    setEditComment(true); // Set edit mode when editing
+                } else {
+                    toastErrorMessage("Failed to load comment for editing.");
+                }
             } else {
-                setInitialValues(
-                    {
-                        task_id: "",
-                        comment: "",
-                        attachments: [],
-                    }
-                )
+                setInitialValues({
+                    task_id: "",
+                    comment: "",
+                    attachments: [],
+                });
+                setEditComment(false); // Reset edit mode
             }
         } catch (error) {
-
+            console.error("Error in cancel function:", error);
+            toastErrorMessage("Error resetting form.");
         }
-        // message.error('Edit Successful!');
     };
+
     const taskDeleted = async (id) => {
         if (1) {
             try {
@@ -306,6 +315,21 @@ function TaskComent({ mnualData }) {
                                                 }}
                                             >
                                                 <i className='fa-sharp fa-solid fa-trash-can fa-2xs'></i>
+
+                                            </Badge>
+                                            <Badge
+                                                style={{
+                                                    backgroundColor: '#afe1af	',
+                                                    color: '#fff',
+                                                    fontWeight: '500',
+                                                }}
+                                                onClick={(e) => {
+                                                    e.stopPropagation(); // Prevents triggering the parent div's onClick
+                                                    taskDeleted(data?._id);
+                                                }}
+                                            >
+                                                <i class="fa-sharp fa-solid fa-clock fa-shake"></i>
+
                                             </Badge>
                                         </div>
                                     </div>
@@ -346,11 +370,11 @@ function TaskComent({ mnualData }) {
                             <div className="d-flex justify-content-between align-items-center mb-3">
                                 <div>
                                     <Button variant="outline-secondary" size="sm" className="mr-2">Mark as Done</Button>
-                                    <Button variant="outline-secondary" size="sm" onClick={() => setModalShow(true)}>Remind Later</Button>
+                                    {/* <Button variant="outline-secondary" size="sm" onClick={() => setModalShow(true)}>Remind Later</Button>
                                     <ReminderLater
                                         show={modalShow}
                                         onHide={() => setModalShow(false)}
-                                    />
+                                    /> */}
                                 </div>
                                 <Button className='btn-outline' variant="link" size="m" onClick={() => setShow(!show)}>
                                     Edit Task <i class="fa-solid fa-pen-to-square"></i>
@@ -478,12 +502,11 @@ function TaskComent({ mnualData }) {
                                                         <p>{item?.comment || "No comment provided"}</p>
                                                         <span className="arrow-icon">
                                                             <Popconfirm
-                                                                title="Edit Delete Chat"
-                                                                // description="Are you sure to delete?"
+                                                                title="Edit or Delete Chat"
                                                                 onConfirm={() => confirm(item?._id)}
                                                                 onCancel={() => cancel(item?._id)}
-                                                                okText={<i class="fa-solid fa-trash fa-2xs"></i>}
-                                                                cancelText={<i class="fa-solid fa-pen fa-2xs"></i>}
+                                                                okText={<i className="fa-solid fa-trash fa-2xs"></i>}
+                                                                cancelText={<i className="fa-solid fa-pen fa-2xs"></i>}
                                                             >
                                                                 <i className="fa-solid fa-angle-down"></i>
                                                             </Popconfirm>
