@@ -1065,6 +1065,40 @@ import { BusinessView } from "./components/degreeView/businessView/BusinessViwe"
 import PickUpMaster from "./components/topNavigationComp/masters/pickuppoint/PickUpMaster.js";
 import CreatePickUp from "./components/topNavigationComp/masters/pickuppoint/MasterForm/CreatePickUp.js";
 
+import OrderReturn from "./pages/empolye/OrderReturn/index.js";
+import NewOrderReturn from "./pages/empolye/NewOrderReturn/index.js";
+import CreateSampleOrder from "./pages/empolye/CreateSimpleOrdre";
+import CustomePartyOutstandingReport from "./components/Empoyee/Report/CustomerPartyOutstandingReport.js";
+import CustomePartyAgingReport from "./components/Empoyee/Report/CustomerPartyAgingReport.js";
+import MonthlyProductAchivement from "./components/Empoyee/Report/MonthlyProductAchivement.js";
+import YearlyProductAchivement from "./components/Empoyee/Report/YearlyProductAchivement.js";
+import About90Days from "./components/Empoyee/Report/About90Days.js";
+import PartyProductSalesAnalysis from "./components/Empoyee/Report/PartyProductSalesAnalysis.js";
+import MonthlyForecastReport from "./components/Empoyee/Report/MonthlyForecastReport.js";
+import DepotProductStock from "./components/Empoyee/Report/DepotProductStock.js";
+import DealerProductStock from "./components/Empoyee/Report/DealerProductStock.js";
+import DemoAchivement from "./components/Empoyee/Report/DemoAchivement.js";
+import DemoMaterialSummery from "./components/Empoyee/Report/DemoMaterialSummery.js";
+import NoSaleProducts from "./components/Empoyee/Report/NoSaleProducts.js";
+import ProductPricelistState from "./components/Empoyee/Report/ProductPricelistState.js";
+import Productlist from "./components/Empoyee/Report/ProductList.js";
+
+// Meraj  --------  13/12/2024---------start Imports  
+import ExistingPartyVisit from "./components/partyDealer/ExistingPartyVisit.js";
+import NewPartyVisit from "./components/partyDealer/NewPartyVisit";
+import NewPartyVisitSummery from "./components/partyDealer/NewPartyVisitSummery";
+import PartyDealerList from "./components/partyDealer/PartyDealerList";
+import PartyDealerSite from "./components/partyDealer/PartyDealerSite";
+import PartyDealerDetail from "./components/partyDealer/PartyDealerDetail";
+import CollectionSummery from "./components/partyDealer/CollectionSummery";
+import DayWiseVisit from "./components/partyDealer/DayWiseVisit";
+import EmployeeWiseVisit from "./components/partyDealer/EmployeeWiseVisit";
+import PartyBusinessAnalytics from "./components/partyDealer/PartyBusinessAnalytics";
+import CustomerDirectory from "./components/cropProductions/CustomerDirectory";
+import Orderslr from "./pages/order-lr/Orderslr";
+import AllReports from "./pages/allReports";
+// Meraj  --------  13/12/2024---------End Imports 
+
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [navigateState, setNavigateState] = useState(null);
@@ -2971,10 +3005,11 @@ function App() {
 
               <Route path="travel-leads" element={<TravelLeadPage />} />
               <Route path="travel-leads-add" element={<AddLeadForm />} />
+              <Route path="travel-leads-update/:id" element={<AddLeadForm />} />
               <Route path="leads-details/:referId/:id" element={<ViewLeads />} />
-              <Route path="travel-Vouchers-list" element={<TravelVoucherPage />} />
-              <Route path="travel-Vouchers-Add" element={<AddHotelVoucher />} />
-              <Route path="travel-service-Add" element={<AddServiceVoucher />} />
+              <Route path="travel-Vouchers-list/:id" element={<TravelVoucherPage />} />
+              <Route path="travel-Vouchers-Add/:id" element={<AddHotelVoucher />} />
+              <Route path="travel-service-Add/:id" element={<AddServiceVoucher />} />
               <Route path="travel-flight-Add" element={<AddFlightVoucher />} />
               <Route path="travel-invoice-list" element={<TravelInvoice />} />
               <Route path="travel-invoice-create" element={<InvoiceAdd />} />
@@ -3174,6 +3209,47 @@ function App() {
               <Route path="boost-view" element={<Boosts />} />
               <Route path="degree-view" element={<DegreeViews />} />
               <Route path="business-view" element={<BusinessView />} />
+
+
+              <Route path="orderreturn" element={<OrderReturn />} />
+              <Route path="order-return-page" element={<NewOrderReturn />} />
+              <Route path="create-sample-order" element={<CreateSampleOrder />} />
+              <Route path="customepartyreport" element={<CustomePartyOutstandingReport />} />
+              <Route path="customepartyreportagingreport" element={<CustomePartyAgingReport />} />
+              <Route path="monthlyproductachivement" element={<MonthlyProductAchivement />} />
+              <Route path="yearlyproductachivement" element={<YearlyProductAchivement />} />
+              <Route path="about90days" element={<About90Days />} />
+              <Route path="saleanalysis" element={<PartyProductSalesAnalysis />} />
+              <Route path="forcestreport" element={<MonthlyForecastReport />} />
+
+              <Route path="depotproductstock" element={<DepotProductStock />} />
+              <Route path="dealerproductstock" element={<DealerProductStock />} />
+              <Route path="demoachivement" element={<DemoAchivement />} />
+              <Route path="demomaterial" element={<DemoMaterialSummery />} />
+              <Route path="nosaleProducts" element={<NoSaleProducts />} />
+              <Route path="priceliststate" element={<ProductPricelistState />} />
+              <Route path="priceproductlist" element={<Productlist />} />
+
+
+
+              {/* Meraj Routes start ----- 13/12/24------------------ */}
+
+              <Route path="order-lr" element={<Orderslr />} />
+              <Route path="all-report" element={<AllReports />} />
+              {/* Party/Dealer */}
+              <Route path="existing-party-visit" element={<ExistingPartyVisit />} />
+              <Route path="new-party-visit" element={<NewPartyVisit />} />
+              <Route path="new-party-visit-summery" element={<NewPartyVisitSummery />} />
+              <Route path="party-dealer-list" element={<PartyDealerList />} />
+              <Route path="party-dealer-site" element={<PartyDealerSite />} />
+              <Route path="party-dealer-detail" element={<PartyDealerDetail />} />
+              <Route path="collection-summery" element={<CollectionSummery />} />
+              <Route path="day-wise-visit" element={<DayWiseVisit />} />
+              <Route path="employee-wise-visit" element={<EmployeeWiseVisit />} />
+              <Route path="Party-business-analytics" element={<PartyBusinessAnalytics />} />
+              {/* Crop Productions */}
+              <Route path="customer-directory" element={<CustomerDirectory />} />
+              {/* Meraj Routes  ----- 13/12/24-------END----------- */}
             </Route>
           </>
         )}

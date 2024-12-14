@@ -4,7 +4,7 @@ import { searchingReminderTask, searchReminderTask } from '../../../api/login/Lo
 
 function TaskRemainder() {
     const [initialValues, setinitialValues] = useState([]);
-    const [searchQuerry, setsearchQuerry] = useState("");
+    let searchQuerry = null
     const [count, setCount] = useState(0);
     const [page, setPage] = useState(100);
 
@@ -34,23 +34,26 @@ function TaskRemainder() {
 
     // API call on search
     const handleSearch = async (searchTerm) => {
+
+
         if (searchTerm.length >= 3) {
+            console.log(searchTerm, "condition");
             try {
-                const response = await searchingReminderTask(page,count,searchTerm);
+                const response = await searchingReminderTask(page, count, searchTerm);
                 setinitialValues(response);
             } catch (error) {
                 console.error("Error while searching:", error.message);
             }
         } else {
-            setinitialValues([]); 
+            setinitialValues([]);
         }
     };
 
-    const debouncedSearch = debounce(handleSearch, 1000);
+    const debouncedSearch = debounce(handleSearch,2000);
 
     const handleChange = (e) => {
         const value = e.target.value;
-        setsearchQuerry(value);
+        // setsearchQuerry(value);
         debouncedSearch(value);
     };
 

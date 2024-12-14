@@ -5517,6 +5517,24 @@ export const getByIdTRCRM_tr_lead = (id) => {
   return axiosInstance.get(`${baseUrl}TRCRM_tr_lead/${id}`);
 };
 
+export const getByIdTRCRMOnlyUpdate = (id) => {
+  return axiosInstance.get(`${baseUrl}trcrm_tr_lead/getTypeByIdForForm/${id}`);
+};
+
+export const trcrm_tr_leadUpdate = (id, value) => {
+  return axiosInstance.put(`${baseUrl}trcrm_tr_lead/update_type/${id}`, value);
+};
+export const addhotelVoucher = (data) => {
+  return axiosInstance.post(`${baseUrl}hotelVoucher/addType`, data);
+}
+
+export const getHotelVoucher = (value) => {
+  return axiosInstance.get(`${baseUrl}hotelVoucher/user?page=${value?.page}&count=${value?.count}&start_date=${value?.start_date}&end_date=${value?.end_date}`);
+};
+export const deleteHotelVoucher = (id) => {
+  return axiosInstance.delete(`${baseUrl}hotelVoucher/delete_type/${id}`);
+};
+
 
 
 export const getTRCRM_tr_traveller = (value) => {
@@ -5637,6 +5655,9 @@ export const TRCRM_visa_category_masterGet = () => {
 };
 export const TTRCRM_visa_type_masterGet = () => {
   return axiosInstance.get(`${baseUrl}TRCRM_visa_type_master/admin`);
+};
+export const TTRCRM_tr_travellerGet = () => {
+  return axiosInstance.get(`${baseUrl}TRCRM_tr_traveller/admin`);
 };
 
 
@@ -6405,7 +6426,7 @@ export const postPickupPonit = (data) => {
 
 
 export const updatePickupById = (id, data) => {
-  return axios.put(`${baseproductUrl}pickupPoints/${id}`, data , {
+  return axios.put(`${baseproductUrl}pickupPoints/${id}`, data, {
     headers: {
       "Content-Type": "application/json; charset=UTF-8",
       Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
@@ -6425,7 +6446,7 @@ export const postPurchase = (data) => {
   });
 };
 
-export const getAllPurchaseData = (page,count) => {
+export const getAllPurchaseData = (page, count) => {
   return axiosInstance.get(
     `${baseUrl}lead_purchase_order_master/user?page=${page}&count=${count}`
   );
@@ -6437,8 +6458,21 @@ export const getbyIdPurchase = (id) => {
   );
 };
 
-export const updatePurchase = (data , id) => {
+export const updatePurchase = (data, id) => {
   return axiosInstance.put(`/lead_purchase_order_master/update_type/${id}`, data, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
+
+
+// Sales order Apis  start //
+
+export const postSalesOrder = (data) => {
+  return axiosInstance.post(`/lead_sales_order_master/addType`, data, {
     headers: {
       "Content-Type": "application/json; charset=UTF-8",
       Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
@@ -6448,6 +6482,33 @@ export const updatePurchase = (data , id) => {
 
 export const deletetravelPurchase = (id) => {
   return axiosInstance.delete(
-    `${baseUrl}lead_purchase_order_master/delete_type/${id}`
+    `${baseUrl}lead_purchase_order_master/delete_type/${id}`,
+    {
+      headers: {
+        "Content-Type": "application/json; charset=UTF-8",
+        Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+      },
+    });
+};
+
+export const getAllSalesData = (page, count) => {
+  return axiosInstance.get(
+    `${baseUrl}lead_sales_order_master/user?page=${page}&count=${count}`
+  );
+};
+// Sales quotationMaster api Apis  start //
+
+export const postquotationMaster = (data) => {
+  return axiosInstance.post(`/lead_quotation_master/addType`, data, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
+export const getAllquotationMasterData = (page, count) => {
+  return axiosInstance.get(
+    `${baseUrl}lead_quotation_master/?page=${page}&count=${count}`
   );
 };

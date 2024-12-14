@@ -37,7 +37,7 @@ const ViewLeads = () => {
     const leadIdGet = async () => {
         try {
             const res = await getByIdTRCRM_tr_lead(paramsAll?.id)
-            console.log(res);
+            // console.log(res);
             setLeadIdData(res?.data)
         } catch (error) {
 
@@ -143,9 +143,9 @@ const ViewLeads = () => {
             </div>
             <div className="side-buttons position-fixed" style={{ top: "408px", right: "-99px" }}>
                 <Link to={'#'} className="btn btn-info mb-2 mb-2">Flight Quote</Link>
-                <Link to="/travel-Vouchers-list" className="btn btn-info mb-2">Voucher</Link>
+                <Link to={`/travel-Vouchers-list/${paramsAll?.id}`} className="btn btn-info mb-2">Voucher</Link>
                 <Link to={'/travel-invoice-list'} className="btn btn-info mb-2">Invoice</Link>
-            </div>
+            </div >
         </>
     )
 }

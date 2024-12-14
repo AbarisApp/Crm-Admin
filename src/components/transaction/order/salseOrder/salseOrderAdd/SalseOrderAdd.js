@@ -2,6 +2,275 @@ import { useState } from "react";
 import Breadcrumbs from "../../../../../common/breadcrumb/Breadcrumbs";
 
 
+// const SalseOrderAdd = () => {
+//     const breadCrumbsTitle = {
+//         id: "1",
+//         title_1: "Transaction",
+//         title_2: 'Order',
+//         title_3: `Add Sales Order`,
+//         path_2: ``
+//     };
+
+//     const [formData, setFormData] = useState({
+//         date: '',
+//         taxType: '',
+//         orderNo: '',
+//         broker: '',
+//         transportName: '',
+//         deliveryDestination: '',
+//         narration: ''
+//     });
+
+//     const handleInputChange = (e) => {
+//         const clone = { ...formData }
+//         const value = e.target.value
+//         const name = e.target.name
+//         clone[name] = value
+//         setFormData(clone)
+//         // setFormData({
+//         //     ...formData,
+//         //     [e.target.name]: e.target.value
+//         // });
+
+//         // Update expenses when tax type is selected
+//         // if (e.target.name === 'taxType') {
+//         //     setExpenses(taxTypeData[e.target.value] || []);
+//         // }
+//     };
+
+
+//     ////////
+//     const [rows, setRows] = useState([
+//         { id: 1, item: '', Tax: 0, CaseQty: '', Location: '', SizeofCase: '', Quantity2: 0, Quantity: 0 },
+//         { id: 2, item: '', Tax: 0, CaseQty: '', Location: '', SizeofCase: '', Quantity2: 0, Quantity: 0 },
+//         { id: 3, item: '', Tax: 0, CaseQty: '', Location: '', SizeofCase: '', Quantity2: 0, Quantity: 0 },
+//         { id: 4, item: '', Tax: 0, CaseQty: '', Location: '', SizeofCase: '', Quantity2: 0, Quantity: 0 },
+//     ]);
+//     // Function to handle value changes in the input fields
+//     const handleChange = (index, key, value) => {
+//         const updatedRows = rows.map((row, i) =>
+//             i === index ? { ...row, [key]: value } : row
+//         );
+//         setRows(updatedRows);
+//     };
+
+//     // Function to render each row of the table
+//     const renderRow = (row, index) => (
+//         <tr key={row.id}>
+//             <td>
+//                 <select
+//                     value={row.item}
+//                     onChange={(e) => handleChange(index, 'item', e.target.value)}
+//                 >
+//                     <option value="">Select</option>
+//                     <option value="Cr">Cr</option>
+//                     <option value="Db">Db</option>
+//                 </select>
+//             </td>
+//             <td>
+//                 <input
+//                     type="number"
+//                     value={row.Tax}
+//                     onChange={(e) => handleChange(index, 'Tax', e.target.value)}
+//                 />
+//             </td>
+//             <td>
+//                 <input
+//                     type="number"
+//                     value={row.CaseQty}
+//                     onChange={(e) => handleChange(index, 'CaseQty', e.target.value)}
+//                 />
+//             </td>
+//             <td>
+//                 <input
+//                     type="number"
+//                     value={row.Location}
+//                     onChange={(e) => handleChange(index, 'Location', e.target.value)}
+//                 />
+//             </td>
+//             <td>
+//                 <input
+//                     type="number"
+//                     value={row.SizeofCase}
+//                     onChange={(e) => handleChange(index, 'SizeofCase', e.target.value)}
+//                 />
+//             </td>
+//             <td>
+//                 <input
+//                     type="number"
+//                     value={row.Quantity2}
+//                     onChange={(e) => handleChange(index, 'Quantity2', e.target.value)}
+//                 />
+//             </td>
+//             <td>
+//                 <input
+//                     type="number"
+//                     value={row.Quantity}
+//                     onChange={(e) => handleChange(index, 'Quantity', e.target.value)}
+//                 />
+//             </td>
+//             <td>
+//                 <button onClick={() => handleDeleteRow(index)}>🗑️</button>
+//             </td>
+//         </tr>
+//     );
+
+//     // Function to handle row deletion
+//     const handleDeleteRow = (index) => {
+//         const updatedRows = rows.filter((_, i) => i !== index);
+//         setRows(updatedRows);
+//     };
+
+//     // Function to add a new row
+//     const handleAddRow = () => {
+//         setRows([
+//             ...rows,
+//             { id: rows.length + 1, ExpenseAc: '', Product: '', HSNCode: 0, Commodity: 0, Amount: 0 },
+//         ]);
+//     };
+
+//     const submitData = () => {
+//         console.log(formData);
+
+//     }
+
+
+//     /////
+//     return (
+//         <>
+//             <Breadcrumbs breadCrumbsTitle={breadCrumbsTitle} />
+//             <div className="row m-4">
+//                 <div className="col-xl-12">
+//                     <div className="card">
+//                         <div className="card-body p-0">
+
+//                             <div className="tbl-caption tbl-caption-2">
+//                                 <h4 className="heading mb-0">Add Sales Order</h4>
+//                             </div>
+//                             <div className="row">
+//                                 <div className="col-md-3 mb-3">
+//                                     <label htmlFor="date">Date</label>
+//                                     <input
+//                                         type="date"
+//                                         className="form-control"
+//                                         name="date"
+//                                         value={formData.date}
+//                                         onChange={handleInputChange}
+//                                     />
+//                                 </div>
+//                                 <div className="col-md-3 mb-3">
+//                                     <label htmlFor="taxType">Account</label>
+//                                     <select
+//                                         className="form-control"
+//                                         name="taxType"
+//                                         value={formData.taxType}
+//                                         onChange={handleInputChange}
+//                                     >
+//                                         <option value="">Select Tax Type</option>
+//                                         <option value="GST 5%">GST 5%</option>
+//                                         <option value="GST 12%">GST 12%</option>
+//                                         <option value="GST MULTIPLE">GST MULTIPLE</option>
+//                                     </select>
+//                                 </div>
+//                                 <div className="col-md-3 mb-3">
+//                                     <label htmlFor="orderNo">Order No</label>
+//                                     <input
+//                                         type="number"
+//                                         className="form-control"
+//                                         name="orderNo"
+//                                         value={formData.orderNo}
+//                                         onChange={handleInputChange}
+//                                         placeholder="Enter Order No"
+//                                     />
+//                                 </div>
+//                                 <div className="col-md-3 mb-3">
+//                                     <label htmlFor="broker">Broker</label>
+//                                     <input
+//                                         type="text"
+//                                         className="form-control"
+//                                         name="broker"
+//                                         value={formData.broker}
+//                                         onChange={handleInputChange}
+//                                         placeholder="Enter Broker"
+//                                     />
+//                                 </div>
+//                                 <div className="col-md-3 mb-3">
+//                                     <label htmlFor="transportName">Transport Name</label>
+//                                     <input
+//                                         type="text"
+//                                         className="form-control"
+//                                         name="transportName"
+//                                         value={formData.transportName}
+//                                         onChange={handleInputChange}
+//                                         placeholder="Enter Transport Name"
+//                                     />
+//                                 </div>
+//                                 <div className="col-md-3 mb-3">
+//                                     <label htmlFor="deliveryDestination">Delivery Destination</label>
+//                                     <input
+//                                         type="text"
+//                                         className="form-control"
+//                                         name="deliveryDestination"
+//                                         value={formData.deliveryDestination}
+//                                         onChange={handleInputChange}
+//                                         placeholder="Enter Delivery Destination"
+//                                     />
+//                                 </div>
+//                             </div>
+//                             <div className="table-responsive dataTables_wrapper style-1">
+//                                 <div className="col-lg-12">
+//                                     <table border="1" cellPadding="10">
+//                                         <thead>
+//                                             <tr>
+//                                                 <th>Item</th>
+//                                                 <th>Tax %</th>
+//                                                 <th>CaseQty</th>
+//                                                 <th>Location</th>
+//                                                 <th>Size of Case</th>
+//                                                 <th>Quantity2</th>
+//                                                 <th>Quantity</th>
+//                                                 <th>Action</th>
+//                                             </tr>
+//                                         </thead>
+//                                         <tbody>
+//                                             {rows.map((row, index) => renderRow(row, index))}
+//                                         </tbody>
+//                                     </table>
+//                                     {/* <button type="button" onClick={handleAddRow}>Add Row</button> */}
+//                                 </div>
+//                             </div>
+//                             <div className="col-lg-12">
+//                                 <label htmlFor="narration">Narration:</label>
+//                                 <textarea
+//                                     name="narration"
+//                                     id="narration"
+//                                     cols="180"
+//                                     value={formData.narration}
+//                                     onChange={handleInputChange}
+//                                 ></textarea>
+//                             </div>
+//                             <div className="col-lg-12">
+//                                 <button type="button" className="btn btn-success" onClick={submitData}>Save</button>
+//                             </div>
+
+//                         </div>
+//                     </div>
+//                 </div>
+//             </div>
+//         </>
+//     )
+// }
+
+// export default SalseOrderAdd
+
+
+
+import { useEffect } from "react";
+import { getAccAddProjectByPage, getAllAccountData, getAllLocationsData, getAllPickupPointsData, getAllProductsData, getAllTaxTypeData, getAllTransportersData, getAttTaxTypeData, getPickupByPage, getTaxtype, postSalesOrder } from "../../../../../api/login/Login";
+import { toast, ToastContainer } from "react-toastify";
+import Loadar from "../../../../../common/loader/Loader";
+
+
 const SalseOrderAdd = () => {
     const breadCrumbsTitle = {
         id: "1",
@@ -10,104 +279,246 @@ const SalseOrderAdd = () => {
         title_3: `Add Sales Order`,
         path_2: ``
     };
+    const [allAccounts, setAllAccounts] = useState();
+    const [allTaxes, setAllTaxes] = useState();
+    const [allTransports, setAllTransports] = useState();
+    const [allProducts, setAllProducts] = useState();
+    const [allPickupPoints, setAllPickupPoints] = useState();
 
     const [formData, setFormData] = useState({
         date: '',
-        taxType: '',
-        orderNo: '',
-        broker: '',
-        transportName: '',
-        deliveryDestination: '',
-        narration: ''
+        account: '',
+        order_no: '',
+        transporter: '673843f385dbbfa354004862',
+        prj_id: '',
+        tax_type: ''
     });
 
+    // State for dynamic expense and taxes data
+    const [expenses, setExpenses] = useState([]);
+
+    // Sample expense data based on tax type
+    const taxTypeData = {
+        "GST 5%": [
+            { name: 'CGST 1.5%', Product: 'CGST (O/P)', rate: 1.5, amount: 0 },
+            { name: 'SGST 1.5%', Product: 'SGST (O/P)', rate: 1.5, amount: 0 },
+        ],
+        "GST 12%": [
+            { name: 'CGST 6%', Product: 'CGST (O/P)', rate: 6, amount: 0 },
+            { name: 'SGST 6%', Product: 'SGST (O/P)', rate: 6, amount: 0 },
+        ],
+        "GST MULTIPLE": [
+            { name: 'CGST 1.5%', Product: 'CGST (O/P)', rate: 1.5, amount: 0 },
+            { name: 'SGST 1.5%', Product: 'SGST (O/P)', rate: 1.5, amount: 0 },
+            { name: 'CGST 2.5%', Product: 'CGST (O/P)', rate: 2.5, amount: 0 },
+        ]
+    };
+
+    // Handle form input change
     const handleInputChange = (e) => {
-        const clone = { ...formData }
-        const value = e.target.value
-        const name = e.target.name
-        clone[name] = value
-        setFormData(clone)
-        // setFormData({
-        //     ...formData,
-        //     [e.target.name]: e.target.value
-        // });
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        });
 
         // Update expenses when tax type is selected
-        // if (e.target.name === 'taxType') {
-        //     setExpenses(taxTypeData[e.target.value] || []);
-        // }
+        if (e.target.name === 'taxType') {
+            setExpenses(taxTypeData[e.target.value] || []);
+        }
     };
 
 
-    ////////
+
     const [rows, setRows] = useState([
-        { id: 1, item: '', Tax: 0, CaseQty: '', Location: '', SizeofCase: '', Quantity2: 0, Quantity: 0 },
-        { id: 2, item: '', Tax: 0, CaseQty: '', Location: '', SizeofCase: '', Quantity2: 0, Quantity: 0 },
-        { id: 3, item: '', Tax: 0, CaseQty: '', Location: '', SizeofCase: '', Quantity2: 0, Quantity: 0 },
-        { id: 4, item: '', Tax: 0, CaseQty: '', Location: '', SizeofCase: '', Quantity2: 0, Quantity: 0 },
+        { id: 1, item: '', variant: '', sku: "", Tax: 0, pickupPoint: '', quantity2: '', quantity: 0, rate: 0, disc_rs: '', disc_type: '', amount: 0 },
     ]);
-    // Function to handle value changes in the input fields
-    const handleChange = (index, key, value) => {
-        const updatedRows = rows.map((row, i) =>
-            i === index ? { ...row, [key]: value } : row
-        );
+
+
+    const handleDeleteRow = (index) => {
+        const updatedRows = rows.filter((_, i) => i !== index);
+        setRows(updatedRows);
+    };
+    const handleAddRow = () => {
+        setRows([
+            ...rows,
+            { id: rows.length + 1, item: '', variant: '', sku: "", Tax: 0, pickupPoint: '', quantity2: '', quantity: 0, rate: 0, disc_rs: '', disc_type: '', amount: 0 },
+        ]);
+    };
+
+
+
+    const handleChange = (index, key, value, varArr) => {
+        if (key === "item") {
+            const variantItem = allProducts?.find((item) => item?._id?.uid === value);
+            const updatedRows = rows.map((row, i) =>
+                i === index
+                    ? {
+                        ...row,
+                        product_id: value,
+                        variant: '',
+                        variantArr: variantItem?.product?.variations,
+                    }
+                    : row
+            );
+            setRows(updatedRows);
+            return;
+        }
+
+        if (key === "variant") {
+            const skuD = varArr?.find((item) => item?._id === value);
+            const updatedRows = rows.map((row, i) =>
+                i === index
+                    ? {
+                        ...row,
+                        variant_id: value,
+                        sku: skuD?.sku,
+                    }
+                    : row
+            );
+            setRows(updatedRows);
+            return;
+        }
+
+        const updatedRows = rows.map((row, i) => {
+            if (i === index) {
+                const updatedRow = { ...row, [key]: value };
+
+                // Perform calculations for Amount based on Quantity, Quantity2, Rate, Discount, etc.
+                const totalQuantity = parseFloat(updatedRow.quantity || 0) + parseFloat(updatedRow.quantity2 || 0);
+                const rate = parseFloat(updatedRow.rate || 0);
+                let discount = 0;
+
+                if (updatedRow.disc_type === "Fixed") {
+                    discount = parseFloat(updatedRow.disc_rs || 0);
+                } else if (updatedRow.disc_type === "per") {
+                    discount = (parseFloat(updatedRow.disc_rs || 0) / 100) * (rate * totalQuantity);
+                }
+
+                // Calculate Amount
+                const amount = (rate * totalQuantity) - discount;
+                updatedRow.amount = amount > 0 ? amount.toFixed(2) : 0;
+                return updatedRow;
+            }
+            return row;
+        });
+
         setRows(updatedRows);
     };
 
-    // Function to render each row of the table
+
     const renderRow = (row, index) => (
         <tr key={row.id}>
             <td>
                 <select
-                    value={row.item}
+                    value={row.product_id}
                     onChange={(e) => handleChange(index, 'item', e.target.value)}
                 >
-                    <option value="">Select</option>
-                    <option value="Cr">Cr</option>
-                    <option value="Db">Db</option>
+                    <option value="">Select Product</option>
+                    {allProducts?.map((item, i) => (
+                        <option key={i} value={item?._id?.uid}>
+                            {/* {item?._id?.uid} */}
+                            {item?.product?.name}
+                        </option>
+                    ))}
                 </select>
             </td>
             <td>
+                <select
+                    value={row.variant_id}
+                    name="variant_id"
+                    onChange={(e) => handleChange(index, 'variant', e.target.value, row.variantArr)}
+                >
+                    <option value="">Select Variant</option>
+                    {row?.variantArr?.map((item, i) => (
+                        <option key={i} value={item?.uid}>
+                            {item?.weight}
+                        </option>
+                    ))}
+                </select>
+            </td>
+            <td>
+                <input
+                    type="text"
+                    // disabled
+                    value={row.sku}
+                    onChange={(e) => handleChange(index, 'sku', e.target.value)}
+                />
+            </td>
+            {/* <td>
                 <input
                     type="number"
                     value={row.Tax}
                     onChange={(e) => handleChange(index, 'Tax', e.target.value)}
                 />
+            </td> */}
+            <td>
+                <select
+                    value={row.tax}
+                    onChange={(e) => handleChange(index, 'tax', e.target.value)}
+                >
+                    <option value="">Select Tax Type</option>
+                    {allTaxes && allTaxes?.map((item, i) => {
+                        return <option value={item?._id}>{item?.name}</option>
+                    })}
+
+
+                </select>
+            </td>
+            <td>
+                <select
+                    value={row.location}
+                    onChange={(e) => handleChange(index, 'location', e.target.value)}
+                >
+                    <option value="">Select PickupPoint</option>
+                    {allPickupPoints?.map((item, i) => (
+                        <option key={i} value={item?._id}>
+                            {item?.pickupPoint_name}
+                        </option>
+                    ))}
+                </select>
             </td>
             <td>
                 <input
                     type="number"
-                    value={row.CaseQty}
-                    onChange={(e) => handleChange(index, 'CaseQty', e.target.value)}
+                    value={row.quantity2}
+                    onChange={(e) => handleChange(index, 'quantity2', e.target.value)}
                 />
             </td>
             <td>
                 <input
                     type="number"
-                    value={row.Location}
-                    onChange={(e) => handleChange(index, 'Location', e.target.value)}
+                    value={row.quantity}
+                    onChange={(e) => handleChange(index, 'quantity', e.target.value)}
                 />
             </td>
             <td>
                 <input
                     type="number"
-                    value={row.SizeofCase}
-                    onChange={(e) => handleChange(index, 'SizeofCase', e.target.value)}
+                    value={row.rate}
+                    onChange={(e) => handleChange(index, 'rate', e.target.value)}
                 />
             </td>
             <td>
                 <input
                     type="number"
-                    value={row.Quantity2}
-                    onChange={(e) => handleChange(index, 'Quantity2', e.target.value)}
+                    value={row.disc_rs}
+                    onChange={(e) => handleChange(index, 'disc_rs', e.target.value)}
                 />
             </td>
             <td>
-                <input
-                    type="number"
-                    value={row.Quantity}
-                    onChange={(e) => handleChange(index, 'Quantity', e.target.value)}
-                />
+                <select
+                    value={row.disc_type}
+                    onChange={(e) => handleChange(index, 'disc_type', e.target.value)}
+                >
+                    <option value="">Select Disc Type</option>
+                    <option value="Fixed">Fixed</option>
+                    <option value="per">Per</option>
+                    <option value="Quantity">Quantity</option>
+
+                </select>
+            </td>
+            <td>
+                <input type="number" value={row.amount} disabled />
             </td>
             <td>
                 <button onClick={() => handleDeleteRow(index)}>🗑️</button>
@@ -115,119 +526,238 @@ const SalseOrderAdd = () => {
         </tr>
     );
 
-    // Function to handle row deletion
-    const handleDeleteRow = (index) => {
-        const updatedRows = rows.filter((_, i) => i !== index);
-        setRows(updatedRows);
+
+
+
+
+
+    const getAllAccount = async () => {
+        try {
+            const res = await getAllAccountData();
+            setAllAccounts(res?.data?.voucher)
+        } catch (error) {
+
+        }
     };
 
-    // Function to add a new row
-    const handleAddRow = () => {
-        setRows([
-            ...rows,
-            { id: rows.length + 1, ExpenseAc: '', Product: '', HSNCode: 0, Commodity: 0, Amount: 0 },
-        ]);
+    const getAllTaxType = async () => {
+        try {
+            const res = await getAllTaxTypeData();
+            setAllTaxes(res?.data)
+        } catch (error) {
+
+        }
+    };
+    const getAllTransporters = async () => {
+        try {
+            const res = await getAllTransportersData();
+            setAllTransports(res?.data)
+        } catch (error) {
+
+        }
+    };
+    const getAllProducts = async () => {
+        try {
+            const res = await getAllProductsData();
+            console.log('Products---', res)
+            setAllProducts(res)
+        } catch (error) {
+
+        }
+    };
+    const getAllPickupPoints = async () => {
+        try {
+            const res = await getPickupByPage();
+            setAllPickupPoints(res.data)
+        } catch (error) {
+
+        }
+    };
+    const [peoject , setProjects] = useState()
+    const getAllProject = async () => {
+        try {
+            const res = await getAccAddProjectByPage(0 ,200,'67444e0fcd1dc218d6090ddc');
+            setProjects(res.data)
+        } catch (error) {
+
+        }
     };
 
-    const submitData = () => {
-        console.log(formData);
+    useEffect(() => {
+        getAllAccount();
+        getAllTaxType();
+        getAllTransporters();
+        getAllProject();
+        getAllProducts();
+        getAllPickupPoints();
+    }, []);
+    const toastSuccessMessage = (message) => {
+        toast.success(`${message}`, {
+            position: "top-right",
+        });
+    };
 
-    }
+    const [load, setLoad] = useState(false)
+    const handleSubmitData = async () => {
+        setLoad(true)
+        const produ = rows.map((item) => {
+            return {
+                product_id: item.product_id,
+                variant_id: item.variant_id,
+                sku: item.sku,
+                tax: item.tax,
+                location: item.location,
+                quantity2: item.quantity2,
+                quantity: item.quantity,
+                rate: item.rate,
+                rate: item.rate,
+                disc_rs: item.disc_rs,
+                disc_type: item.disc_type,
+                amount: item.amount,
+            }
+        })
+        let Quantity = 0
+        produ.forEach(element => {
+            Quantity = Quantity + +element.quantity
+
+        });
+        let Product_amount = 0
+        produ.forEach(element => {
+            Product_amount = Product_amount + +element.amount
+
+        });
+        const obj = { ...formData, products: produ, total_items: produ.length, quantity: Quantity, product_amount: Product_amount }
+        // console.log("obj----", obj)
+
+        try {
+            const res = await postSalesOrder(obj)
+            if (res?.statusCode == '200') {
+                setLoad(false)
+                toastSuccessMessage(" Added successfully");
+            }
+        } catch (error) {
+
+        }
+        setLoad(false)
+    };
 
 
-    /////
+
     return (
         <>
-            <Breadcrumbs breadCrumbsTitle={breadCrumbsTitle} />
+            <ToastContainer />
+            {load && <Loadar />}
+            <Breadcrumbs
+                breadCrumbsTitle={breadCrumbsTitle} />
             <div className="row m-4">
                 <div className="col-xl-12">
                     <div className="card">
                         <div className="card-body p-0">
                             <div className="table-responsive active-projects style-1">
                                 <div className="tbl-caption tbl-caption-2">
-                                    <h4 className="heading mb-0">Add Sales Order</h4>
+                                    <h4 className="heading mb-0 p-2">Add Sales Order</h4>
                                 </div>
                                 <div className="row">
                                     <div className="col-md-3 mb-3">
-                                        <label htmlFor="date">Date</label>
+                                        <label htmlFor="voucher">Date </label>
                                         <input
                                             type="date"
                                             className="form-control"
                                             name="date"
-                                            value={formData.date}
+                                            // value={formData.date}
                                             onChange={handleInputChange}
+                                            placeholder="Enter Date"
                                         />
                                     </div>
+
                                     <div className="col-md-3 mb-3">
-                                        <label htmlFor="taxType">Account</label>
+                                        <label htmlFor="account">Account</label>
                                         <select
                                             className="form-control"
-                                            name="taxType"
-                                            value={formData.taxType}
+                                            name="account"
+                                            value={formData.account}
                                             onChange={handleInputChange}
                                         >
-                                            <option value="">Select Tax Type</option>
-                                            <option value="GST 5%">GST 5%</option>
-                                            <option value="GST 12%">GST 12%</option>
-                                            <option value="GST MULTIPLE">GST MULTIPLE</option>
+                                            <option value="">Select Account</option>
+                                            {allAccounts && allAccounts?.map((item, i) => {
+                                                return <option value={item?._id}>{item?.name}</option>
+                                            })}
                                         </select>
                                     </div>
+
                                     <div className="col-md-3 mb-3">
-                                        <label htmlFor="orderNo">Order No</label>
+                                        <label htmlFor="taxType">Order No</label>
                                         <input
                                             type="number"
                                             className="form-control"
-                                            name="orderNo"
-                                            value={formData.orderNo}
+                                            name="order_no"
+                                            value={formData.order_no}
                                             onChange={handleInputChange}
                                             placeholder="Enter Order No"
                                         />
                                     </div>
+
                                     <div className="col-md-3 mb-3">
-                                        <label htmlFor="broker">Broker</label>
-                                        <input
-                                            type="text"
+                                        <label htmlFor="taxType">Tax Type </label>
+                                        <select
                                             className="form-control"
-                                            name="broker"
-                                            value={formData.broker}
+                                            name="tax_type"
+                                            value={formData.tax_type}
                                             onChange={handleInputChange}
-                                            placeholder="Enter Broker"
-                                        />
+                                        >
+                                            <option value="">Select Tax Type</option>
+                                            {allTaxes && allTaxes?.map((item, i) => {
+                                                return <option value={item?._id}>{item?.name}</option>
+                                            })}
+                                        </select>
+                                    </div>
+
+                                    <div className="col-md-3 mb-3">
+                                        <label htmlFor="taxType">Transporter</label>
+                                        <select
+                                            className="form-control"
+                                            name="transporter"
+                                            value={formData.transporter}
+                                            onChange={handleInputChange}
+                                        >
+                                            <option value="">Select Transporter</option>
+                                            {allTransports && allTransports?.map((item, i) => {
+                                                return <option value={item?._id}>{item?.name}</option>
+                                            })}
+                                        </select>
                                     </div>
                                     <div className="col-md-3 mb-3">
-                                        <label htmlFor="transportName">Transport Name</label>
-                                        <input
-                                            type="text"
+                                        <label htmlFor="taxType">Project</label>
+                                        <select
                                             className="form-control"
-                                            name="transportName"
-                                            value={formData.transportName}
+                                            name="prj_id"
+                                            value={formData.prj_id}
                                             onChange={handleInputChange}
-                                            placeholder="Enter Transport Name"
-                                        />
-                                    </div>
-                                    <div className="col-md-3 mb-3">
-                                        <label htmlFor="deliveryDestination">Delivery Destination</label>
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            name="deliveryDestination"
-                                            value={formData.deliveryDestination}
-                                            onChange={handleInputChange}
-                                            placeholder="Enter Delivery Destination"
-                                        />
+                                        >
+                                            <option value="">Select Project</option>
+                                            {peoject && peoject?.map((item, i) => {
+                                                return <option value={item?._id}>{item?.project_name}</option>
+                                            })}
+                                        </select>
                                     </div>
                                 </div>
-                                <div className="col-lg-12">
-                                    <table border="1" cellPadding="10">
+
+
+                                <div className="col-lg-12" style={{ overflow: "auto" }}>
+                                    <table border="1" cellPadding="10" >
                                         <thead>
                                             <tr>
                                                 <th>Item</th>
+                                                <th>Variants</th>
+                                                <th>SKU</th>
                                                 <th>Tax %</th>
-                                                <th>CaseQty</th>
                                                 <th>Location</th>
-                                                <th>Size of Case</th>
                                                 <th>Quantity2</th>
                                                 <th>Quantity</th>
+                                                <th>Rate</th>
+                                                <th>Disc.(Rs.)</th>
+                                                <th>Disc Type</th>
+                                                <th>Amount</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -235,26 +765,64 @@ const SalseOrderAdd = () => {
                                             {rows.map((row, index) => renderRow(row, index))}
                                         </tbody>
                                     </table>
-                                    {/* <button type="button" onClick={handleAddRow}>Add Row</button> */}
+                                    <button type="button" onClick={handleAddRow}>Add Row</button>
                                 </div>
-                                <div className="col-lg-12">
-                                    <label htmlFor="narration">Narration:</label>
-                                    <textarea
-                                        name="narration"
-                                        id="narration"
-                                        cols="180"
-                                        value={formData.narration}
-                                        onChange={handleInputChange}
-                                    ></textarea>
+
+
+                                {/* Expense and Taxes Table */}
+                                <div className="table-responsive">
+                                    <table className="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Account Name</th>
+                                                <th>Rate</th>
+                                                <th>Amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {expenses.length > 0 ? (
+                                                expenses.map((expense, index) => (
+                                                    <tr key={index}>
+                                                        <td>{expense.name}</td>
+                                                        <td>{expense.Product}</td>
+                                                        <td>{expense.rate}</td>
+                                                        <td>{expense.amount}</td>
+                                                    </tr>
+                                                ))
+                                            ) : (
+                                                <tr>
+                                                    <td colSpan="4" className="text-center">
+                                                        Amount expenses available for the selected tax type.
+                                                    </td>
+                                                </tr>
+                                            )}
+                                        </tbody>
+                                    </table>
                                 </div>
+
                                 <div className="col-lg-12">
-                                    <button type="button" className="btn btn-success" onClick={submitData}>Save</button>
+                                    <label htmlFor="taxType">Narration</label>
+                                    <textarea name="narration" id="" cols={180} value={formData.narration}
+                                        onChange={handleInputChange}></textarea>
+                                </div>
+
+                                {/* Total Amount */}
+                                <div className="mt-3">
+                                    <h5>
+                                        Total Amount: {expenses.reduce((total, expense) => total + expense.amount, 0)}
+                                    </h5>
+                                </div>
+                                <div className="col-lg-12 text-center">
+                                    <button type="button" className="btn btn-primary" onClick={handleSubmitData}>Save</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+
         </>
     )
 }

@@ -127,7 +127,7 @@ export function LeadList({ data, totalCount, onChangeVal, confirm }) {
                                                     <button type="button" className="btn btn-primary shadow btn-xs sharp me-1" onClick={handleShow}>
                                                         <CiSliderVertical style={{ marginBottom: '8px' }} />
                                                     </button>
-                                                    <Link to={`#`} className="btn btn-primary shadow btn-xs sharp me-1"><i className="fa fa-pencil" /></Link>
+                                                    <Link to={`/travel-leads-update/${item?._id}`} className="btn btn-primary shadow btn-xs sharp me-1"><i className="fa fa-pencil" /></Link>
                                                     <Popconfirm
                                                         title="Delete Leads!"
                                                         description="Are you sure to delete ?"
