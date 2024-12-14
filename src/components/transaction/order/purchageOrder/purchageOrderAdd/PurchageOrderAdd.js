@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import Breadcrumbs from "../../../../../common/breadcrumb/Breadcrumbs";
-import { getAccAddProjectByPage, getAllAccountData, getAllLocationsData, getAllPickupPointsData, getAllProductsData, getAllTaxTypeData, getAllTransportersData, getAttTaxTypeData, getPickupByPage, getTaxtype, postPurchase } from "../../../../../api/login/Login";
+import { getAccAddProjectByPage, getAllAccountData, getAllLocationsData, getAllPickupPointsData, getAllProductsData, getAllTaxTypeData, getAllTransportersData, getAttTaxTypeData, getbyIdPurchase, getPickupByPage, getTaxtype, postPurchase, updatePurchase } from "../../../../../api/login/Login";
 import { toast, ToastContainer } from "react-toastify";
 import Loadar from "../../../../../common/loader/Loader";
+import { useParams } from "react-router-dom";
 
 
 const PurchageOrderAdd = () => {
@@ -27,6 +28,35 @@ const PurchageOrderAdd = () => {
         prj_id: '',
         tax_type: ''
     });
+
+    const parem = useParams()
+    const getEditData = async () => {
+        try {
+            const res = await getbyIdPurchase(parem.id)
+            console.log(res);
+            setFormData({
+                date: res.data?.date,
+                account: res.data?.account,
+                order_no: res.data?.order_no,
+                transporter: '673843f385dbbfa354004862',
+                prj_id: res.data?.prj_id,
+                tax_type: res.data?.tax_type,
+                narration: res.data?.narration
+            })
+            setRows(res.data?.products)
+        } catch (error) {
+
+        }
+    }
+
+    useEffect(() => {
+        if (parem?.id) {
+            getEditData()
+        }
+    }, [])
+
+
+
 
     // State for dynamic expense and taxes data
     const [expenses, setExpenses] = useState([]);
@@ -307,10 +337,10 @@ const PurchageOrderAdd = () => {
 
         }
     };
-    const [peoject , setProjects] = useState()
+    const [peoject, setProjects] = useState()
     const getAllProject = async () => {
         try {
-            const res = await getAccAddProjectByPage(0 ,200,'67444e0fcd1dc218d6090ddc');
+            const res = await getAccAddProjectByPage(0, 200, '67444e0fcd1dc218d6090ddc');
             setProjects(res.data)
         } catch (error) {
 
@@ -376,6 +406,50 @@ const PurchageOrderAdd = () => {
     };
 
 
+    const handleUpdateData = async () => {
+        setLoad(true)
+        const produ = rows.map((item) => {
+            return {
+                product_id: item.product_id,
+                variant_id: item.variant_id,
+                sku: item.sku,
+                tax: item.tax,
+                location: item.location,
+                quantity2: item.quantity2,
+                quantity: item.quantity,
+                rate: item.rate,
+                rate: item.rate,
+                disc_rs: item.disc_rs,
+                disc_type: item.disc_type,
+                amount: item.amount,
+            }
+        })
+        let Quantity = 0
+        produ.forEach(element => {
+            Quantity = Quantity + +element.quantity
+
+        });
+        let Product_amount = 0
+        produ.forEach(element => {
+            Product_amount = Product_amount + +element.amount
+
+        });
+        const obj = { ...formData, products: produ, total_items: produ.length, quantity: Quantity, product_amount: Product_amount }
+        // console.log("obj----", obj)
+
+        try {
+            const res = await updatePurchase(obj, parem.id)
+            if (res?.statusCode == '200') {
+                setLoad(false)
+                toastSuccessMessage(" Update successfully");
+            }
+        } catch (error) {
+
+        }
+        setLoad(false)
+    };
+
+
 
     return (
         <>
@@ -422,7 +496,7 @@ const PurchageOrderAdd = () => {
                                     <div className="col-md-3 mb-3">
                                         <label htmlFor="taxType">Order No</label>
                                         <input
-                                            type="number"
+                                            type="text"
                                             className="form-control"
                                             name="order_no"
                                             value={formData.order_no}
@@ -548,7 +622,7 @@ const PurchageOrderAdd = () => {
                                     </h5>
                                 </div>
                                 <div className="col-lg-12 text-center">
-                                    <button type="button" className="btn btn-primary" onClick={handleSubmitData}>Save</button>
+                                    <button type="button" className="btn btn-primary" onClick={parem?.id ? handleUpdateData : handleSubmitData}>Save</button>
                                 </div>
                             </div>
                         </div>
