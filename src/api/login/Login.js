@@ -5534,6 +5534,24 @@ export const getHotelVoucher = (value) => {
 export const deleteHotelVoucher = (id) => {
   return axiosInstance.delete(`${baseUrl}hotelVoucher/delete_type/${id}`);
 };
+export const getByIdhotelVoucher = (id) => {
+  return axiosInstance.get(`${baseUrl}hotelVoucher/${id}`);
+};
+
+
+export const addServiceVoucher = (data) => {
+  return axiosInstance.post(`${baseUrl}serviceVoucher/addType`, data);
+}
+
+export const getServiceVoucher = (value) => {
+  return axiosInstance.get(`${baseUrl}serviceVoucher/user?page=${value?.page}&count=${value?.count}&start_date=${value?.start_date}&end_date=${value?.end_date}`);
+};
+export const deletesServiceVoucher = (id) => {
+  return axiosInstance.delete(`${baseUrl}serviceVoucher/delete_type/${id}`);
+};
+export const getByIdServiceVoucher = (id) => {
+  return axiosInstance.get(`${baseUrl}serviceVoucher/${id}`);
+};
 
 
 
@@ -6465,7 +6483,7 @@ export const postSalesOrder = (data) => {
   });
 };
 
-export const getAllSalesData = (page,count) => {
+export const getAllSalesData = (page, count) => {
   return axiosInstance.get(
     `${baseUrl}lead_sales_order_master/user?page=${page}&count=${count}`
   );
@@ -6481,7 +6499,7 @@ export const postquotationMaster = (data) => {
   });
 };
 
-export const getAllquotationMasterData = (page,count) => {
+export const getAllquotationMasterData = (page, count) => {
   return axiosInstance.get(
     `${baseUrl}lead_quotation_master/?page=${page}&count=${count}`
   );

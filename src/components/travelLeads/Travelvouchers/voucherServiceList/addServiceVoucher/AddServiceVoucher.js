@@ -5,6 +5,7 @@ import JoditEditor from "jodit-react";
 import Breadcrumbs from "../../../../../common/breadcrumb/Breadcrumbs";
 import { useParams } from "react-router-dom";
 import { addTravelRoomType, getAirlLine, getByIdTRCRM_tr_lead, getTravelAllCountry, getTRCRM_hotel_type_master, TTRCRM_tr_travellerGet } from "../../../../../api/login/Login";
+import { toast } from "react-toastify";
 
 const AddServiceVoucher = () => {
     const breadCrumbsTitle = {
@@ -29,18 +30,18 @@ const AddServiceVoucher = () => {
         child: '',
         infant: '',
         travel_date: '',
-        end_date: '',
-        booking_confirmed_by: '',
+        travel_end_date: '',
+        book_confirm_date: '',
         vehicle_type: '',
         vehicle_number: '',
-        hotal_Confirmation: '',
+        hotel_confirmation: '',
         driver_number: '',
         type_Of_Service: '',
         from_City: '',
         to_City: '',
-        arrival_Flight: '',
-        departure_Flight: '',
-        emergency_Contact: '',
+        arrival_flight: '',
+        departure_flight: '',
+        emergency_contact: '',
         remarks: '',
         services: '',
         hotel: '',
@@ -125,11 +126,24 @@ const AddServiceVoucher = () => {
     //     placeholder: 'Start typing...'
     // }), []);
 
+    const toastSuccessMessage = (message) => {
+        toast.success(`${params?.id ? `${message}` : `${message}`}`, {
+            position: "top-right",
+        });
+    };
+
+    const toastErroeMessage = (message) => {
+        toast.error(`${message}`, {
+            position: "top-right",
+        });
+    };
+
 
     const submitData = async () => {
         const clone = { ...initialData, lead_id: params?.id }
-        console.log(clone);
+        // console.log(clone);
         try {
+            // const res = await 
         } catch (error) {
 
         }
@@ -235,8 +249,8 @@ const AddServiceVoucher = () => {
                                         <input type="text" className="form-control" placeholder="Enter Co Passanger" name="end_date" value={initialData?.end_date} onChange={changeHandle} />
                                     </div>
                                     <div className="col-xl-4 mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Booking Confirmed By</label>
-                                        <input type="text" className="form-control" placeholder="Enter Booking Confirmed By" name="booking_confirmed_by" value={initialData?.booking_confirmed_by} onChange={changeHandle} />
+                                        <label for="exampleFormControlInput1" class="form-label">Booking Confirmed Date</label>
+                                        <input type="date" className="form-control" placeholder="Enter Booking Confirmed By" name="book_confirm_date" value={initialData?.book_confirm_date} onChange={changeHandle} />
                                     </div>
                                     <div className="col-xl-4 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">Vehicle Type</label>

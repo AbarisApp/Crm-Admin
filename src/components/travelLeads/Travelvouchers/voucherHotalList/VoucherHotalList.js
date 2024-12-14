@@ -3,7 +3,7 @@ import { BsTicketPerforatedFill } from "react-icons/bs"
 import { CiMail } from "react-icons/ci"
 import { FaEye } from "react-icons/fa"
 import { TiDownload, TiTick } from "react-icons/ti"
-import { Link } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import SendMailModal from "./sendMailModal/SendMailModal"
 import { useEffect, useState } from "react"
 import { PDFDownloadLink } from "@react-pdf/renderer"
@@ -14,6 +14,8 @@ import { deleteHotelVoucher, getHotelVoucher } from "../../../../api/login/Login
 
 
 const VoucherHotalList = () => {
+    const params = useParams()
+
     const [modalShow, setModalShow] = useState(false);
 
     const getCurrentDate = () => {
@@ -160,7 +162,7 @@ const VoucherHotalList = () => {
                                                 {({ loading }) => (loading ? 'Loading document...' : 'VOUCHER AFTER PAYMENT')}
                                             </PDFDownloadLink>
                                         </Button>
-                                        <Link to={`#`} className="btn btn-primary shadow btn-xs sharp me-1">
+                                        <Link to={`travel-Vouchers-Add/${params?.id}/:${item?._id}`} className="btn btn-primary shadow btn-xs sharp me-1">
                                             <i className="fa fa-pencil" />
                                         </Link>
                                         <Popconfirm
