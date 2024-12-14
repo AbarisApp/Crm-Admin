@@ -287,11 +287,16 @@ const SalseOrderAdd = () => {
 
     const [formData, setFormData] = useState({
         date: '',
+        due_date: '',
         account: '',
         order_no: '',
         transporter: '673843f385dbbfa354004862',
         prj_id: '',
-        tax_type: ''
+        tax_type: '',
+        delivery_destination: '',
+        transport_name: '',
+        po_status: '',
+        status: '',
     });
 
     // State for dynamic expense and taxes data
@@ -573,10 +578,10 @@ const SalseOrderAdd = () => {
 
         }
     };
-    const [peoject , setProjects] = useState()
+    const [peoject, setProjects] = useState()
     const getAllProject = async () => {
         try {
-            const res = await getAccAddProjectByPage(0 ,200,'67444e0fcd1dc218d6090ddc');
+            const res = await getAccAddProjectByPage(0, 200, '67444e0fcd1dc218d6090ddc');
             setProjects(res.data)
         } catch (error) {
 
@@ -596,8 +601,14 @@ const SalseOrderAdd = () => {
             position: "top-right",
         });
     };
+    const toastErrorMessage = (message) => {
+        toast.error(`${message}`, {
+            position: "top-right",
+        });
+    };
 
     const [load, setLoad] = useState(false)
+
     const handleSubmitData = async () => {
         setLoad(true)
         const produ = rows.map((item) => {
@@ -626,7 +637,7 @@ const SalseOrderAdd = () => {
             Product_amount = Product_amount + +element.amount
 
         });
-        const obj = { ...formData, products: produ, total_items: produ.length, quantity: Quantity, product_amount: Product_amount }
+        const obj = { ...formData, products: produ, total_items: produ.length, quantity: Quantity, product_amount: Product_amount, total_amount: Product_amount }
         // console.log("obj----", obj)
 
         try {
@@ -634,9 +645,11 @@ const SalseOrderAdd = () => {
             if (res?.statusCode == '200') {
                 setLoad(false)
                 toastSuccessMessage(" Added successfully");
+            } else {
+                toastErrorMessage("Not Added")
             }
         } catch (error) {
-
+            toastErrorMessage("Not Added")
         }
         setLoad(false)
     };
@@ -664,10 +677,72 @@ const SalseOrderAdd = () => {
                                             type="date"
                                             className="form-control"
                                             name="date"
-                                            // value={formData.date}
+                                            value={formData.date}
                                             onChange={handleInputChange}
                                             placeholder="Enter Date"
                                         />
+                                    </div>
+                                    <div className="col-md-3 mb-3">
+                                        <label htmlFor="voucher">Due Date </label>
+                                        <input
+                                            type="date"
+                                            className="form-control"
+                                            name="due_date"
+                                            value={formData.due_date}
+                                            onChange={handleInputChange}
+                                            placeholder="Enter Due Date"
+                                        />
+                                    </div>
+                                    <div className="col-md-3 mb-3">
+                                        <label htmlFor="voucher">Transport Name</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            name="transport_name"
+                                            value={formData.transport_name}
+                                            onChange={handleInputChange}
+                                            placeholder="Enter Transport Name"
+                                        />
+                                    </div>
+                                    <div className="col-md-3 mb-3">
+                                        <label htmlFor="voucher">Delivery Destination</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            name="delivery_destination"
+                                            value={formData.delivery_destination}
+                                            onChange={handleInputChange}
+                                            placeholder="Enter Delivery Destination"
+                                        />
+                                    </div>
+
+                                    <div className="col-md-3 mb-3">
+                                        <label htmlFor="account">PO Status</label>
+                                        <select
+                                            className="form-control"
+                                            name="po_status"
+                                            value={formData.po_status}
+                                            onChange={handleInputChange}
+                                        >
+                                            <option value="">Select PO Status</option>
+                                            <option value={"Paid"}>Paid</option>
+                                            <option value={"Partially Paid"}>Partially Paid</option>
+                                            <option value={"UnPaid"}>UnPaid</option>
+                                        </select>
+                                    </div>
+                                    <div className="col-md-3 mb-3">
+                                        <label htmlFor="account">Status</label>
+                                        <select
+                                            className="form-control"
+                                            name="status"
+                                            value={formData.status}
+                                            onChange={handleInputChange}
+                                        >
+                                            <option value="">Select Status</option>
+                                            <option value={"Pending"}>Pending</option>
+                                            <option value={"Approved"}>Approved</option>
+                                            <option value={"Rejected"}>Rejected</option>
+                                        </select>
                                     </div>
 
                                     <div className="col-md-3 mb-3">
@@ -820,7 +895,7 @@ const SalseOrderAdd = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div >
 
 
         </>
