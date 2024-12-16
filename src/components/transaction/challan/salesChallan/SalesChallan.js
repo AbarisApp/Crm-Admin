@@ -2,9 +2,10 @@ import { Link } from "react-router-dom";
 import { PDFViewer } from "@react-pdf/renderer";
 import { useEffect, useState } from "react";
 import Loadar from "../../../../common/loader/Loader";
-import {getAllquotationMasterData } from "../../../../api/login/Login";
+import { getSalesChallan } from "../../../../api/login/Login";
 import Breadcrumbs from "../../../../common/breadcrumb/Breadcrumbs";
 import { message, Pagination, Popconfirm } from "antd";
+import PdfBanks from "../../order/purchageOrder/pdfBank/PdfBanks";
 
 const SalesChallan = () => {
     const breadCrumbsTitle = {
@@ -35,7 +36,7 @@ const SalesChallan = () => {
 
         setLoading(true)
         try {
-            const res = await getAllquotationMasterData(page, count)
+            const res = await getSalesChallan(page, count)
             setTotalCount(res?.totalCount)
             setData(res?.data)
             setPage(page)
@@ -84,16 +85,16 @@ const SalesChallan = () => {
 
     return (
         <>
-            {loading && <Loadar/>}
+            {loading && <Loadar />}
             <Breadcrumbs
                 breadCrumbsTitle={breadCrumbsTitle} />
             {/* <GroupSummaryFilter /> */}
             <div style={{ margin: "14px" }}>
                 {pdf && <div className="pdfcs">
                     <div className="loader-overlay">
-                        {/* <PDFViewer style={{ width: '100%', height: '100vh' }}>
+                        <PDFViewer style={{ width: '100%', height: '100vh' }}>
                             <PdfBanks />
-                        </PDFViewer> */}
+                        </PDFViewer>
                     </div>
 
                 </div>}
@@ -128,7 +129,7 @@ const SalesChallan = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {data && data?.map((item ,i) => {
+                                        {data && data?.map((item, i) => {
                                             return <tr role="row" className="odd" >
                                                 <td>{i + 1}</td>
                                                 <td>{item?.date}</td>

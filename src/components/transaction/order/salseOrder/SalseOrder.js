@@ -120,9 +120,6 @@ const SalesOrder = () => {
 
 
 
-
-
-
     const [data, setData] = useState()
     const [loading, setLoading] = useState(false);
     const [count, setCount] = useState(10)
@@ -130,7 +127,6 @@ const SalesOrder = () => {
     const [totalCount, setTotalCount] = useState()
 
     const getFloorMasters = async (page) => {
-
         setLoading(true)
         try {
             const res = await getAllSalesData(page, count)
@@ -231,8 +227,8 @@ const SalesOrder = () => {
                                                 <td>{i + 1}</td>
                                                 <td>{item?.date}</td>
                                                 <td>{item?.order_no}</td>
-                                                <td> --</td>
-                                                <td>{item?.product_amount}</td>
+                                                <td>{item?.account_name}</td>
+                                                <td>{item?.tatal_amount}</td>
                                                 <td>{item?.createdBy?.name}</td>
                                                 <td>
                                                     <button className="btn btn-sm btn-success ms-2" onClick={pdfGenerateDefault}>Print PDF</button>

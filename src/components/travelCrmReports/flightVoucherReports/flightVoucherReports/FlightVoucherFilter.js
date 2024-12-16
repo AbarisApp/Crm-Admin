@@ -1,6 +1,6 @@
 import React from 'react'
 
-function FlightVoucherFilter() {
+function FlightVoucherFilter({ filterInitial, handleChange, getTransitionReport }) {
     return (
         <section className='mx-4'>
             <div className="card">
@@ -16,7 +16,9 @@ function FlightVoucherFilter() {
                                     <input
                                         type="date"
                                         className="form-control"
-                                        name="title"
+                                        name="start_date"
+                                        value={filterInitial?.start_date}
+                                        onChange={handleChange}
                                     />
                                 </div>
                                 <div className="col-xl-4 mb-3">
@@ -24,11 +26,13 @@ function FlightVoucherFilter() {
                                     <input
                                         type="date"
                                         className="form-control"
-                                        name="title"
+                                        name="end_date"
+                                        value={filterInitial?.end_date}
+                                        onChange={handleChange}
                                     />
                                 </div>
                                 <div className="col-xl-4 text-center mt-5">
-                                    <button type="button" className="btn btn-primary">
+                                    <button type="button" className="btn btn-primary" onClick={() => getTransitionReport(0)}>
                                         Search
                                     </button>
                                 </div>

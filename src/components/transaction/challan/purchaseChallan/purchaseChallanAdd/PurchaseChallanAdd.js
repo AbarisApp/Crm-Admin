@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Breadcrumbs from "../../../../../common/breadcrumb/Breadcrumbs";
-import { getAccAddProjectByPage, getAllAccountData, getAllProductsData, getAllTaxTypeData, getAllTransportersData, getAttTaxTypeData, getPickupByPage, getTaxtype, postquotationMaster } from "../../../../../api/login/Login";
+import { getAccAddProjectByPage, getAllAccountData, getAllProductsData, getAllRatesheetData, getAllTaxTypeData, getAllTransportersData, getAttTaxTypeData, getPickupByPage, getTaxtype, postPurchaseChallan, postquotationMaster } from "../../../../../api/login/Login";
 import { toast, ToastContainer } from "react-toastify";
 import Loadar from "../../../../../common/loader/Loader";
 
@@ -277,6 +277,7 @@ const PurchaseChallanAdd = () => {
     const [allTransports, setAllTransports] = useState();
     const [allProducts, setAllProducts] = useState();
     const [allPickupPoints, setAllPickupPoints] = useState();
+    const [allRatesheetD, setAllRatesheetD] = useState();
 
     const [formData, setFormData] = useState({
         date: '',
@@ -284,7 +285,10 @@ const PurchaseChallanAdd = () => {
         order_no: '',
         transporter: '673843f385dbbfa354004862',
         prj_id: '',
-        tax_type: ''
+        tax_type: '',
+        barcode: '',
+        challan_no: '',
+        ratesheet: '',
     });
 
     // State for dynamic expense and taxes data
@@ -523,7 +527,15 @@ const PurchaseChallanAdd = () => {
 
 
 
+    const getAllRatesheet = async () => {
+        try {
+            const res = await getAllRatesheetData();
+            console.log('ratesheet----', res?.data?.data)
+            setAllRatesheetD(res?.data?.data)
+        } catch (error) {
 
+        }
+    };
     const getAllAccount = async () => {
         try {
             const res = await getAllAccountData();
@@ -566,10 +578,10 @@ const PurchaseChallanAdd = () => {
 
         }
     };
-    const [peoject , setProjects] = useState()
+    const [peoject, setProjects] = useState()
     const getAllProject = async () => {
         try {
-            const res = await getAccAddProjectByPage(0 ,200,'67444e0fcd1dc218d6090ddc');
+            const res = await getAccAddProjectByPage(0, 200, '67444e0fcd1dc218d6090ddc');
             setProjects(res.data)
         } catch (error) {
 
@@ -583,14 +595,21 @@ const PurchaseChallanAdd = () => {
         getAllProject();
         getAllProducts();
         getAllPickupPoints();
+        getAllRatesheet();
     }, []);
     const toastSuccessMessage = (message) => {
         toast.success(`${message}`, {
             position: "top-right",
         });
     };
+    const toastErrorMessage = (message) => {
+        toast.error(`${message}`, {
+            position: "top-right",
+        });
+    };
 
     const [load, setLoad] = useState(false)
+
     const handleSubmitData = async () => {
         setLoad(true)
         const produ = rows.map((item) => {
@@ -623,13 +642,15 @@ const PurchaseChallanAdd = () => {
         // console.log("obj----", obj)
 
         try {
-            const res = await postquotationMaster(obj)
+            const res = await postPurchaseChallan(obj)
             if (res?.statusCode == '200') {
                 setLoad(false)
                 toastSuccessMessage(" Added successfully");
+            } else {
+                toastErrorMessage("Not Added")
             }
         } catch (error) {
-
+            toastErrorMessage("Not Added")
         }
         setLoad(false)
     };
@@ -657,7 +678,7 @@ const PurchaseChallanAdd = () => {
                                             type="date"
                                             className="form-control"
                                             name="date"
-                                            // value={formData.date}
+                                            value={formData.date}
                                             onChange={handleInputChange}
                                             placeholder="Enter Date"
                                         />
@@ -733,6 +754,45 @@ const PurchaseChallanAdd = () => {
                                             })}
                                         </select>
                                     </div>
+
+                                    <div className="col-md-3 mb-3">
+                                        <label htmlFor="taxType">Barcode</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            name="barcode"
+                                            value={formData.barcode}
+                                            onChange={handleInputChange}
+                                            placeholder="Enter Barcode"
+                                        />
+                                    </div>
+                                    <div className="col-md-3 mb-3">
+                                        <label htmlFor="taxType">Challan No</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            name="challan_no"
+                                            value={formData.challan_no}
+                                            onChange={handleInputChange}
+                                            placeholder="Enter Challan No"
+                                        />
+                                    </div>
+                                    <div className="col-md-3 mb-3">
+                                        <label htmlFor="taxType">Rate Sheet</label>
+                                        <select
+                                            className="form-control"
+                                            name="ratesheet"
+                                            value={formData.ratesheet}
+                                            onChange={handleInputChange}
+                                        >
+                                            <option value="">Select ratesheet</option>
+                                            {allRatesheetD && allRatesheetD?.map((item, i) => {
+                                                return <option value={item?._id}>{item?.name}</option>
+                                            })}
+                                        </select>
+                                    </div>
+
+
                                 </div>
 
 
@@ -760,7 +820,6 @@ const PurchaseChallanAdd = () => {
                                     </table>
                                     <button type="button" onClick={handleAddRow}>Add Row</button>
                                 </div>
-
 
                                 {/* Expense and Taxes Table */}
                                 <div className="table-responsive">

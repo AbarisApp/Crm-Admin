@@ -245,6 +245,10 @@ export const cityMainGet = () => {
   return axiosInstance.get(`${baseUrl}city`);
 };
 
+export const cityMainGett = () => {
+  return axiosInstance.get(`${baseUrl}city/state`);
+};
+
 export const cityUpdate = (id, value) => {
   return axiosInstance.put(`${baseUrl}city/updateCity/${id}`, value);
 };
@@ -5194,6 +5198,10 @@ export const updateRCRM_hotel_master = (id, value) => {
   return axiosInstance.put(`${baseUrl}TRCRM_hotel_master/update_type/${id}`, value);
 };
 
+export const getrcrm_hotel_master = (id) => {
+  return axiosInstance.get(`${baseUrl}trcrm_hotel_master/admin`);
+};
+
 export const TRCRM_tag_name_master = (value) => {
   return axiosInstance.get(`${baseUrl}TRCRM_tag_name_master/user?page=${value?.page}&count=${value?.count}&start_date=${value?.start_date}&end_date=${value?.end_date}`);
 };
@@ -5506,7 +5514,7 @@ export const addTRCRM_tr_leadaddType = (data) => {
 }
 
 export const getTRCRM_tr_lead = (value) => {
-  return axiosInstance.get(`${baseUrl}TRCRM_tr_lead/user?page=${value?.page}&count=${value?.count}&start_date=${value?.start_date}&end_date=${value?.end_date}&lead_priority=${value?.lead_priority}&lead_status=${value?.lead_status}&assigned_to=${value?.assigned_to}&lead_number=${value?.lead_number}&first_name=${value?.first_name}&last_name=${value?.last_name}&email_id=${value?.email_id}&tag=${value?.tag}&mobile_number=${value?.mobile_number}`);
+  return axiosInstance.get(`${baseUrl}TRCRM_tr_lead/user?page=${value?.page}&count=${value?.count}&start_date=${value?.start_date}&end_date=${value?.end_date}&lead_priority=${value?.lead_priority}&lead_status=${value?.lead_status}&assigned_to=${value?.assigned_to}&lead_number=${value?.lead_number}&first_name=${value?.first_name}&last_name=${value?.last_name}&email_id=${value?.email_id}&tag=${value?.tag}&mobile_number=${value?.mobile_number}&createdBy=${value.createdBy}`);
 };
 
 export const deleteTRCRM_tr_lead = (id) => {
@@ -5533,6 +5541,28 @@ export const getHotelVoucher = (value) => {
 };
 export const deleteHotelVoucher = (id) => {
   return axiosInstance.delete(`${baseUrl}hotelVoucher/delete_type/${id}`);
+};
+export const getByIdhotelVoucher = (id) => {
+  return axiosInstance.get(`${baseUrl}hotelVoucher/${id}`);
+};
+
+export const thotelVoucherUpdate = (id, value) => {
+  return axiosInstance.put(`${baseUrl}hotelVoucher/update_type/${id}`, value);
+};
+
+
+export const addServiceVoucher = (data) => {
+  return axiosInstance.post(`${baseUrl}serviceVoucher/addType`, data);
+}
+
+export const getServiceVoucher = (value) => {
+  return axiosInstance.get(`${baseUrl}serviceVoucher/user?page=${value?.page}&count=${value?.count}&start_date=${value?.start_date}&end_date=${value?.end_date}`);
+};
+export const deletesServiceVoucher = (id) => {
+  return axiosInstance.delete(`${baseUrl}serviceVoucher/delete_type/${id}`);
+};
+export const getByIdServiceVoucher = (id) => {
+  return axiosInstance.get(`${baseUrl}serviceVoucher/${id}`);
 };
 
 
@@ -6470,9 +6500,8 @@ export const updatePurchase = (data, id) => {
 
 
 // Sales order Apis  start //
-
 export const postSalesOrder = (data) => {
-  return axiosInstance.post(`/lead_sales_order_master/addType`, data, {
+  return axiosInstance.post(`${baseUrl}lead_sales_order_master/addType`, data, {
     headers: {
       "Content-Type": "application/json; charset=UTF-8",
       Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
@@ -6496,8 +6525,8 @@ export const getAllSalesData = (page, count) => {
     `${baseUrl}lead_sales_order_master/user?page=${page}&count=${count}`
   );
 };
-// Sales quotationMaster api Apis  start //
 
+// Sales quotationMaster api Apis  start //
 export const postquotationMaster = (data) => {
   return axiosInstance.post(`/lead_quotation_master/addType`, data, {
     headers: {
@@ -6510,5 +6539,105 @@ export const postquotationMaster = (data) => {
 export const getAllquotationMasterData = (page, count) => {
   return axiosInstance.get(
     `${baseUrl}lead_quotation_master/?page=${page}&count=${count}`
+  );
+};
+
+
+// ====purchase quotation====
+
+export const getQuoteNo = () => {
+  return axios.get(`${baseUrl}add_book_code/admin`, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+export const getAllSubjectData = () => {
+  return axios.get(`${baseUrl}add_subject/admin`, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+export const getAllRatesheetData = () => {
+  return axios.get(`${baseUrl}acc_rate_sheet/admin`, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+export const getAllSalesmanData = () => {
+  return axios.get(`${baseUrl}staff/admin`, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+export const getAllMistryData = () => {
+  return axios.get(`${baseUrl}add_mistry/admin`, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
+// ====purchase Challan====
+export const postPurchaseChallan = (data) => {
+  return axiosInstance.post(`${baseUrl}lead_purchase_challan_master/addType`, data, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
+export const getPurchaseChallan = (page, count) => {
+  return axiosInstance.get(
+    `${baseUrl}lead_purchase_challan_master/user?page=${page}&count=${count}`
+  );
+};
+
+// ====Sales Challan====
+export const postSalesChallan = (data) => {
+  return axiosInstance.post(`${baseUrl}lead_sales_challan_master/addType`, data, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
+export const getSalesChallan = (page, count) => {
+  return axiosInstance.get(
+    `${baseUrl}lead_sales_challan_master/user?page=${page}&count=${count}`
+  );
+};
+
+// ====Challan Return====
+export const postChallanReturn = (data) => {
+  return axiosInstance.post(`${baseUrl}lead_sales_return_master/addType`, data, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+export const getAllInvoiceTypeData = () => {
+  return axios.get(`${baseUrl}acc_select_invoice_type/admin`, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
+export const getChallanReturn = (page, count) => {
+  return axiosInstance.get(
+    `${baseUrl}lead_sales_return_master/user?page=${page}&count=${count}`
   );
 };

@@ -1,7 +1,7 @@
 import { Empty, Pagination } from 'antd'
 import React from 'react'
 
-function FlightVoucherList() {
+function FlightVoucherList({ page, count, onChangeVal, data, totalCount }) {
     return (
         <>
             <section className='mx-4'>
@@ -22,31 +22,51 @@ function FlightVoucherList() {
                                         <table id="banner-tblwrapper" className="table dataTable no-footer" role="grid" aria-describedby="banner-tblwrapper_info">
                                             <thead>
                                                 <tr role="row">
+                                                    <th style={{ width: '150px' }}>S No.</th>
                                                     <th style={{ width: '150px' }}>Lead No.</th>
                                                     <th style={{ width: '150px' }}>Customer </th>
                                                     <th style={{ width: '150px' }}>Voucher No.</th>
                                                     <th style={{ width: '150px' }}>Booking Date</th>
                                                     <th style={{ width: '150px' }}>Created Date</th>
-                                                    <th style={{ width: '150px' }}>Date</th>
+                                                    {/* <th style={{ width: '150px' }}>Date</th> */}
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr role="row" >
-                                                    <td colSpan="5" className="text-center">
-                                                        <Empty />
-                                                    </td>
-                                                </tr>
+                                                {data && data?.map((item, i) => {
+                                                    return <tr role="row" >
+                                                        <td valign="top" className="dataTables_empty">{(i + 1) + (page * count)}</td>
+                                                        <td className="text-center">
+                                                            {item?._id}
+                                                        </td>
+                                                        <td className="text-center">
+                                                            {item?.firstname} {item?.lastname}
+                                                        </td>
+                                                        <td className="text-center">
+                                                            {item?.voucher_number}
+                                                        </td>
+                                                        <td className="text-center">
+                                                            {item?.hotel}
+                                                        </td>
+                                                        <td className="text-center">
+                                                            {item?.booking_date}
+                                                        </td>
+                                                        <td className="text-center">
+                                                            {item?.createdAt}
+                                                        </td>
+
+                                                    </tr>
+                                                })}
                                             </tbody>
                                         </table>
 
                                         <div className="dataTables_info" role="status" aria-live="polite">
-                                            Total 0 entries
+                                            Total {totalCount} entries
                                         </div>
                                         <div className="dataTables_paginate paging_simple_numbers">
                                             <Pagination
                                                 defaultCurrent={1}
-                                            // onChange={onChangeVal}
-                                            // total={totalCount}
+                                                onChange={onChangeVal}
+                                                total={totalCount}
                                             />
                                         </div>
                                     </div>

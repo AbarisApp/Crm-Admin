@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Breadcrumbs from "../../../../../common/breadcrumb/Breadcrumbs";
 import JoditEditor from "jodit-react";
 import { useNavigate, useParams } from "react-router-dom";
-import { addhotelVoucher, addTravelRoomType, getAirlLine, getByIdTRCRM_tr_lead, getTravelAllCountry, getTRCRM_hotel_type_master, TTRCRM_tr_travellerGet } from "../../../../../api/login/Login";
+import { addhotelVoucher, addTravelRoomType, cityMainGet, cityMainGet2, cityMainGett, getAirlLine, getByIdhotelVoucher, getByIdTRCRM_tr_lead, getrcrm_hotel_master, getTravelAllCountry, getTRCRM_hotel_type_master, thotelVoucherUpdate, TTRCRM_tr_travellerGet } from "../../../../../api/login/Login";
 import { Select } from "antd";
 import { toast, ToastContainer } from "react-toastify";
 const { Option } = Select;
@@ -17,6 +17,8 @@ const AddHotelVoucher = () => {
     };
 
     const params = useParams()
+    console.log(params);
+
 
     const navigate = useNavigate()
 
@@ -80,8 +82,6 @@ const AddHotelVoucher = () => {
         }));
     };
 
-
-
     const [leadIdData, setLeadIdData] = useState(null)
     // console.log(leadIdData);
     const leadIdGet = async () => {
@@ -112,7 +112,7 @@ const AddHotelVoucher = () => {
             setCoPassanger(res2?.data)
             const res3 = await addTravelRoomType()
             setroomType(res3?.data)
-            const res4 = await getTRCRM_hotel_type_master()
+            const res4 = await getrcrm_hotel_master()
             setHotelData(res4?.data)
         } catch (error) {
 
@@ -121,7 +121,7 @@ const AddHotelVoucher = () => {
     const [locations, setLocations] = useState([]);
     const searchAirlLine = async () => {
         try {
-            const res = await getAirlLine()
+            const res = await cityMainGett()
             setLocations(res?.data);
         } catch (error) {
 
@@ -149,9 +149,9 @@ const AddHotelVoucher = () => {
 
     const submitData = async () => {
         const clone = { ...initialData, lead_id: params?.id }
-        console.log(clone);
+        // console.log(clone);
         try {
-            if (!params?.idd) {
+            if (!params?.updateId) {
                 const res = await addhotelVoucher(clone)
                 // console.log(res);
                 if (res?.error == false) {
@@ -160,10 +160,21 @@ const AddHotelVoucher = () => {
                     setTimeout(() => {
                         navigate(`/travel-Vouchers-list/${params?.id}`)
                     }, 2000)
+                } else {
+                    toastErroeMessage(res?.message)
                 }
             } else {
-                // const res = await addhotelVoucher(clone)
-                // console.log(res);
+                const res = await thotelVoucherUpdate(params?.updateId, clone)
+                console.log(res);
+                if (res?.error == false) {
+                    toastSuccessMessage(res?.message)
+                    // setLoader(false)
+                    setTimeout(() => {
+                        navigate(`/travel-Vouchers-list/${params?.id}`)
+                    }, 2000)
+                } else {
+                    toastErroeMessage(res?.message)
+                }
             }
 
 
@@ -173,25 +184,21 @@ const AddHotelVoucher = () => {
     }
 
 
-    // useEffect(() => {
-    //     const getIdData = async () => {
-    //         try {
-    //             const res = await getIdTRCRM_tr_quotation_master(editData._id)
-    //             console.log(res);
-    //             // setInitialState(res?.data)
-    //             setInitialData(res?.data)
-    //             setRows(res?.data?.cities)
-    //             setRowsHotelInfo(res?.data?.options)
-    //             setRowsItinerary(res?.data?.days)
-    //             setImage(res.data?.attach_file)
-    //         } catch (error) {
+    useEffect(() => {
+        const getIdData = async () => {
+            try {
+                const res = await getByIdhotelVoucher(params.updateId)
+                // console.log(res);
+                setInitialData(res?.data)
 
-    //         }
-    //     }
-    //     if (editData && editData._id) {
-    //         getIdData();
-    //     }
-    // }, [editData])
+            } catch (error) {
+
+            }
+        }
+        if (params?.updateId) {
+            getIdData();
+        }
+    }, [params?.updateId])
 
     useEffect(() => {
         getAllCountryListData()
@@ -210,7 +217,7 @@ const AddHotelVoucher = () => {
         }
     }, [leadIdData]);
 
-    console.log(params);
+    // console.log(params);
 
     return (
         <>
@@ -220,7 +227,7 @@ const AddHotelVoucher = () => {
                     <div className="card-body p-0">
                         <div className="table-responsive active-projects style-1">
                             <div className="tbl-caption tbl-caption-2">
-                                <h4 className="heading mb-0 p-2">Create Hotel Voucher</h4>
+                                <h4 className="heading mb-0 p-2">{params?.updateId ? 'Update' : 'Create'} Hotel Voucher</h4>
                             </div>
                             <form className="tbl-captionn">
                                 <div className="row">
@@ -265,7 +272,7 @@ const AddHotelVoucher = () => {
                                         >
                                             {locations?.map((loc) => (
                                                 <Option key={loc._id} value={loc._id}>
-                                                    {loc.city_name}
+                                                    {loc.name}
                                                 </Option>
                                             ))}
                                         </Select>
@@ -275,7 +282,7 @@ const AddHotelVoucher = () => {
                                         <select className="form-control" aria-label="Default select example" name="hotel" value={initialData?.hotel} onChange={changeHandle}>
                                             <option selected>Open this select Hotels</option>
                                             {hotelData && hotelData?.map((item) => {
-                                                return <option value={item?._id}>{item?.hotel_type}</option>
+                                                return <option value={item?._id}>{item?.hotel_name}</option>
                                             })}
                                         </select>
                                     </div>
@@ -454,7 +461,7 @@ const AddHotelVoucher = () => {
                                     </div>
                                     <div className="col-xl-12 text-center">
                                         <button type="button" className="btn btn-primary" onClick={submitData}>
-                                            Save
+                                            {params?.updateId ? 'Update' : 'Add'}
                                         </button>
                                     </div>
                                 </div>

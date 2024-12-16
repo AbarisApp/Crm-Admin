@@ -14,8 +14,11 @@ const Contacts = ({ paramsAll }) => {
     const getData = async () => {
         try {
             const response = await getAccContactByPage(page, count, paramsAll?.id);
-            setData(response?.data);
-            setTotalPages(response?.totalPages);
+            if (response?.error == false) {
+                setData(response?.data || []);
+                setTotalPages(response?.totalPages);
+            }
+
         } catch (error) {
             console.error("Failed to fetch data", error);
         }
@@ -68,7 +71,7 @@ const Contacts = ({ paramsAll }) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {data.map((contact, i) => (
+                            {data && data?.map((contact, i) => (
                                 <tr key={contact.id}>
                                     <td>{(i + 1) + (page * count)}</td>
                                     <td>{contact.first_name} {contact.last_name}</td>

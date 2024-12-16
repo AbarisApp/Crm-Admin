@@ -5,7 +5,7 @@ import { Link, useNavigate, useParams } from "react-router-dom"
 import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import CustomInputField from "../../../../common/CustomInputField";
-import { addSubSubModule, getSubModuleForselect, mainModuleList,  updateSubSubMainModule, updatesubSubModule } from "../../../../api/login/Login";
+import { addSubSubModule, getSubModuleForselect, mainModuleList, updateSubSubMainModule, updatesubSubModule } from "../../../../api/login/Login";
 
 
 function FormSubSubModule() {
@@ -223,10 +223,10 @@ function FormSubSubModule() {
                                                                 className="form-select"
                                                                 aria-label="Default select example"
                                                                 value={values?.main_module}
-                                                                name="main_module"  
+                                                                name="main_module"
                                                                 onChange={(e) => {
-                                                                    handleChange(e);  
-                                                                    handleChangeMainModule(e);  
+                                                                    handleChange(e);
+                                                                    handleChangeMainModule(e);
                                                                 }}>
                                                                 <option value="" disabled>Open this select menu</option>
                                                                 {Combo && Combo.map((item) => (

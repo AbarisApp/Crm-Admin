@@ -17,16 +17,16 @@ const validationSchema = Yup.object({
         is: false,
         then: Yup.string().required('Password is required')
     }),
-        /* role_id: Yup.string().required('Role is required'),
-        building_id: Yup.string().required('Building is required'),
-        floor_id: Yup.string().required('Floor is required'),
-        area_id: Yup.string().required('Area is required'),
-        block_id: Yup.string().required('Block is required'),
-        ward_id: Yup.string().required('Ward is required'),
-        office_id: Yup.string().required('Office is required'),
-        department_id: Yup.string().required('Department is required'),
-        designation_id: Yup.string().required('Designation is required'),
-        slug: Yup.string().required('Slug is required'),  */// Added slug validation
+    /* role_id: Yup.string().required('Role is required'),
+    building_id: Yup.string().required('Building is required'),
+    floor_id: Yup.string().required('Floor is required'),
+    area_id: Yup.string().required('Area is required'),
+    block_id: Yup.string().required('Block is required'),
+    ward_id: Yup.string().required('Ward is required'),
+    office_id: Yup.string().required('Office is required'),
+    department_id: Yup.string().required('Department is required'),
+    designation_id: Yup.string().required('Designation is required'),
+    slug: Yup.string().required('Slug is required'),  */// Added slug validation
 });
 
 const validate = async (values) => {
@@ -284,7 +284,7 @@ function AddPermision() {
                                                             </div>
                                                         )}
                                                         {!values.profile && !profileImage?.data?.url && (
-                                                            <div className='border p-2 rounded-circle'><img id="avatar-image" src="https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg" alt="Profile Picture" /></div>
+                                                            <div className='border p-2 rounded-circle'><img id="avatar-image" style={{ width: '55px' }} src="https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg" alt="Profile Picture" /></div>
                                                         )}
                                                     </div>
                                                 </div>

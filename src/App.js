@@ -1097,7 +1097,48 @@ import PartyBusinessAnalytics from "./components/partyDealer/PartyBusinessAnalyt
 import CustomerDirectory from "./components/cropProductions/CustomerDirectory";
 import Orderslr from "./pages/order-lr/Orderslr";
 import AllReports from "./pages/allReports";
-// Meraj  --------  13/12/2024---------End Imports 
+
+import CropInformation from "./components/cropProductions/CropInformation";
+import AgronomyPractices from "./components/cropProductions/AgronomyPractices";
+import PickingDrying from "./components/cropProductions/PickingDrying";
+// Meraj  --------  13/12/2024---------End Imports
+
+// kamran
+
+import OrderDispatch from "./pages/KamranNew/OrderDispatch";
+import AddOrderProduct from "./components/KamranNew/AddOrderProduct";
+import SampleOrder from "./pages/KamranNew/SampleOrder";
+import SampleOrderAdd from "./components/KamranNew/SampleOrderAdd";
+import OrderLrReport from "./pages/KamranNew/OrderLrReport";
+import SampleFollowUp from "./pages/KamranNew/SampleFollowUp";
+import TravelPolicy from "./pages/KamranNew/TravelPolicy";
+import AunnalTerm from "./pages/KamranNew/AunnalTerm";
+import PortalUsage from "./pages/KamranNew/PortalUsage";
+import SalesProducting from "./pages/KamranNew/SalesProducting";
+import TeamSales from "./pages/KamranNew/TeamSales";
+import SalesTarget from "./pages/KamranNew/SalesTarget";
+import CollectionPlanning from "./pages/KamranNew/CollectionPlanning";
+import TeamCollectionPlanning from "./pages/KamranNew/TeamCollectionPlanning";
+import ProductSales from "./pages/KamranNew/ProductSales";
+import CumulativePayroll from "./pages/KamranNew/CumulativePayroll";
+import MonthlySales from "./pages/KamranNew/MonthlySales";
+import YearSales from "./pages/KamranNew/YearSales";
+import BusinessSummary from "./pages/KamranNew/BusinessSummary";
+import MtdYtd from "./pages/KamranNew/MtdYtd";
+import AccountSummary from "./pages/KamranNew/AccountSummary";
+import ProductSummary from "./pages/KamranNew/ProductSummary";
+// kamran
+// adil
+import OrderSummeryTrk from "./components/Empoyee/Order/order-summery.js";
+import PartyPending from "./components/Empoyee/Order/party-pending-order.js";
+import PartyPendingOrder from "./components/Empoyee/Order/party-pending-order2.js";
+import PartyDispatched from "./components/Empoyee/Order/party-dispatched-order.js";
+import ProductOrderSummery from "./components/Empoyee/Order/product-order-summery.js";
+import PendingOrderSummery from "./components/Empoyee/Order/pending-order-summery.js";
+import DispatchOrderSummery from "./components/Empoyee/Order/dispatch-order-summery.js";
+import PartyOrderSummery from "./components/Empoyee/Order/party-order-summery.js";
+// adil
+
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -3009,6 +3050,7 @@ function App() {
               <Route path="leads-details/:referId/:id" element={<ViewLeads />} />
               <Route path="travel-Vouchers-list/:id" element={<TravelVoucherPage />} />
               <Route path="travel-Vouchers-Add/:id" element={<AddHotelVoucher />} />
+              <Route path="travel-Vouchers-Add/:id/:updateId" element={<AddHotelVoucher />} />
               <Route path="travel-service-Add/:id" element={<AddServiceVoucher />} />
               <Route path="travel-flight-Add" element={<AddFlightVoucher />} />
               <Route path="travel-invoice-list" element={<TravelInvoice />} />
@@ -3247,9 +3289,51 @@ function App() {
               <Route path="day-wise-visit" element={<DayWiseVisit />} />
               <Route path="employee-wise-visit" element={<EmployeeWiseVisit />} />
               <Route path="Party-business-analytics" element={<PartyBusinessAnalytics />} />
+
+              <Route path="crop-information" element={<CropInformation />} />
+              <Route path="agronomy-practices" element={<AgronomyPractices />} />
+              <Route path="picking-drying" element={<PickingDrying />} />
               {/* Crop Productions */}
               <Route path="customer-directory" element={<CustomerDirectory />} />
               {/* Meraj Routes  ----- 13/12/24-------END----------- */}
+
+              {/* kamran Route */}
+              <Route path="orders-dispatch" element={<OrderDispatch />} />
+              <Route path="orders-dispatch/add" element={<AddOrderProduct />} />
+              <Route path="sample-order-list" element={<SampleOrder />} />
+              <Route path="sample-order-list/sample" element={<SampleOrderAdd />} />
+              <Route path="order-lr-report" element={<OrderLrReport />} />
+              <Route path="sample-order-followup" element={<SampleFollowUp />} />
+              <Route path="travelpolicy" element={<TravelPolicy />} />
+              <Route path="aunnalterm" element={<AunnalTerm />} />
+              <Route path="portalusage" element={<PortalUsage />} />
+              <Route path="saleproducting" element={<SalesProducting />} />
+              <Route path="teamsales" element={<TeamSales />} />
+              <Route path="salestarget" element={<SalesTarget />} />
+              <Route path="collectionplanning" element={<CollectionPlanning />} />
+              <Route path="teamcollectionplanning" element={<TeamCollectionPlanning />} />
+              <Route path="productsale" element={<ProductSales />} />
+              <Route path="culumalaive" element={<CumulativePayroll />} />
+              <Route path="monthsale" element={<MonthlySales />} />
+              <Route path="yearsales" element={<YearSales />} />
+              <Route path="summary" element={<BusinessSummary />} />
+              <Route path="mtdytd" element={<MtdYtd />} />
+              <Route path="accountsummary" element={<AccountSummary />} />
+              <Route path="productsummary" element={<ProductSummary />} />
+              {/* kamran Route */}
+
+              {/* adil */}
+              <Route path="ordersummery" element={<OrderSummeryTrk />} />
+              <Route path="partypending" element={<PartyPending />} />
+              <Route path="partyorder" element={<PartyOrderSummery />} />
+              <Route path="partypendingorder" element={<PartyPendingOrder />} />
+              <Route path="partydispatched" element={<PartyDispatched />} />
+              <Route path="productordersummery" element={<ProductOrderSummery />} />
+              <Route path="pendingordersummery" element={<PendingOrderSummery />} />
+              <Route path="dispatachorder" element={<DispatchOrderSummery />} />
+              {/* adil */}
+
+
             </Route>
           </>
         )}

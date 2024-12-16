@@ -4,6 +4,7 @@ import { CiMail } from "react-icons/ci"
 import { TiDownload, TiTick } from "react-icons/ti"
 import { Link } from "react-router-dom"
 import { toast } from "react-toastify"
+import { deletesServiceVoucher, getServiceVoucher } from "../../../../api/login/Login"
 
 
 const VoucherServiceList = () => {
@@ -43,15 +44,15 @@ const VoucherServiceList = () => {
     const getTransitionReport = async (input) => {
         // console.log('iojijip');
         setLoading(true)
-        // const clone = { ...filterInitial, count: count, page: input, user_id: window.localStorage.getItem('userIdToken') }
-        // try {
-        //     const res = await getTRCRM_tr_lead(clone)
-        //     setTotalCount(res?.totalCount)
-        //     setData(res?.data)
-        // } catch (error) {
+        const clone = { ...filterInitial, count: count, page: input, user_id: window.localStorage.getItem('userIdToken') }
+        try {
+            const res = await getServiceVoucher(clone)
+            setTotalCount(res?.totalCount)
+            setData(res?.data)
+        } catch (error) {
 
-        // }
-        // setLoading(false)
+        }
+        setLoading(false)
     }
     const onChangeVal = (e) => {
         // console.log(e - 1);
@@ -73,14 +74,14 @@ const VoucherServiceList = () => {
 
     const deleteData = async (id) => {
         try {
-            // const res = await deleteTRCRM_tr_lead(id)
-            // // console.log(res);
-            // if (res?.error == false) {
-            //     toastSuccessMessage()
-            //     getTransitionReport(0)
-            // } else {
-            //     alert(res?.message)
-            // }
+            const res = await deletesServiceVoucher(id)
+            // console.log(res);
+            if (res?.error == false) {
+                toastSuccessMessage()
+                getTransitionReport(0)
+            } else {
+                alert(res?.message)
+            }
         } catch (error) {
 
         }

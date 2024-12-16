@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Breadcrumbs from "../../../../../common/breadcrumb/Breadcrumbs";
-import { getAccAddProjectByPage, getAllAccountData, getAllProductsData, getAllTaxTypeData, getAllTransportersData, getAttTaxTypeData, getPickupByPage, getTaxtype, postquotationMaster } from "../../../../../api/login/Login";
+import { getAccAddProjectByPage, getAllAccountData, getAllMistryData, getAllProductsData, getAllRatesheetData, getAllSalesmanData, getAllSubjectData, getAllTaxTypeData, getAllTransportersData, getAttTaxTypeData, getPickupByPage, getQuoteNo, getTaxtype, postquotationMaster } from "../../../../../api/login/Login";
 import { toast, ToastContainer } from "react-toastify";
 import Loadar from "../../../../../common/loader/Loader";
 
@@ -315,12 +315,12 @@ import Loadar from "../../../../../common/loader/Loader";
 
 
 
-const PurchageOrderAdd = () => {
+const PurchaseQuatationAdd = () => {
     const breadCrumbsTitle = {
         id: "1",
         title_1: "Transaction",
         title_2: 'Order',
-        title_3: `Add Purchase Order`,
+        title_3: `Add Purchase Quotation`,
         path_2: ``
     };
     const [allAccounts, setAllAccounts] = useState();
@@ -328,6 +328,11 @@ const PurchageOrderAdd = () => {
     const [allTransports, setAllTransports] = useState();
     const [allProducts, setAllProducts] = useState();
     const [allPickupPoints, setAllPickupPoints] = useState();
+    const [allQuoteNo, setAllQuoteNo] = useState();
+    const [allSubjectD, setAllSubjectD] = useState();
+    const [allRatesheetD, setAllRatesheetD] = useState();
+    const [allSalesmanD, setAllSalesmanD] = useState();
+    const [allMistryD, setAllMistryD] = useState();
 
     const [formData, setFormData] = useState({
         date: '',
@@ -335,7 +340,13 @@ const PurchageOrderAdd = () => {
         order_no: '',
         transporter: '673843f385dbbfa354004862',
         prj_id: '',
-        tax_type: ''
+        tax_type: '',
+        quote_no: '',
+        quotation_no: '',
+        subject: '',
+        ratesheet: '',
+        salesman: '',
+        mistry: '',
     });
 
     // State for dynamic expense and taxes data
@@ -371,13 +382,9 @@ const PurchageOrderAdd = () => {
         }
     };
 
-
-
     const [rows, setRows] = useState([
         { id: 1, item: '', variant: '', sku: "", Tax: 0, pickupPoint: '', quantity2: '', quantity: 0, rate: 0, disc_rs: '', disc_type: '', amount: 0 },
     ]);
-
-
     const handleDeleteRow = (index) => {
         const updatedRows = rows.filter((_, i) => i !== index);
         setRows(updatedRows);
@@ -388,8 +395,6 @@ const PurchageOrderAdd = () => {
             { id: rows.length + 1, item: '', variant: '', sku: "", Tax: 0, pickupPoint: '', quantity2: '', quantity: 0, rate: 0, disc_rs: '', disc_type: '', amount: 0 },
         ]);
     };
-
-
 
     const handleChange = (index, key, value, varArr) => {
         if (key === "item") {
@@ -448,7 +453,6 @@ const PurchageOrderAdd = () => {
 
         setRows(updatedRows);
     };
-
 
     const renderRow = (row, index) => (
         <tr key={row.id}>
@@ -570,11 +574,6 @@ const PurchageOrderAdd = () => {
         </tr>
     );
 
-
-
-
-
-
     const getAllAccount = async () => {
         try {
             const res = await getAllAccountData();
@@ -617,10 +616,58 @@ const PurchageOrderAdd = () => {
 
         }
     };
-    const [peoject , setProjects] = useState()
+    const getAllQuoteNo = async () => {
+        try {
+            const res = await getQuoteNo();
+            console.log('quoteNo----', res?.data?.data)
+            setAllQuoteNo(res?.data?.data)
+        } catch (error) {
+
+        }
+    };
+    const getAllSubject = async () => {
+        try {
+            const res = await getAllSubjectData();
+            console.log('subject----', res?.data?.data)
+            setAllSubjectD(res?.data?.data)
+        } catch (error) {
+
+        }
+    };
+    const getAllRatesheet = async () => {
+        try {
+            const res = await getAllRatesheetData();
+            console.log('ratesheet----', res?.data?.data)
+            setAllRatesheetD(res?.data?.data)
+        } catch (error) {
+
+        }
+    };
+    const getAllSalesman = async () => {
+        try {
+            const res = await getAllSalesmanData();
+            console.log('salesman----', res?.data?.data)
+            setAllSalesmanD(res?.data?.data)
+        } catch (error) {
+
+        }
+    };
+    const getAllMistry = async () => {
+        try {
+            const res = await getAllMistryData();
+            console.log('mistry----', res?.data?.data)
+            setAllMistryD(res?.data?.data)
+        } catch (error) {
+
+        }
+    };
+
+
+
+    const [peoject, setProjects] = useState()
     const getAllProject = async () => {
         try {
-            const res = await getAccAddProjectByPage(0 ,200,'67444e0fcd1dc218d6090ddc');
+            const res = await getAccAddProjectByPage(0, 200, '67444e0fcd1dc218d6090ddc');
             setProjects(res.data)
         } catch (error) {
 
@@ -634,13 +681,22 @@ const PurchageOrderAdd = () => {
         getAllProject();
         getAllProducts();
         getAllPickupPoints();
+        getAllQuoteNo();
+        getAllSubject();
+        getAllRatesheet();
+        getAllSalesman();
+        getAllMistry();
     }, []);
     const toastSuccessMessage = (message) => {
         toast.success(`${message}`, {
             position: "top-right",
         });
     };
-
+    const toastErrorMessage = (message) => {
+        toast.error(`${message}`, {
+            position: "top-right",
+        });
+    };
     const [load, setLoad] = useState(false)
     const handleSubmitData = async () => {
         setLoad(true)
@@ -678,14 +734,14 @@ const PurchageOrderAdd = () => {
             if (res?.statusCode == '200') {
                 setLoad(false)
                 toastSuccessMessage(" Added successfully");
+            } else {
+                toastErrorMessage("Not Added")
             }
         } catch (error) {
-
+            toastErrorMessage("Not Added")
         }
         setLoad(false)
     };
-
-
 
     return (
         <>
@@ -699,7 +755,7 @@ const PurchageOrderAdd = () => {
                         <div className="card-body p-0">
                             <div className="table-responsive active-projects style-1">
                                 <div className="tbl-caption tbl-caption-2">
-                                    <h4 className="heading mb-0 p-2">Add Purchase Order</h4>
+                                    <h4 className="heading mb-0 p-2">Add Purchase Quotation</h4>
                                 </div>
                                 <div className="row">
                                     <div className="col-md-3 mb-3">
@@ -708,7 +764,7 @@ const PurchageOrderAdd = () => {
                                             type="date"
                                             className="form-control"
                                             name="date"
-                                            // value={formData.date}
+                                            value={formData.date}
                                             onChange={handleInputChange}
                                             placeholder="Enter Date"
                                         />
@@ -784,6 +840,103 @@ const PurchageOrderAdd = () => {
                                             })}
                                         </select>
                                     </div>
+
+
+
+                                    <div className="col-md-3 mb-3">
+                                        <label htmlFor="taxType">Quote No</label>
+                                        <select
+                                            className="form-control"
+                                            name="quote_no"
+                                            value={formData.quote_no}
+                                            onChange={handleInputChange}
+                                        >
+                                            <option value="">Select Quote No</option>
+                                            {allQuoteNo && allQuoteNo?.map((item, i) => {
+                                                return <option value={item?._id}>{item?.prefix}</option>
+                                            })}
+                                        </select>
+                                    </div>
+
+                                    <div className="col-md-3 mb-3">
+                                        <label htmlFor="taxType">Quotation No</label>
+                                        <input
+                                            type="number"
+                                            className="form-control"
+                                            name="quotation_no"
+                                            value={formData.quotation_no}
+                                            onChange={handleInputChange}
+                                            placeholder="Enter Quotation No"
+                                        />
+                                    </div>
+                                    <div className="col-md-3 mb-3">
+                                        <label htmlFor="voucher">Valid Till </label>
+                                        <input
+                                            type="date"
+                                            className="form-control"
+                                            name="valid_till"
+                                            value={formData.valid_till}
+                                            onChange={handleInputChange}
+                                            placeholder="Enter valid_till"
+                                        />
+                                    </div>
+                                    <div className="col-md-3 mb-3">
+                                        <label htmlFor="taxType">Subject</label>
+                                        <select
+                                            className="form-control"
+                                            name="subject"
+                                            value={formData.subject}
+                                            onChange={handleInputChange}
+                                        >
+                                            <option value="">Select Subject</option>
+                                            {allSubjectD && allSubjectD?.map((item, i) => {
+                                                return <option value={item?._id}>{item?.subject_name}</option>
+                                            })}
+                                        </select>
+                                    </div>
+                                    <div className="col-md-3 mb-3">
+                                        <label htmlFor="taxType">Rate Sheet</label>
+                                        <select
+                                            className="form-control"
+                                            name="ratesheet"
+                                            value={formData.ratesheet}
+                                            onChange={handleInputChange}
+                                        >
+                                            <option value="">Select ratesheet</option>
+                                            {allRatesheetD && allRatesheetD?.map((item, i) => {
+                                                return <option value={item?._id}>{item?.name}</option>
+                                            })}
+                                        </select>
+                                    </div>
+                                    <div className="col-md-3 mb-3">
+                                        <label htmlFor="taxType">Salesman</label>
+                                        <select
+                                            className="form-control"
+                                            name="salesman"
+                                            value={formData.salesman}
+                                            onChange={handleInputChange}
+                                        >
+                                            <option value="">Select salesman</option>
+                                            {allSalesmanD && allSalesmanD?.map((item, i) => {
+                                                return <option value={item?._id}>{item?.name}</option>
+                                            })}
+                                        </select>
+                                    </div>
+                                    <div className="col-md-3 mb-3">
+                                        <label htmlFor="taxType">Mistry</label>
+                                        <select
+                                            className="form-control"
+                                            name="mistry"
+                                            value={formData.mistry}
+                                            onChange={handleInputChange}
+                                        >
+                                            <option value="">Select Mistry</option>
+                                            {allMistryD && allMistryD?.map((item, i) => {
+                                                return <option value={item?._id}>{item?.mistry_name}</option>
+                                            })}
+                                        </select>
+                                    </div>
+
                                 </div>
 
 
@@ -871,4 +1024,4 @@ const PurchageOrderAdd = () => {
     )
 }
 
-export default PurchageOrderAdd
+export default PurchaseQuatationAdd

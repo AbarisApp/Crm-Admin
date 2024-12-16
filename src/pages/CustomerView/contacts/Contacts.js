@@ -13,7 +13,7 @@ const ContactTable = ({ title }) => {
 
     const getData = async () => {
         try {
-            const response = await getAccContactByPage(page, count);
+            const response = await getAccContactByPage(page, count, '123');
             setData(response?.data);
             setTotalPages(response?.totalPages); // Assuming API provides total pages
         } catch (error) {
@@ -66,7 +66,7 @@ const ContactTable = ({ title }) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {data.map((contact, i) => (
+                            {data?.length && data?.map((contact, i) => (
                                 <tr key={contact.id}>
                                     <td>{i + 1 + (page - 1) * count}</td>
                                     <td>{contact.fullName}</td>
@@ -89,17 +89,17 @@ const ContactTable = ({ title }) => {
                         </tbody>
                     </table>
                     <div className="d-flex justify-content-between">
-                        <button 
-                            className="btn btn-secondary" 
-                            onClick={handlePrevPage} 
+                        <button
+                            className="btn btn-secondary"
+                            onClick={handlePrevPage}
                             disabled={page === 1}
                         >
                             Previous
                         </button>
                         <span>Page {page} of {totalPages}</span>
-                        <button 
-                            className="btn btn-secondary" 
-                            onClick={handleNextPage} 
+                        <button
+                            className="btn btn-secondary"
+                            onClick={handleNextPage}
                             disabled={page === totalPages}
                         >
                             Next
