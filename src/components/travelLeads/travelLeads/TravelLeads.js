@@ -46,7 +46,8 @@ const TravelLeads = () => {
         last_name: '',
         email_id: '',
         tag: '',
-        mobile_number: ''
+        mobile_number: '',
+        createdBy: '',
         // sortType: '',
         // sortType: ''
     })
@@ -66,7 +67,7 @@ const TravelLeads = () => {
         try {
             const res = await getTRCRM_tr_lead(clone)
             setTotalCount(res?.totalCount)
-            setData(res?.data)
+            setData(res?.data || [])
         } catch (error) {
 
         }

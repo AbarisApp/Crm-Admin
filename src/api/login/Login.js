@@ -245,6 +245,10 @@ export const cityMainGet = () => {
   return axiosInstance.get(`${baseUrl}city`);
 };
 
+export const cityMainGett = () => {
+  return axiosInstance.get(`${baseUrl}city/state`);
+};
+
 export const cityUpdate = (id, value) => {
   return axiosInstance.put(`${baseUrl}city/updateCity/${id}`, value);
 };
@@ -5194,6 +5198,10 @@ export const updateRCRM_hotel_master = (id, value) => {
   return axiosInstance.put(`${baseUrl}TRCRM_hotel_master/update_type/${id}`, value);
 };
 
+export const getrcrm_hotel_master = (id) => {
+  return axiosInstance.get(`${baseUrl}trcrm_hotel_master/admin`);
+};
+
 export const TRCRM_tag_name_master = (value) => {
   return axiosInstance.get(`${baseUrl}TRCRM_tag_name_master/user?page=${value?.page}&count=${value?.count}&start_date=${value?.start_date}&end_date=${value?.end_date}`);
 };
@@ -5506,7 +5514,7 @@ export const addTRCRM_tr_leadaddType = (data) => {
 }
 
 export const getTRCRM_tr_lead = (value) => {
-  return axiosInstance.get(`${baseUrl}TRCRM_tr_lead/user?page=${value?.page}&count=${value?.count}&start_date=${value?.start_date}&end_date=${value?.end_date}&lead_priority=${value?.lead_priority}&lead_status=${value?.lead_status}&assigned_to=${value?.assigned_to}&lead_number=${value?.lead_number}&first_name=${value?.first_name}&last_name=${value?.last_name}&email_id=${value?.email_id}&tag=${value?.tag}&mobile_number=${value?.mobile_number}`);
+  return axiosInstance.get(`${baseUrl}TRCRM_tr_lead/user?page=${value?.page}&count=${value?.count}&start_date=${value?.start_date}&end_date=${value?.end_date}&lead_priority=${value?.lead_priority}&lead_status=${value?.lead_status}&assigned_to=${value?.assigned_to}&lead_number=${value?.lead_number}&first_name=${value?.first_name}&last_name=${value?.last_name}&email_id=${value?.email_id}&tag=${value?.tag}&mobile_number=${value?.mobile_number}&createdBy=${value.createdBy}`);
 };
 
 export const deleteTRCRM_tr_lead = (id) => {
@@ -5536,6 +5544,10 @@ export const deleteHotelVoucher = (id) => {
 };
 export const getByIdhotelVoucher = (id) => {
   return axiosInstance.get(`${baseUrl}hotelVoucher/${id}`);
+};
+
+export const thotelVoucherUpdate = (id, value) => {
+  return axiosInstance.put(`${baseUrl}hotelVoucher/update_type/${id}`, value);
 };
 
 
