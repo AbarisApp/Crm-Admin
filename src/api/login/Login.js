@@ -6589,3 +6589,43 @@ export const getPurchaseChallan = (page, count) => {
     `${baseUrl}lead_purchase_challan_master/user?page=${page}&count=${count}`
   );
 };
+
+// ====Sales Challan====
+export const postSalesChallan = (data) => {
+  return axiosInstance.post(`${baseUrl}lead_sales_challan_master/addType`, data, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
+export const getSalesChallan = (page, count) => {
+  return axiosInstance.get(
+    `${baseUrl}lead_sales_challan_master/user?page=${page}&count=${count}`
+  );
+};
+
+// ====Challan Return====
+export const postChallanReturn = (data) => {
+  return axiosInstance.post(`${baseUrl}lead_sales_return_master/addType`, data, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+export const getAllInvoiceTypeData = () => {
+  return axios.get(`${baseUrl}acc_select_invoice_type/admin`, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
+export const getChallanReturn = (page, count) => {
+  return axiosInstance.get(
+    `${baseUrl}lead_sales_return_master/user?page=${page}&count=${count}`
+  );
+};

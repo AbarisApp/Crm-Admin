@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Breadcrumbs from "../../../../../common/breadcrumb/Breadcrumbs";
-import { getAccAddProjectByPage, getAllAccountData, getAllProductsData, getAllTaxTypeData, getAllTransportersData, getAttTaxTypeData, getPickupByPage, getTaxtype, postquotationMaster } from "../../../../../api/login/Login";
+import { getAccAddProjectByPage, getAllAccountData, getAllProductsData, getAllRatesheetData, getAllTaxTypeData, getAllTransportersData, getAttTaxTypeData, getPickupByPage, getTaxtype, postquotationMaster, postSalesChallan } from "../../../../../api/login/Login";
 import { toast, ToastContainer } from "react-toastify";
 import Loadar from "../../../../../common/loader/Loader";
 
@@ -404,14 +404,21 @@ const SalesChallanAdd = () => {
     const [allTransports, setAllTransports] = useState();
     const [allProducts, setAllProducts] = useState();
     const [allPickupPoints, setAllPickupPoints] = useState();
+    const [allRatesheetD, setAllRatesheetD] = useState();
 
     const [formData, setFormData] = useState({
         date: '',
         account: '',
-        order_no: '',
+        challan_no: '',
         transporter: '673843f385dbbfa354004862',
         prj_id: '',
-        tax_type: ''
+        tax_type: '',
+        c_d: '',
+        sp_account: '',
+        lr_no: '',
+        lr_date: '',
+        barcode: '',
+        ratesheet: '',
     });
 
     // State for dynamic expense and taxes data
@@ -524,7 +531,6 @@ const SalesChallanAdd = () => {
 
         setRows(updatedRows);
     };
-
 
     const renderRow = (row, index) => (
         <tr key={row.id}>
@@ -646,11 +652,6 @@ const SalesChallanAdd = () => {
         </tr>
     );
 
-
-
-
-
-
     const getAllAccount = async () => {
         try {
             const res = await getAllAccountData();
@@ -693,11 +694,20 @@ const SalesChallanAdd = () => {
 
         }
     };
-    const [peoject , setProjects] = useState()
+    const [peoject, setProjects] = useState()
     const getAllProject = async () => {
         try {
-            const res = await getAccAddProjectByPage(0 ,200,'67444e0fcd1dc218d6090ddc');
+            const res = await getAccAddProjectByPage(0, 200, '67444e0fcd1dc218d6090ddc');
             setProjects(res.data)
+        } catch (error) {
+
+        }
+    };
+    const getAllRatesheet = async () => {
+        try {
+            const res = await getAllRatesheetData();
+            console.log('ratesheet----', res?.data?.data)
+            setAllRatesheetD(res?.data?.data)
         } catch (error) {
 
         }
@@ -710,9 +720,15 @@ const SalesChallanAdd = () => {
         getAllProject();
         getAllProducts();
         getAllPickupPoints();
+        getAllRatesheet();
     }, []);
     const toastSuccessMessage = (message) => {
         toast.success(`${message}`, {
+            position: "top-right",
+        });
+    };
+    const toastErrorMessage = (message) => {
+        toast.error(`${message}`, {
             position: "top-right",
         });
     };
@@ -750,13 +766,15 @@ const SalesChallanAdd = () => {
         // console.log("obj----", obj)
 
         try {
-            const res = await postquotationMaster(obj)
+            const res = await postSalesChallan(obj)
             if (res?.statusCode == '200') {
                 setLoad(false)
-                toastSuccessMessage(" Added successfully");
+                toastSuccessMessage("Added successfully");
+            } else {
+                toastErrorMessage("Not Added")
             }
         } catch (error) {
-
+            toastErrorMessage("Not Added")
         }
         setLoad(false)
     };
@@ -784,7 +802,7 @@ const SalesChallanAdd = () => {
                                             type="date"
                                             className="form-control"
                                             name="date"
-                                            // value={formData.date}
+                                            value={formData.date}
                                             onChange={handleInputChange}
                                             placeholder="Enter Date"
                                         />
@@ -806,14 +824,14 @@ const SalesChallanAdd = () => {
                                     </div>
 
                                     <div className="col-md-3 mb-3">
-                                        <label htmlFor="taxType">Order No</label>
+                                        <label htmlFor="taxType">challan No</label>
                                         <input
                                             type="number"
                                             className="form-control"
-                                            name="order_no"
-                                            value={formData.order_no}
+                                            name="challan_no"
+                                            value={formData.challan_no}
                                             onChange={handleInputChange}
-                                            placeholder="Enter Order No"
+                                            placeholder="Enter challan No"
                                         />
                                     </div>
 
@@ -860,6 +878,90 @@ const SalesChallanAdd = () => {
                                             })}
                                         </select>
                                     </div>
+
+                                    <div className="col-md-3 mb-3">
+                                        <label htmlFor="taxType">C/D</label>
+                                        <select
+                                            className="form-control"
+                                            name="c_d"
+                                            value={formData.c_d}
+                                            onChange={handleInputChange}
+                                        >
+                                            <option value="">Select C/D</option>
+                                            <option value={"Debit"}>Debit</option>
+                                            <option value={"Cash"}>Cash</option>
+                                        </select>
+                                    </div>
+
+                                    <div className="col-md-3 mb-3">
+                                        <label htmlFor="account">S\P Account</label>
+                                        <select
+                                            className="form-control"
+                                            name="sp_account"
+                                            value={formData.sp_account}
+                                            onChange={handleInputChange}
+                                        >
+                                            <option value="">Select S\P Account</option>
+                                            {allAccounts && allAccounts?.map((item, i) => {
+                                                return <option value={item?._id}>{item?.name}</option>
+                                            })}
+                                        </select>
+                                    </div>
+                                    <div className="col-md-3 mb-3">
+                                        <label htmlFor="taxType">Lr No</label>
+                                        <input
+                                            type="number"
+                                            className="form-control"
+                                            name="lr_no"
+                                            value={formData.lr_no}
+                                            onChange={handleInputChange}
+                                            placeholder="Enter LR No"
+                                        />
+                                    </div>
+
+                                    <div className="col-md-3 mb-3">
+                                        <label htmlFor="taxType">Lr Date</label>
+                                        <input
+                                            type="date"
+                                            className="form-control"
+                                            name="lr_date"
+                                            value={formData.lr_date}
+                                            onChange={handleInputChange}
+                                            placeholder="Enter LR Date"
+                                        />
+                                    </div>
+
+                                    <div className="col-md-3 mb-3">
+                                        <label htmlFor="taxType">Barcode</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            name="barcode"
+                                            value={formData.barcode}
+                                            onChange={handleInputChange}
+                                            placeholder="Enter Barcode"
+                                        />
+                                    </div>
+
+                                    <div className="col-md-3 mb-3">
+                                        <label htmlFor="taxType">Rate Sheet</label>
+                                        <select
+                                            className="form-control"
+                                            name="ratesheet"
+                                            value={formData.ratesheet}
+                                            onChange={handleInputChange}
+                                        >
+                                            <option value="">Select ratesheet</option>
+                                            {allRatesheetD && allRatesheetD?.map((item, i) => {
+                                                return <option value={item?._id}>{item?.name}</option>
+                                            })}
+                                        </select>
+                                    </div>
+
+
+
+
+
                                 </div>
 
 

@@ -113,9 +113,10 @@ import { Link } from "react-router-dom";
 import { PDFViewer } from "@react-pdf/renderer";
 import { useEffect, useState } from "react";
 import Loadar from "../../../../common/loader/Loader";
-import {getAllquotationMasterData } from "../../../../api/login/Login";
+import { getChallanReturn } from "../../../../api/login/Login";
 import Breadcrumbs from "../../../../common/breadcrumb/Breadcrumbs";
 import { message, Pagination, Popconfirm } from "antd";
+import PdfBanks from "../../order/salseOrder/pdfBank/PdfBanks";
 
 
 
@@ -149,7 +150,7 @@ const ChallanReturn = () => {
 
         setLoading(true)
         try {
-            const res = await getAllquotationMasterData(page, count)
+            const res = await getChallanReturn(page, count)
             setTotalCount(res?.totalCount)
             setData(res?.data)
             setPage(page)
@@ -198,16 +199,16 @@ const ChallanReturn = () => {
 
     return (
         <>
-            {loading && <Loadar/>}
+            {loading && <Loadar />}
             <Breadcrumbs
                 breadCrumbsTitle={breadCrumbsTitle} />
             {/* <GroupSummaryFilter /> */}
             <div style={{ margin: "14px" }}>
                 {pdf && <div className="pdfcs">
                     <div className="loader-overlay">
-                        {/* <PDFViewer style={{ width: '100%', height: '100vh' }}>
+                        <PDFViewer style={{ width: '100%', height: '100vh' }}>
                             <PdfBanks />
-                        </PDFViewer> */}
+                        </PDFViewer>
                     </div>
 
                 </div>}
@@ -242,7 +243,7 @@ const ChallanReturn = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {data && data?.map((item ,i) => {
+                                        {data && data?.map((item, i) => {
                                             return <tr role="row" className="odd" >
                                                 <td>{i + 1}</td>
                                                 <td>{item?.date}</td>
