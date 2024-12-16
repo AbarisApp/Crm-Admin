@@ -6470,12 +6470,14 @@ export const getAllPurchaseData = (page, count) => {
   );
 };
 
+export const getbyIdPurchase = (id) => {
+  return axiosInstance.get(
+    `${baseUrl}lead_purchase_order_master/${id}`
+  );
+};
 
-
-// Sales order Apis  start //
-
-export const postSalesOrder = (data) => {
-  return axiosInstance.post(`/lead_sales_order_master/addType`, data, {
+export const updatePurchase = (data, id) => {
+  return axiosInstance.put(`/lead_purchase_order_master/update_type/${id}`, data, {
     headers: {
       "Content-Type": "application/json; charset=UTF-8",
       Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
@@ -6483,13 +6485,36 @@ export const postSalesOrder = (data) => {
   });
 };
 
+
+
+// Sales order Apis  start //
+export const postSalesOrder = (data) => {
+  return axiosInstance.post(`${baseUrl}lead_sales_order_master/addType`, data, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
+export const deletetravelPurchase = (id) => {
+  return axiosInstance.delete(
+    `${baseUrl}lead_purchase_order_master/delete_type/${id}`,
+    {
+      headers: {
+        "Content-Type": "application/json; charset=UTF-8",
+        Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+      },
+    });
+};
+
 export const getAllSalesData = (page, count) => {
   return axiosInstance.get(
     `${baseUrl}lead_sales_order_master/user?page=${page}&count=${count}`
   );
 };
-// Sales quotationMaster api Apis  start //
 
+// Sales quotationMaster api Apis  start //
 export const postquotationMaster = (data) => {
   return axiosInstance.post(`/lead_quotation_master/addType`, data, {
     headers: {
@@ -6502,5 +6527,65 @@ export const postquotationMaster = (data) => {
 export const getAllquotationMasterData = (page, count) => {
   return axiosInstance.get(
     `${baseUrl}lead_quotation_master/?page=${page}&count=${count}`
+  );
+};
+
+
+// ====purchase quotation====
+
+export const getQuoteNo = () => {
+  return axios.get(`${baseUrl}add_book_code/admin`, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+export const getAllSubjectData = () => {
+  return axios.get(`${baseUrl}add_subject/admin`, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+export const getAllRatesheetData = () => {
+  return axios.get(`${baseUrl}acc_rate_sheet/admin`, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+export const getAllSalesmanData = () => {
+  return axios.get(`${baseUrl}staff/admin`, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+export const getAllMistryData = () => {
+  return axios.get(`${baseUrl}add_mistry/admin`, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
+// ====purchase Challan====
+export const postPurchaseChallan = (data) => {
+  return axiosInstance.post(`${baseUrl}lead_purchase_challan_master/addType`, data, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
+export const getPurchaseChallan = (page, count) => {
+  return axiosInstance.get(
+    `${baseUrl}lead_purchase_challan_master/user?page=${page}&count=${count}`
   );
 };

@@ -64,7 +64,7 @@ function TasksListComp({ style }) {
         } */
     }
     useEffect(() => {
-        getFloorMasters(0)
+        // getFloorMasters(0)
     }, [])
     // add Area
     const formatDate = (dateStr) => {
@@ -205,26 +205,13 @@ function TasksListComp({ style }) {
                                             </thead>
                                             <tbody>
 
-                                                {data && data?.map((item, i) => {
+                                                {/* {false && data?.map((item, i) => {
                                                     return <tr>
                                                         <td>{i + 1}</td>
                                                         <td>
                                                             <span className='text-primary'>{item?.task_name}  </span>
                                                         </td>
-                                                        {/* <td>
-                                                            <select className="form-select" aria-label="Default select example">
-                                                                <option selected>select</option>
-                                                                <option value={'Not Started'}>
-                                                                    Not Started
-                                                                </option>
-                                                                <option value={'In Progress'} >
-                                                                    In Progress
-                                                                </option>
-                                                                <option value={'Testing'} >Testing</option>
-                                                                <option value={'Awaiting Feedback'}>Awaiting Feedback</option>
-                                                                <option value={'Awaiting Feedback'}>Complete</option>
-                                                            </select>
-                                                        </td> */}
+                                                     
                                                         <td>{formatDate(item?.start_date)}</td>
                                                         <td>{formatDate(item?.due_date)}</td>
                                                         <td>{item?.assignees?.map((item) => item.name)}</td>
@@ -254,7 +241,7 @@ function TasksListComp({ style }) {
                                                         </td>
 
                                                     </tr>
-                                                })}
+                                                })} */}
 
 
 

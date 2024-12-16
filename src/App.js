@@ -2371,6 +2371,7 @@ function App() {
               <Route path="purchasechallan/add" element={<PurchaseChallanAdd />} />
               <Route path="saleschallanfrm/list" element={<SalesFromOrderPage />} />
               <Route path="saleschallanfrm/add" element={<SalesFromOrderAdd />} />
+              <Route path="saleschallanfrm/edit/:id" element={<SalesFromOrderAdd />} />
               <Route path="purchasechallanfrm/list" element={<PurchangefromChalanPage />} />
               <Route path="purchasechallanfrm/add" element={<PurchangefromChalanAdd />} />
               <Route path="challanreturn/list" element={<ChallanReturnPage />} />
