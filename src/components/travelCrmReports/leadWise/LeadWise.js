@@ -1,6 +1,8 @@
 import { Pagination } from "antd";
 import Breadcrumbs from "../../../common/breadcrumb/Breadcrumbs";
 import LeadWiseFilter from "./leadWiseFilter/LeadWiseFilter";
+import { useEffect, useState } from "react";
+import { getTRCRM_tr_lead } from "../../../api/login/Login";
 
 
 const LeadWise = () => {
@@ -10,10 +12,78 @@ const LeadWise = () => {
         title_2: 'Lead Wise Report',
         path_2: ``
     };
+
+    const getCurrentDate = () => {
+        const today = new Date();
+        return today.toISOString().substr(0, 10);
+    };
+
+    const [currentDate, setCurrentDate] = useState(getCurrentDate());
+    const [loading, setLoading] = useState(false);
+    const [count, setCount] = useState(10)
+    const [page, setPage] = useState(0)
+    // console.log(page);
+    const [totalCount, setTotalCount] = useState(null)
+    const [data, setData] = useState(null)
+    const [allData, setAllData] = useState(null)
+    const [filterInitial, setFilterInitial] = useState({
+        user_id: '',
+        count: '',
+        page: '',
+        end_date: getCurrentDate(),
+        start_date: getCurrentDate(),
+        lead_priority: '',
+        lead_status: '',
+        assigned_to: '',
+        lead_number: '',
+        first_name: '',
+        last_name: '',
+        email_id: '',
+        tag: '',
+        mobile_number: ''
+        // sortType: '',
+        // sortType: ''
+    })
+
+    const handleChange = (e) => {
+        const clone = { ...filterInitial }
+        const value = e.target.value
+        const name = e.target.name
+        clone[name] = value
+        setFilterInitial(clone)
+    }
+
+    const getTransitionReport = async (input) => {
+        // console.log('iojijip');
+        setLoading(true)
+        const clone = { ...filterInitial, count: count, page: input, user_id: window.localStorage.getItem('userIdToken') }
+        try {
+            const res = await getTRCRM_tr_lead(clone)
+            setTotalCount(res?.totalCount)
+            setData(res?.data)
+        } catch (error) {
+
+        }
+        setLoading(false)
+    }
+    const onChangeVal = (e) => {
+        // console.log(e - 1);
+
+        setPage(e - 1)
+        getTransitionReport(e - 1)
+    };
+
+    useEffect(() => {
+        getCurrentDate()
+    }, [])
+
+    useEffect(() => {
+        getTransitionReport(0)
+    }, [])
     return (
         <>
             <Breadcrumbs breadCrumbsTitle={breadCrumbsTitle} />
-            <LeadWiseFilter />
+            <LeadWiseFilter filterInitial={filterInitial} handleChange={handleChange} getTransitionReport={getTransitionReport} />
             <div>
                 <div className="row m-2">
                     <div className="col-xl-12">
@@ -46,20 +116,57 @@ const LeadWise = () => {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr role="row" >
-                                                    <td colSpan="11" className="text-center">No data available in table</td>
-                                                </tr>
+                                                {data && data?.map((item, i) => {
+                                                    return <tr role="row" className="odd" key={item?._id}>
+                                                        <td valign="top" className="dataTables_empty">{(i + 1) + (page * count)}</td>
+                                                        <td>
+                                                            {item?.refer_code}
+                                                        </td>
+                                                        <td>
+                                                            {item?.first_name} {item?.last_name}
+                                                        </td>
+                                                        <td>
+                                                            {item?.mobile_number}
+                                                        </td>
+                                                        <td>
+                                                            {item?.lead_priority?.name}
+                                                        </td>
+                                                        <td>
+                                                            {item?.lead_status?.name}
+                                                        </td>
+                                                        <td>
+                                                            {item?.trip_type?.trip_type}
+                                                        </td>
+                                                        <td>
+                                                            --
+                                                        </td>
+                                                        <td>
+                                                            --
+                                                        </td>
+                                                        <td>
+                                                            --
+                                                        </td>
+                                                        <td>
+                                                            {item?.createdAt}
+                                                        </td>
+
+                                                        {/* <td>
+                                                <span className="badge badge-success text-light border-0" style={{ backgroundColor: `${item?.is_active === true ? 'blue' : '#bc3922ab'}`, fontSize: `${item?.is_active === false ? '0.8rem' : ''}` }}>{item?.is_active == true ? 'ACTIVE' : 'IN ACTIVE'}</span>
+                                            </td> */}
+
+                                                    </tr>
+                                                })}
                                             </tbody>
                                         </table>
 
                                         <div className="dataTables_info" role="status" aria-live="polite">
-                                            Total 0 entries
+                                            Total {totalCount} entries
                                         </div>
                                         <div className="dataTables_paginate paging_simple_numbers">
                                             <Pagination
                                                 defaultCurrent={1}
-                                            // onChange={onChangeVal}
-                                            // total={totalCount}
+                                                onChange={onChangeVal}
+                                                total={totalCount}
                                             />
                                         </div>
                                     </div>
