@@ -9,7 +9,7 @@ import { addSubSubModule, getSubModuleForselect, mainModuleList,  updateSubSubMa
 
 
 function FormSubSubModule() {
-    const [count, setCount] = useState(100)
+    const [count, setCount] = useState(200)
     const [page, setPage] = useState(0)
     const itemList = [
         { name: "Airtel", value: "Airtel" },

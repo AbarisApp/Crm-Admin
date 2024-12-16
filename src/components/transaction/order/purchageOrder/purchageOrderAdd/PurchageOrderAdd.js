@@ -570,7 +570,7 @@ const PurchageOrderAdd = () => {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {rows.map((row, index) => renderRow(row, index))}
+                                            {rows?.map((row, index) => renderRow(row, index))}
                                         </tbody>
                                     </table>
                                     <button type="button" onClick={handleAddRow}>Add Row</button>

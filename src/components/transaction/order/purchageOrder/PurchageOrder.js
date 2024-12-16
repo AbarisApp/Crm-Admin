@@ -17,9 +17,15 @@ const PurchageOrder = () => {
         path_2: ``
     };
     const [pdf, setPdf] = useState(false)
+    const [val, setVal] = useState(null)
 
-    const pdfGenerateDefault = () => {
-        setPdf(!pdf)
+    const pdfGenerateDefault = (item) => {
+        setLoading(true)
+        setVal(item)
+        setTimeout(() => {
+            setLoading(false)
+            setPdf(!pdf)
+        }, 2000);
     }
 
 
@@ -94,7 +100,7 @@ const PurchageOrder = () => {
                 {pdf && <div className="pdfcs">
                     <div className="loader-overlay">
                         <PDFViewer style={{ width: '100%', height: '100vh' }}>
-                            <PdfBanks />
+                            <PdfBanks val={val}/>
                         </PDFViewer>
                     </div>
 
@@ -130,7 +136,7 @@ const PurchageOrder = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {data && data?.map((item ,i) => {
+                                        {data && data?.map((item, i) => {
                                             return <tr role="row" className="odd" >
                                                 <td>{i + 1}</td>
                                                 <td>{item?.date}</td>
@@ -139,7 +145,7 @@ const PurchageOrder = () => {
                                                 <td>{item?.product_amount}</td>
                                                 <td>{item?.createdBy?.name}</td>
                                                 <td>
-                                                    <button className="btn btn-sm btn-success ms-2" onClick={pdfGenerateDefault}>Print PDF</button>
+                                                    <button className="btn btn-sm btn-success ms-2" onClick={() => { pdfGenerateDefault(item) }}>Print PDF</button>
                                                     <div className="d-flex">
                                                         <Link to={`/purchaseorder/edit/${item?._id}`} className="btn btn-primary shadow btn-xs sharp me-1">
                                                             <i className="fa fa-pencil" />

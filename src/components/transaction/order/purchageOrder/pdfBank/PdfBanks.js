@@ -1,6 +1,49 @@
 import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
 
-const PdfBanks = () => {
+const PdfBanks = ({ val }) => {
+    console.log('val', val);
+
+    const data = {
+        header: {
+            headOffice: "HEAD OFFICE",
+            title: "(Purchase Order)",
+            original: "Original",
+        },
+        quoteDetails: {
+            quoteNo: val?.order_no,
+            quoteDate: val?.createdAt,
+        },
+        recipient: {
+            name: val?.prj_id?.project_name,
+            contact: "--",
+        },
+        subject: val?.narration,
+        items: val?.products?.map((item, i) => {
+            return {
+                no: i + 1,
+                particular: item?.product_id,
+                qty: item?.quantity,
+                unit: "",
+                rate: item?.rate,
+                amount: item?.amount,
+            }
+        }),
+        totals: {
+            totalQty: val?.product_amount,
+            subTotal: val?.product_amount,
+            grandTotal: val?.product_amount,
+        },
+        rupees: "--",
+        notes: val?.narration,
+        bankDetails: {
+            bank: "123",
+            account: "125231184616",
+            ifsc: "123",
+        },
+        terms: [
+            "1. Incase item(s) offered have any adverse impact on Environment, Health & Safety, please specify relevant details in your quote categorically. Kindly provide applicable legislation for the same.",
+        ],
+    };
 
     const styles = StyleSheet.create({
         page: {
@@ -66,7 +109,7 @@ const PdfBanks = () => {
             marginTop: 20,
             textAlign: 'right',
             fontStyle: 'italic',
-        }
+        },
     });
 
     return (
@@ -76,85 +119,80 @@ const PdfBanks = () => {
 
                     {/* Header */}
                     <View style={styles.header}>
-                        <Text>HEAD OFFICE</Text>
-                        <Text style={styles.title}>(Purchase Order)</Text>
-                        <Text>Original</Text>
+                        <Text>{data.header.headOffice}</Text>
+                        <Text style={styles.title}>{data.header.title}</Text>
+                        <Text>{data.header.original}</Text>
                     </View>
 
                     {/* Quote Details */}
                     <View style={styles.row}>
-                        <Text>Quote No: <Text style={styles.boldText}>1</Text></Text>
-                        <Text>Quote Date: <Text style={styles.boldText}>04/11/2024</Text></Text>
-                        <Text>Valid Till: <Text style={styles.boldText}>15/11/2024</Text></Text>
+                        <Text>Quote No: <Text style={styles.boldText}>{data.quoteDetails.quoteNo}</Text></Text>
+                        <Text>Quote Date: <Text style={styles.boldText}>{data.quoteDetails.quoteDate}</Text></Text>
+                        {/* <Text>Valid Till: <Text style={styles.boldText}>{data.quoteDetails.validTill}</Text></Text> */}
                     </View>
 
                     {/* Recipient Details */}
-                    <Text>M/s: <Text style={styles.boldText}>ABARIS SOFTCH PVT. LTD..</Text></Text>
-                    <Text>M: 8851746286</Text>
+                    <Text>M/s: <Text style={styles.boldText}>{data.recipient.name}</Text></Text>
+                    <Text>M: {data.recipient.contact}</Text>
 
                     {/* Subject and Message */}
-                    <Text>Subject: TITLE HERE</Text>
-                    <Text>We thank you for giving us the opportunity to Quote for valuable goods. We are pleased to quote you our best rate offer for the same as under.</Text>
+                    <Text>Subject: {data.subject}</Text>
+                    {/* <Text>{data.message}</Text> */}
 
-                    {/* Table Header */}
+                    {/* Table */}
                     <View style={styles.table}>
                         <View style={styles.tableRow}>
                             <Text style={styles.tableHeader}>No.</Text>
-                            <Text style={styles.tableHeader}>Particular</Text>
+                            <Text style={styles.tableHeader}>Product</Text>
                             <Text style={styles.tableHeader}>Qty</Text>
                             <Text style={styles.tableHeader}>Unit</Text>
                             <Text style={styles.tableHeader}>Rate</Text>
                             <Text style={styles.tableHeader}>Amount</Text>
                         </View>
 
-                        {/* Table Rows */}
-                        <View style={styles.tableRow}>
-                            <Text style={styles.tableCol}>1</Text>
-                            <Text style={styles.tableCol}>AGRI PRODUCT 100 ML</Text>
-                            <Text style={styles.tableCol}>64</Text>
-                            <Text style={styles.tableCol}></Text>
-                            <Text style={styles.tableCol}>296.61</Text>
-                            <Text style={styles.tableCol}>18,978.04</Text>
-                        </View>
-                        <View style={styles.tableRow}>
-                            <Text style={styles.tableCol}>2</Text>
-                            <Text style={styles.tableCol}>ACID SLURY</Text>
-                            <Text style={styles.tableCol}>4</Text>
-                            <Text style={styles.tableCol}></Text>
-                            <Text style={styles.tableCol}>169.49</Text>
-                            <Text style={styles.tableCol}>637.96</Text>
-                        </View>
+                        {data.items.map((item, index) => (
+                            <View style={styles.tableRow} key={index}>
+                                <Text style={styles.tableCol}>{item.no}</Text>
+                                <Text style={styles.tableCol}>{item.particular}</Text>
+                                <Text style={styles.tableCol}>{item.qty}</Text>
+                                <Text style={styles.tableCol}>{item.unit}</Text>
+                                <Text style={styles.tableCol}>{item.rate}</Text>
+                                <Text style={styles.tableCol}>{item.amount}</Text>
+                            </View>
+                        ))}
 
                         {/* Total Row */}
                         <View style={styles.totalRow}>
                             <Text style={{ width: '80%' }}>Total Qty</Text>
-                            <Text style={{ width: '20%' }}>68.00</Text>
+                            <Text style={{ width: '20%' }}>{data.totals.totalQty}</Text>
                         </View>
                         <View style={styles.totalRow}>
                             <Text style={{ width: '80%' }}>Sub Total</Text>
-                            <Text style={{ width: '20%' }}>19,616.00</Text>
+                            <Text style={{ width: '20%' }}>{data.totals.subTotal}</Text>
                         </View>
                         <View style={styles.totalRow}>
                             <Text style={{ width: '80%' }}>Grand Total</Text>
-                            <Text style={{ width: '20%' }}>19,616.00</Text>
+                            <Text style={{ width: '20%' }}>{data.totals.grandTotal}</Text>
                         </View>
                     </View>
 
                     {/* Amount in Words */}
-                    <Text>Rupees: Nineteen Thousand Six Hundred Sixteen Only</Text>
+                    <Text>Rupees: {data.rupees}</Text>
 
                     {/* Notes Section */}
                     <View style={styles.noteSection}>
-                        <Text>Notes: Suddep</Text>
-                        <Text>Bank: 123 | A/C: 125231184616 | IFSC No: 123</Text>
+                        <Text>Notes: {data.notes}</Text>
+                        <Text>Bank: {data.bankDetails.bank} | A/C: {data.bankDetails.account} | IFSC No: {data.bankDetails.ifsc}</Text>
                     </View>
 
                     {/* Terms & Conditions */}
                     <Text>Terms & Condition:</Text>
-                    <Text>1. Incase item(s) offered have any adverse impact on Environment, Health & Safety, please specify relevant details in your quote categorically. Kindly provide applicable legislation for the same.</Text>
+                    {data.terms.map((term, index) => (
+                        <Text key={index}>{term}</Text>
+                    ))}
 
                     {/* Footer */}
-                    <Text style={styles.footer}>HEAD OFFICE</Text>
+                    <Text style={styles.footer}>{data.header.headOffice}</Text>
                     <Text style={styles.footer}>( Authorized Signatory )</Text>
                 </View>
             </Page>
