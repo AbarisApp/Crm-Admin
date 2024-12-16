@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Breadcrumbs from "../../../../../common/breadcrumb/Breadcrumbs";
 import JoditEditor from "jodit-react";
 import { useNavigate, useParams } from "react-router-dom";
-import { addhotelVoucher, addTravelRoomType, getAirlLine, getByIdTRCRM_tr_lead, getTravelAllCountry, getTRCRM_hotel_type_master, TTRCRM_tr_travellerGet } from "../../../../../api/login/Login";
+import { addhotelVoucher, addTravelRoomType, getAirlLine, getByIdhotelVoucher, getByIdTRCRM_tr_lead, getTravelAllCountry, getTRCRM_hotel_type_master, TTRCRM_tr_travellerGet } from "../../../../../api/login/Login";
 import { Select } from "antd";
 import { toast, ToastContainer } from "react-toastify";
 const { Option } = Select;
@@ -160,6 +160,8 @@ const AddHotelVoucher = () => {
                     setTimeout(() => {
                         navigate(`/travel-Vouchers-list/${params?.id}`)
                     }, 2000)
+                } else {
+                    toastErroeMessage(res?.message)
                 }
             } else {
                 // const res = await addhotelVoucher(clone)
@@ -176,14 +178,10 @@ const AddHotelVoucher = () => {
     // useEffect(() => {
     //     const getIdData = async () => {
     //         try {
-    //             const res = await getIdTRCRM_tr_quotation_master(editData._id)
+    //             const res = await getByIdhotelVoucher(editData._id)
     //             console.log(res);
     //             // setInitialState(res?.data)
-    //             setInitialData(res?.data)
-    //             setRows(res?.data?.cities)
-    //             setRowsHotelInfo(res?.data?.options)
-    //             setRowsItinerary(res?.data?.days)
-    //             setImage(res.data?.attach_file)
+
     //         } catch (error) {
 
     //         }

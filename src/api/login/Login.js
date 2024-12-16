@@ -5534,6 +5534,24 @@ export const getHotelVoucher = (value) => {
 export const deleteHotelVoucher = (id) => {
   return axiosInstance.delete(`${baseUrl}hotelVoucher/delete_type/${id}`);
 };
+export const getByIdhotelVoucher = (id) => {
+  return axiosInstance.get(`${baseUrl}hotelVoucher/${id}`);
+};
+
+
+export const addServiceVoucher = (data) => {
+  return axiosInstance.post(`${baseUrl}serviceVoucher/addType`, data);
+}
+
+export const getServiceVoucher = (value) => {
+  return axiosInstance.get(`${baseUrl}serviceVoucher/user?page=${value?.page}&count=${value?.count}&start_date=${value?.start_date}&end_date=${value?.end_date}`);
+};
+export const deletesServiceVoucher = (id) => {
+  return axiosInstance.delete(`${baseUrl}serviceVoucher/delete_type/${id}`);
+};
+export const getByIdServiceVoucher = (id) => {
+  return axiosInstance.get(`${baseUrl}serviceVoucher/${id}`);
+};
 
 
 

@@ -16,9 +16,11 @@ const AddFlightVoucher = () => {
     const [content, setContent] = useState('');
 
     const config = useMemo(() => ({
-        readonly: false, // All settings to be defined here
+        readonly: false,
         placeholder: 'Start typing...'
     }), []);
+
+    const [initialData, setInitialData] = useState()
 
 
     const [flights, setFlights] = useState([
