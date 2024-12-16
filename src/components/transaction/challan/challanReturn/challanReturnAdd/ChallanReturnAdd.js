@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Breadcrumbs from "../../../../../common/breadcrumb/Breadcrumbs";
-import { getAccAddProjectByPage, getAllAccountData, getAllProductsData, getAllTaxTypeData, getAllTransportersData, getAttTaxTypeData, getPickupByPage, getTaxtype, postquotationMaster } from "../../../../../api/login/Login";
+import { getAccAddProjectByPage, getAllAccountData, getAllInvoiceTypeData, getAllProductsData, getAllRatesheetData, getAllTaxTypeData, getAllTransportersData, getAttTaxTypeData, getPickupByPage, getTaxtype, postChallanReturn, postquotationMaster } from "../../../../../api/login/Login";
 import { toast, ToastContainer } from "react-toastify";
 import Loadar from "../../../../../common/loader/Loader";
 
@@ -372,6 +372,8 @@ const ChallanReturnAdd = () => {
     const [allTransports, setAllTransports] = useState();
     const [allProducts, setAllProducts] = useState();
     const [allPickupPoints, setAllPickupPoints] = useState();
+    const [allRatesheetD, setAllRatesheetD] = useState();
+    const [allInvoiceTypeD, setAllInvoiceTypeD] = useState();
 
     const [formData, setFormData] = useState({
         date: '',
@@ -379,7 +381,19 @@ const ChallanReturnAdd = () => {
         order_no: '',
         transporter: '673843f385dbbfa354004862',
         prj_id: '',
-        tax_type: ''
+        tax_type: '',
+        c_d: '',
+        sp_account: '',
+        lr_no: '',
+        lr_date: '',
+        barcode: '',
+        ratesheet: '',
+        org_bill_amount: '',
+        port_code: '',
+        inv_date: '',
+        inv_no: '',
+        bill_no: '',
+        invoice_type: '673843f385dbbfa354004834',
     });
 
     // State for dynamic expense and taxes data
@@ -420,8 +434,6 @@ const ChallanReturnAdd = () => {
     const [rows, setRows] = useState([
         { id: 1, item: '', variant: '', sku: "", Tax: 0, pickupPoint: '', quantity2: '', quantity: 0, rate: 0, disc_rs: '', disc_type: '', amount: 0 },
     ]);
-
-
     const handleDeleteRow = (index) => {
         const updatedRows = rows.filter((_, i) => i !== index);
         setRows(updatedRows);
@@ -661,11 +673,28 @@ const ChallanReturnAdd = () => {
 
         }
     };
-    const [peoject , setProjects] = useState()
+    const [peoject, setProjects] = useState()
     const getAllProject = async () => {
         try {
-            const res = await getAccAddProjectByPage(0 ,200,'67444e0fcd1dc218d6090ddc');
+            const res = await getAccAddProjectByPage(0, 200, '67444e0fcd1dc218d6090ddc');
             setProjects(res.data)
+        } catch (error) {
+
+        }
+    };
+    const getAllRatesheet = async () => {
+        try {
+            const res = await getAllRatesheetData();
+            setAllRatesheetD(res?.data?.data)
+        } catch (error) {
+
+        }
+    };
+    const getAllInvoiceType = async () => {
+        try {
+            const res = await getAllInvoiceTypeData();
+            console.log('invoiceTyoe----', res?.data)
+            setAllInvoiceTypeD(res?.data?.data)
         } catch (error) {
 
         }
@@ -678,9 +707,16 @@ const ChallanReturnAdd = () => {
         getAllProject();
         getAllProducts();
         getAllPickupPoints();
+        getAllRatesheet();
+        getAllInvoiceType();
     }, []);
     const toastSuccessMessage = (message) => {
         toast.success(`${message}`, {
+            position: "top-right",
+        });
+    };
+    const toastErrorMessage = (message) => {
+        toast.error(`${message}`, {
             position: "top-right",
         });
     };
@@ -718,13 +754,15 @@ const ChallanReturnAdd = () => {
         // console.log("obj----", obj)
 
         try {
-            const res = await postquotationMaster(obj)
+            const res = await postChallanReturn(obj)
             if (res?.statusCode == '200') {
                 setLoad(false)
                 toastSuccessMessage(" Added successfully");
+            } else {
+                toastErrorMessage("Not Added")
             }
         } catch (error) {
-
+            toastErrorMessage("Not Added")
         }
         setLoad(false)
     };
@@ -828,6 +866,159 @@ const ChallanReturnAdd = () => {
                                             })}
                                         </select>
                                     </div>
+
+
+                                    <div className="col-md-3 mb-3">
+                                        <label htmlFor="taxType">C/D</label>
+                                        <select
+                                            className="form-control"
+                                            name="c_d"
+                                            value={formData.c_d}
+                                            onChange={handleInputChange}
+                                        >
+                                            <option value="">Select C/D</option>
+                                            <option value={"Debit"}>Debit</option>
+                                            <option value={"Cash"}>Cash</option>
+                                        </select>
+                                    </div>
+
+                                    <div className="col-md-3 mb-3">
+                                        <label htmlFor="account">S\P Account</label>
+                                        <select
+                                            className="form-control"
+                                            name="sp_account"
+                                            value={formData.sp_account}
+                                            onChange={handleInputChange}
+                                        >
+                                            <option value="">Select S\P Account</option>
+                                            {allAccounts && allAccounts?.map((item, i) => {
+                                                return <option value={item?._id}>{item?.name}</option>
+                                            })}
+                                        </select>
+                                    </div>
+                                    <div className="col-md-3 mb-3">
+                                        <label htmlFor="taxType">Lr No</label>
+                                        <input
+                                            type="number"
+                                            className="form-control"
+                                            name="lr_no"
+                                            value={formData.lr_no}
+                                            onChange={handleInputChange}
+                                            placeholder="Enter LR No"
+                                        />
+                                    </div>
+
+                                    <div className="col-md-3 mb-3">
+                                        <label htmlFor="taxType">Lr Date</label>
+                                        <input
+                                            type="date"
+                                            className="form-control"
+                                            name="lr_date"
+                                            value={formData.lr_date}
+                                            onChange={handleInputChange}
+                                            placeholder="Enter LR Date"
+                                        />
+                                    </div>
+
+                                    <div className="col-md-3 mb-3">
+                                        <label htmlFor="taxType">Barcode</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            name="barcode"
+                                            value={formData.barcode}
+                                            onChange={handleInputChange}
+                                            placeholder="Enter Barcode"
+                                        />
+                                    </div>
+
+                                    <div className="col-md-3 mb-3">
+                                        <label htmlFor="taxType">Rate Sheet</label>
+                                        <select
+                                            className="form-control"
+                                            name="ratesheet"
+                                            value={formData.ratesheet}
+                                            onChange={handleInputChange}
+                                        >
+                                            <option value="">Select ratesheet</option>
+                                            {allRatesheetD && allRatesheetD?.map((item, i) => {
+                                                return <option value={item?._id}>{item?.name}</option>
+                                            })}
+                                        </select>
+                                    </div>
+
+                                    <div className="col-md-3 mb-3">
+                                        <label htmlFor="taxType">Org Bill Amount</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            name="org_bill_amount"
+                                            value={formData.org_bill_amount}
+                                            onChange={handleInputChange}
+                                            placeholder="Enter Org Bill Amount"
+                                        />
+                                    </div>
+                                    <div className="col-md-3 mb-3">
+                                        <label htmlFor="taxType">Port Code</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            name="port_code"
+                                            value={formData.port_code}
+                                            onChange={handleInputChange}
+                                            placeholder="Enter Port Code"
+                                        />
+                                    </div>
+                                    <div className="col-md-3 mb-3">
+                                        <label htmlFor="taxType">Inv Date</label>
+                                        <input
+                                            type="date"
+                                            className="form-control"
+                                            name="inv_date"
+                                            value={formData.inv_date}
+                                            onChange={handleInputChange}
+                                            placeholder="Enter Inv Date"
+                                        />
+                                    </div>
+                                    <div className="col-md-3 mb-3">
+                                        <label htmlFor="taxType">Inv No</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            name="inv_no"
+                                            value={formData.inv_no}
+                                            onChange={handleInputChange}
+                                            placeholder="Enter Inv No"
+                                        />
+                                    </div>
+                                    <div className="col-md-3 mb-3">
+                                        <label htmlFor="taxType">Bill No</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            name="bill_no"
+                                            value={formData.bill_no}
+                                            onChange={handleInputChange}
+                                            placeholder="Enter Bill No"
+                                        />
+                                    </div>
+                                    <div className="col-md-3 mb-3">
+                                        <label htmlFor="taxType">Invoice Type</label>
+                                        <select
+                                            className="form-control"
+                                            name="invoice_type"
+                                            value={formData.invoice_type}
+                                            onChange={handleInputChange}
+                                        >
+                                            <option value="">Select Invoice Type</option>
+                                            {allInvoiceTypeD && allInvoiceTypeD?.map((item, i) => {
+                                                return <option value={item?._id}>{item?.name}</option>
+                                            })}
+                                        </select>
+                                    </div>
+
+
+
                                 </div>
 
 
