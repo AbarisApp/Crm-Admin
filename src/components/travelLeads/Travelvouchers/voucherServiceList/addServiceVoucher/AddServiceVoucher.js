@@ -3,9 +3,11 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 import JoditEditor from "jodit-react";
 import Breadcrumbs from "../../../../../common/breadcrumb/Breadcrumbs";
-import { useParams } from "react-router-dom";
-import { addTravelRoomType, getAirlLine, getByIdTRCRM_tr_lead, getTravelAllCountry, getTRCRM_hotel_type_master, TTRCRM_tr_travellerGet } from "../../../../../api/login/Login";
-import { toast } from "react-toastify";
+import { useNavigate, useParams } from "react-router-dom";
+import { addServiceVoucher, addTravelRoomType, cityMainGett, getAirlLine, getByIdServiceVoucher, getByIdTRCRM_tr_lead, getTravelAllCountry, getTRCRM_hotel_type_master, serviceVoucherUpdate, TTRCRM_tr_travellerGet } from "../../../../../api/login/Login";
+import { toast, ToastContainer } from "react-toastify";
+import { Select } from "antd";
+const { Option } = Select;
 
 const AddServiceVoucher = () => {
     const breadCrumbsTitle = {
@@ -16,6 +18,9 @@ const AddServiceVoucher = () => {
     };
 
     const params = useParams()
+    console.log(params);
+
+    const navigate = useNavigate()
 
     const editor = useRef(null);
     const [content, setContent] = useState('');
@@ -113,7 +118,7 @@ const AddServiceVoucher = () => {
     const [locations, setLocations] = useState([]);
     const searchAirlLine = async () => {
         try {
-            const res = await getAirlLine()
+            const res = await cityMainGett()
             setLocations(res?.data);
         } catch (error) {
 
@@ -143,32 +148,54 @@ const AddServiceVoucher = () => {
         const clone = { ...initialData, lead_id: params?.id }
         // console.log(clone);
         try {
-            // const res = await 
+            if (!params?.updateId) {
+                const res = await addServiceVoucher(clone)
+                // console.log(res);
+                if (res?.error == false) {
+                    toastSuccessMessage(res?.message)
+                    // setLoader(false)
+                    setTimeout(() => {
+                        navigate(`/travel-Vouchers-list/${params?.id}`)
+                    }, 2000)
+                } else {
+                    toastErroeMessage(res?.message)
+                }
+            } else {
+                const res = await serviceVoucherUpdate(params?.updateId, clone)
+                // console.log(res);
+                if (res?.error == false) {
+                    toastSuccessMessage(res?.message)
+                    // setLoader(false)
+                    setTimeout(() => {
+                        navigate(`/travel-Vouchers-list/${params?.id}`)
+                    }, 2000)
+                } else {
+                    toastErroeMessage(res?.message)
+                }
+            }
+
+
         } catch (error) {
 
         }
     }
 
 
-    // useEffect(() => {
-    //     const getIdData = async () => {
-    //         try {
-    //             const res = await getIdTRCRM_tr_quotation_master(editData._id)
-    //             console.log(res);
-    //             // setInitialState(res?.data)
-    //             setInitialData(res?.data)
-    //             setRows(res?.data?.cities)
-    //             setRowsHotelInfo(res?.data?.options)
-    //             setRowsItinerary(res?.data?.days)
-    //             setImage(res.data?.attach_file)
-    //         } catch (error) {
+    useEffect(() => {
+        const getIdData = async () => {
+            try {
+                const res = await getByIdServiceVoucher(params.updateId)
+                // console.log(res);
+                setInitialData(res?.data)
 
-    //         }
-    //     }
-    //     if (editData && editData._id) {
-    //         getIdData();
-    //     }
-    // }, [editData])
+            } catch (error) {
+
+            }
+        }
+        if (params?.updateId) {
+            getIdData();
+        }
+    }, [params?.updateId])
 
     useEffect(() => {
         getAllCountryListData()
@@ -237,7 +264,22 @@ const AddServiceVoucher = () => {
                                     </div>
                                     <div className="col-xl-4 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">Co Passanger</label>
-                                        <input type="text" className="form-control" placeholder="Enter Co Passanger" name="co_passanger" value={initialData?.co_passanger} onChange={changeHandle} />
+                                        {/* <input type="text" className="form-control" placeholder="Enter Co Passanger" name="co_passanger" value={initialData?.co_passanger} onChange={changeHandle} /> */}
+                                        <Select
+                                            mode="multiple"
+                                            showSearch
+                                            style={{ width: "100%" }}
+                                            placeholder="Select Co Passanger"
+                                            optionFilterProp="co_passanger"
+                                            value={initialData.co_passanger}
+                                            onChange={(value) => handleSelectChange(value, 'co_passanger')}
+                                        >
+                                            {coPassanger?.map((loc) => (
+                                                <Option key={loc._id} value={loc._id}>
+                                                    {loc.given_name}
+                                                </Option>
+                                            ))}
+                                        </Select>
                                     </div>
                                     <div className="col-xl-4 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">Travel Date </label>
@@ -246,7 +288,7 @@ const AddServiceVoucher = () => {
 
                                     <div className="col-xl-4 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">End Date</label>
-                                        <input type="text" className="form-control" placeholder="Enter Co Passanger" name="end_date" value={initialData?.end_date} onChange={changeHandle} />
+                                        <input type="date" className="form-control" placeholder="Enter Co Passanger" name="travel_end_date" value={initialData?.travel_end_date} onChange={changeHandle} />
                                     </div>
                                     <div className="col-xl-4 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">Booking Confirmed Date</label>
@@ -274,24 +316,50 @@ const AddServiceVoucher = () => {
                                     </div>
                                     <div className="col-xl-4 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">From City</label>
-                                        <input type="text" className="form-control" placeholder="Enter From City" name="from_City" value={initialData?.from_City} onChange={changeHandle} />
+                                        <Select
+                                            showSearch
+                                            style={{ width: "100%" }}
+                                            placeholder="Select City"
+                                            optionFilterProp="city"
+                                            value={initialData.from_City}
+                                            onChange={(value) => handleSelectChange(value, 'from_City')}
+                                        >
+                                            {locations?.map((loc) => (
+                                                <Option key={loc._id} value={loc._id}>
+                                                    {loc.name}
+                                                </Option>
+                                            ))}
+                                        </Select>
                                     </div>
                                     <div className="col-xl-4 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">To City</label>
-                                        <input type="text" className="form-control" placeholder="Enter To City" name="to_City" value={initialData?.to_City} onChange={changeHandle} />
+                                        <Select
+                                            showSearch
+                                            style={{ width: "100%" }}
+                                            placeholder="Select City"
+                                            optionFilterProp="city"
+                                            value={initialData.to_City}
+                                            onChange={(value) => handleSelectChange(value, 'to_City')}
+                                        >
+                                            {locations?.map((loc) => (
+                                                <Option key={loc._id} value={loc._id}>
+                                                    {loc.name}
+                                                </Option>
+                                            ))}
+                                        </Select>
                                     </div>
                                     <div className="col-xl-4 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">Arrival Flight</label>
-                                        <input type="text" className="form-control" placeholder="Enter Arrival Flight" name="arrival_Flight" value={initialData?.arrival_Flight} onChange={changeHandle} />
+                                        <input type="text" className="form-control" placeholder="Enter Arrival Flight" name="arrival_flight" value={initialData?.arrival_flight} onChange={changeHandle} />
                                     </div>
                                     <div className="col-xl-4 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">Departure Flight</label>
-                                        <input type="text" className="form-control" placeholder="Enter Departure Flight" name="departure_Flight" value={initialData?.departure_Flight} onChange={changeHandle} />
+                                        <input type="text" className="form-control" placeholder="Enter Departure Flight" name="departure_flight" value={initialData?.departure_flight} onChange={changeHandle} />
                                     </div>
 
                                     <div className="col-xl-6 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">Emergency Contact</label>
-                                        <input type="text" className="form-control" placeholder="Enter Extra Bed" name="emergency_Contact" value={initialData?.emergency_Contact} onChange={changeHandle} />
+                                        <input type="text" className="form-control" placeholder="Enter Extra Bed" name="emergency_contact" value={initialData?.emergency_contact} onChange={changeHandle} />
                                     </div>
                                     <div className="col-xl-6 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">Remarks</label>
@@ -354,7 +422,7 @@ const AddServiceVoucher = () => {
                                     </div>
                                     <div className="col-xl-12 text-center">
                                         <button type="button" className="btn btn-primary" onClick={submitData}>
-                                            Save
+                                            {params?.updateId ? 'Update' : 'Add'}
                                         </button>
                                     </div>
                                 </div>
@@ -363,6 +431,7 @@ const AddServiceVoucher = () => {
                     </div>
                 </div>
             </div>
+            <ToastContainer />
         </>
     )
 }

@@ -2,13 +2,15 @@ import { Pagination, Popconfirm } from "antd"
 import { useEffect, useState } from "react"
 import { CiMail } from "react-icons/ci"
 import { TiDownload, TiTick } from "react-icons/ti"
-import { Link } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import { toast } from "react-toastify"
 import { deletesServiceVoucher, getServiceVoucher } from "../../../../api/login/Login"
 
 
 const VoucherServiceList = () => {
     const [modalShow, setModalShow] = useState(false);
+
+    const params = useParams()
 
     const getCurrentDate = () => {
         const today = new Date();
@@ -47,8 +49,10 @@ const VoucherServiceList = () => {
         const clone = { ...filterInitial, count: count, page: input, user_id: window.localStorage.getItem('userIdToken') }
         try {
             const res = await getServiceVoucher(clone)
-            setTotalCount(res?.totalCount)
-            setData(res?.data)
+            if (res?.error == false) {
+                setTotalCount(res?.totalCount)
+                setData(res?.data || [])
+            }
         } catch (error) {
 
         }
@@ -116,34 +120,56 @@ const VoucherServiceList = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr role="row" >
-                            <td className="text-center" colSpan={7}>No data available in table</td>
-                            <td>
-                                <div className="d-flex">
-                                    <Link to={`#`} className="btn btn-primary shadow btn-xs sharp me-1">
-                                        <TiTick style={{ marginBottom: '8px' }} />
-                                    </Link>
-                                    <Link to={`#`} className="btn btn-primary shadow btn-xs sharp me-1">
-                                        <TiDownload style={{ marginBottom: '8px' }} />
-                                    </Link>
-                                    <Link to={`#`} className="btn btn-primary shadow btn-xs sharp me-1">
-                                        <i className="fa fa-pencil" />
-                                    </Link>
-                                    <Popconfirm
-                                        title="Delete cow feed!"
-                                        description="Are you sure to delete?"
-                                        // onConfirm={() => confirm(item?._id)}
-                                        // onCancel={cancel}
-                                        okText="Yes"
-                                        cancelText="No"
-                                    >
-                                        <Link to="#" className="btn btn-danger shadow btn-xs sharp">
-                                            <i className="fa fa-trash" />
+                        {data && data?.map((item, i) => {
+                            return <tr role="row" key={item?._id}>
+                                <td valign="top" className="dataTables_empty">{(i + 1) + (page * count)}</td>
+                                <td className="text-center">
+                                    {item?.voucher_number}
+                                </td>
+                                <td className="text-center">
+                                    {item?.travel_date}
+                                </td>
+                                <td className="text-center">
+                                    {item?.adult}
+                                </td>
+                                <td className="text-center">
+                                    {item?.child}
+                                </td>
+                                <td className="text-center">
+                                    {item?.infant}
+                                </td>
+                                <td className="text-center">
+                                    {item?.createdAt}
+                                </td>
+
+                                <td>
+                                    <div className="d-flex">
+                                        <Link to={`#`} className="btn btn-primary shadow btn-xs sharp me-1">
+                                            <TiTick style={{ marginBottom: '8px' }} />
                                         </Link>
-                                    </Popconfirm>
-                                </div>
-                            </td>
-                        </tr>
+                                        <Link to={`#`} className="btn btn-primary shadow btn-xs sharp me-1">
+                                            <TiDownload style={{ marginBottom: '8px' }} />
+                                        </Link>
+                                        <Link to={`/travel-service-Add/${params?.id}/${item?._id}`} className="btn btn-primary shadow btn-xs sharp me-1">
+                                            <i className="fa fa-pencil" />
+                                        </Link>
+                                        <Popconfirm
+                                            title="Delete Service Voucher!"
+                                            description="Are you sure to delete?"
+                                            onConfirm={() => confirm(item?._id)}
+                                            // onCancel={cancel}
+                                            okText="Yes"
+                                            cancelText="No"
+                                        >
+                                            <Link to="#" className="btn btn-danger shadow btn-xs sharp">
+                                                <i className="fa fa-trash" />
+                                            </Link>
+                                        </Popconfirm>
+                                    </div>
+                                </td>
+                            </tr>
+                        })}
+
                     </tbody>
                 </table>
 

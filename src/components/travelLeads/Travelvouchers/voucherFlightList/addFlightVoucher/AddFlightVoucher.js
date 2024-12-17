@@ -1,8 +1,13 @@
 import Breadcrumbs from "../../../../../common/breadcrumb/Breadcrumbs";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import JoditEditor from "jodit-react";
+import { addflightVoucher, cityMainGett, flightVoucherUpdate, getByIdflightVoucher, getByIdTRCRM_tr_lead } from "../../../../../api/login/Login";
+import { Select } from "antd";
+import { useNavigate, useParams } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+const { Option } = Select;
 
 const AddFlightVoucher = () => {
     const breadCrumbsTitle = {
@@ -14,13 +19,68 @@ const AddFlightVoucher = () => {
 
     const editor = useRef(null);
     const [content, setContent] = useState('');
+    const params = useParams()
+    const navigate = useNavigate()
 
     const config = useMemo(() => ({
         readonly: false,
         placeholder: 'Start typing...'
     }), []);
 
-    const [initialData, setInitialData] = useState()
+    const [initialData, setInitialData] = useState({
+        lead_id: '',
+        booking_date: '',
+        no_of_passenger: '',
+        subVouchers: [
+            {
+                // airline: "",
+                flightNumber: "",
+                pnrNumber: "",
+                connectingFlight: false,
+                operatedBy: false,
+                discription: '',
+                departure: {
+                    city: "",
+                    date: "",
+                    hours: "",
+                    minutes: "",
+                    // airport: "",
+                },
+                arrival: {
+                    city: "",
+                    date: "",
+                    hours: "",
+                    minutes: "",
+                    // airport: "",
+                },
+                connectingFlights: [
+                    {
+                        flightNumber: "",
+                        departure: {
+                            city: "", date: "", hours: "", minutes: "",
+                            // airport: ""
+                        },
+                        arrival: {
+                            city: "", date: "", hours: "", minutes: "",
+                            // airport: ""
+                        },
+                    }
+                ],
+            },],
+        initials: '',
+        firstname: '',
+        lastname: '',
+        ticket_no: '',
+        frequent_flyer: '',
+        basic_fare: '',
+        tax_and_charges: '',
+        service_tax: '',
+        total_fare: '',
+        baggage: '',
+        meals: '',
+        class: '',
+        terms_condition: '',
+    })
 
 
     const [flights, setFlights] = useState([
@@ -30,6 +90,7 @@ const AddFlightVoucher = () => {
             pnrNumber: "",
             connectingFlight: false,
             operatedBy: false,
+            discription: '',
             departure: {
                 city: "",
                 date: "",
@@ -67,6 +128,7 @@ const AddFlightVoucher = () => {
                 pnrNumber: "",
                 connectingFlight: false,
                 operatedBy: false,
+                discription: '',
                 departure: {
                     city: "",
                     date: "",
@@ -98,16 +160,32 @@ const AddFlightVoucher = () => {
     };
 
     // Handle input changes
-    const handleInputChange = (index, field, value) => {
-        const updatedFlights = [...flights];
-        updatedFlights[index][field] = value;
+    const handleInputChange = (index, field, subField, value) => {
+        const updatedFlights = [...initialData.subVouchers];
+        if (subField) {
+
+            updatedFlights[index][field][subField] = value;
+        } else {
+
+            updatedFlights[index][field] = value;
+        }
         setFlights(updatedFlights);
+
+        setInitialData({ ...initialData, subVouchers: updatedFlights });
+        // const updatedFlights = [...flights];
+        // if (parentField && subField) {
+        //     updatedFlights[index][parentField][subField] = value;
+        // } else {
+        //     updatedFlights[index][parentField] = value;
+        // }
+        // setFlights(updatedFlights);
     };
 
     const handleNestedChange = (flightIndex, section, nestedIndex, field, value) => {
-        const updatedFlights = [...flights];
+        const updatedFlights = [...initialData.subVouchers];
         updatedFlights[flightIndex][section][nestedIndex][field] = value;
         setFlights(updatedFlights);
+        setInitialData({ ...initialData, subVouchers: updatedFlights });
     };
 
 
@@ -129,6 +207,137 @@ const AddFlightVoucher = () => {
         );
         setFlights(updatedFlights);
     };
+
+
+    const [locations, setLocations] = useState([]);
+    const searchAirlLine = async () => {
+        try {
+            const res = await cityMainGett()
+            setLocations(res?.data);
+        } catch (error) {
+
+        }
+    }
+
+    const [leadIdData, setLeadIdData] = useState(null)
+    // console.log(leadIdData);
+    const leadIdGet = async () => {
+        try {
+            const res = await getByIdTRCRM_tr_lead(params?.id)
+            // console.log(res);
+            setLeadIdData(res?.data)
+        } catch (error) {
+
+        }
+    }
+
+    useEffect(() => {
+        leadIdGet()
+    }, [params?.id])
+
+
+    const chnageHandle = (e) => {
+        const clone = { ...initialData }
+        const value = e.target.value
+        const name = e.target.name
+        clone[name] = value
+        setInitialData(clone)
+    }
+
+    const handleEditorChange = (field, value) => {
+        setInitialData((prevData) => ({
+            ...prevData,
+            [field]: value,
+        }));
+    };
+
+
+    const toastSuccessMessage = (message) => {
+        toast.success(`${params?.id ? `${message}` : `${message}`}`, {
+            position: "top-right",
+        });
+    };
+    const toastErroeMessage = (message) => {
+        toast.error(`${message}`, {
+            position: "top-right",
+        });
+    };
+
+    const submitData = async () => {
+        // console.log(initialData);
+        const clone = { ...initialData, lead_id: params?.id }
+        // console.log(clone);
+
+        try {
+            if (!params?.updateId) {
+                const res = await addflightVoucher(clone)
+                // console.log(res);
+                if (res?.error == false) {
+                    toastSuccessMessage(res?.message)
+                    // setLoader(false)
+                    setTimeout(() => {
+                        navigate(`/travel-Vouchers-list/${params?.id}`)
+                    }, 2000)
+                } else {
+                    toastErroeMessage(res?.message)
+                }
+            } else {
+                const res = await flightVoucherUpdate(params?.updateId, clone)
+                // console.log(res);
+                if (res?.error == false) {
+                    toastSuccessMessage(res?.message)
+                    // setLoader(false)
+                    setTimeout(() => {
+                        navigate(`/travel-Vouchers-list/${params?.id}`)
+                    }, 2000)
+                } else {
+                    toastErroeMessage(res?.message)
+                }
+            }
+
+
+        } catch (error) {
+
+        }
+    }
+
+
+    useEffect(() => {
+        const getIdData = async () => {
+            try {
+                const res = await getByIdflightVoucher(params.updateId)
+                // console.log(res);
+                setInitialData(res?.data)
+
+            } catch (error) {
+
+            }
+        }
+        if (params?.updateId) {
+            getIdData();
+        }
+    }, [params?.updateId])
+
+
+
+
+
+    useEffect(() => {
+        if (leadIdData) {
+            const fullName = [leadIdData.first_name, leadIdData.last_name]
+                .filter(Boolean)
+                .join(' ');
+            setInitialData((prevData) => ({
+                ...prevData,
+                traveller_name: fullName,
+            }));
+        }
+    }, [leadIdData]);
+
+
+    useEffect(() => {
+        searchAirlLine()
+    }, [])
     return (
         <>
             <Breadcrumbs breadCrumbsTitle={breadCrumbsTitle} />
@@ -137,37 +346,36 @@ const AddFlightVoucher = () => {
                     <div className="card-body p-0">
                         <div className="table-responsive active-projects style-1">
                             <div className="tbl-caption tbl-caption-2">
-                                <h4 className="heading mb-0 p-2">Create Flight Voucher</h4>
+                                <h4 className="heading mb-0 p-2">{params?.updateId ? 'Update' : 'Create'} Flight Voucher</h4>
                             </div>
                             <form className="tbl-captionn">
                                 <div className="row">
                                     <div className="col-xl-3 mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Name</label>
-                                        <p>Mustafa Ashraf</p>
+                                        <label for="exampleFormControlInput1" className="form-label">Name</label>
+                                        <p>{leadIdData?.first_name} {leadIdData?.last_name}</p>
                                     </div>
                                     <div className="col-xl-3 mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Mobile Number</label>
-                                        <p>9787898778</p>
+                                        <label for="exampleFormControlInput1" className="form-label">Mobile Number</label>
+                                        <p>{leadIdData?.mobile_number}</p>
                                     </div>
                                     <div className="col-xl-3 mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Assigned User</label>
-                                        <p>Junaid</p>
+                                        <label for="exampleFormControlInput1" className="form-label">Assigned User</label>
+                                        <p>{leadIdData?.assigned_to?.name}</p>
                                     </div>
                                     <div className="col-xl-3 mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Present User</label>
-                                        <p>Suhaib</p>
+                                        <label for="exampleFormControlInput1" className="form-label">Present User</label>
+                                        <p>{leadIdData?.first_name}</p>
                                     </div>
 
-
-                                    <div className="col-xl-4 mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label">Booking Date </label>
-                                        <input type="text" className="form-control" name="title" placeholder="Enter Booking Date " />
+                                    <div className="col-xl-6 mb-3">
+                                        <label for="exampleFormControlInput1" class="form-label">Booking Date</label>
+                                        <input type="date" className="form-control" name="booking_date" value={initialData?.booking_date} onChange={chnageHandle} />
                                     </div>
-                                    <div className="col-xl-4 mb-3">
+                                    <div className="col-xl-6 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">No. of Passengers</label>
-                                        <input type="text" className="form-control" name="title" placeholder="Enter No. of Passengers" />
+                                        <input type="text" className="form-control" placeholder="Enter No. of Passengers" name="no_of_passenger" value={initialData?.no_of_passenger} onChange={chnageHandle} />
                                     </div>
-                                    <div className="col-xl-4 mb-3">
+                                    {/* <div className="col-xl-4 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">Status</label>
                                         <select className="form-control" aria-label="Default select example">
                                             <option selected>Open this select Status</option>
@@ -175,10 +383,7 @@ const AddFlightVoucher = () => {
                                             <option value={2}>Two</option>
                                             <option value={3}>Three</option>
                                         </select>
-                                    </div>
-
-
-
+                                    </div> */}
 
                                     {flights.map((flight, index) => (
                                         <div className="col-xl-12 mb-3">
@@ -186,30 +391,30 @@ const AddFlightVoucher = () => {
                                                 <div className="row">
                                                     <div className="col-xl-4 mb-3">
                                                         <label for="exampleFormControlInput1" class="form-label">Airline </label>
-                                                        <select className="form-control" aria-label="Default select example" value={flight.airline}
-                                                            onChange={(e) => handleInputChange(index, "airline", e.target.value)}>
+                                                        <select className="form-control" disabled aria-label="Default select example" value={flight.airline}
+                                                            onChange={(e) => handleInputChange(index, "airline", null, e.target.value)}>
                                                             <option selected>Open this select Airline</option >
-                                                            <option value={1}>One</option>
-                                                            <option value={2}>Two</option>
-                                                            <option value={3}>Three</option>
+                                                            <option value={1}>Filght1</option>
+                                                            <option value={2}>Filght2</option>
+                                                            <option value={3}>Filght3</option>
                                                         </select>
                                                     </div>
                                                     <div className="col-xl-4 mb-3">
                                                         <label for="exampleFormControlInput1" class="form-label">Flight Number</label>
-                                                        <input type="text" className="form-control" name="title" placeholder="Enter Flight Number" value={flight.flightNumber}
-                                                            onChange={(e) => handleInputChange(index, "flightNumber", e.target.value)} />
+                                                        <input type="text" className="form-control" name="flightNumber" placeholder="Enter Flight Number"
+                                                            value={flight.flightNumber}
+                                                            onChange={(e) => handleInputChange(index, "flightNumber", null, e.target.value)}
+                                                        />
                                                     </div>
                                                     <div className="col-xl-4 mb-3">
                                                         <label for="exampleFormControlInput1" class="form-label">PNR Number</label>
-                                                        <input type="text" className="form-control" name="title" placeholder="Enter PNR Number" value={flight.pnrNumber}
-                                                            onChange={(e) => handleInputChange(index, "pnrNumber", e.target.value)} />
+                                                        <input type="text" className="form-control" name="pnrNumber" placeholder="Enter PNR Number" value={flight.pnrNumber}
+                                                            onChange={(e) => handleInputChange(index, "pnrNumber", null, e.target.value)} />
                                                     </div>
                                                     <div className="col-xl-4 mb-3">
                                                         <label for="exampleFormControlInput1" class="form-label">Connecting Flight </label>
                                                         <div className="form-check">
-                                                            <input className="form-check-input" type="checkbox" id="flexCheckDefault" onChange={(e) =>
-                                                                handleInputChange(index, "connectingFlight", e.target.checked)
-                                                            } />
+                                                            <input className="form-check-input" type="checkbox" id="flexCheckDefault" checked={flight.connectingFlight} onChange={(e) => handleInputChange(index, "connectingFlight", null, e.target.checked)} />
                                                             {/* <label className="form-check-label" htmlFor="flexCheckDefault">
                                                 Default checkbox
                                             </label> */}
@@ -219,9 +424,7 @@ const AddFlightVoucher = () => {
                                                     <div className="col-xl-4 mb-3">
                                                         <label for="exampleFormControlInput1" class="form-label">Operated By </label>
                                                         <div className="form-check">
-                                                            <input className="form-check-input" type="checkbox" defaultValue id="flexCheckDefault" onChange={(e) =>
-                                                                handleInputChange(index, "operatedBy", e.target.checked)
-                                                            } />
+                                                            <input className="form-check-input" type="checkbox" defaultValue id="flexCheckDefault" checked={flight.operatedBy} onChange={(e) => handleInputChange(index, "operatedBy", null, e.target.checked)} />
                                                             {/* <label className="form-check-label" htmlFor="flexCheckDefault">
                                                 Default checkbox
                                             </label> */}
@@ -231,7 +434,8 @@ const AddFlightVoucher = () => {
                                                     {flight.operatedBy && (
                                                         <div className="col-xl-3 mb-3">
                                                             <label for="exampleFormControlInput1" class="form-label">Description</label>
-                                                            <input type="text" className="form-control" name="title" placeholder="Enter Description" />
+                                                            <input type="text" className="form-control" name="discription" placeholder="Enter Description" value={flight.discription}
+                                                                onChange={(e) => handleInputChange(index, "discription", null, e.target.value)} />
                                                         </div>
                                                     )}
 
@@ -242,33 +446,57 @@ const AddFlightVoucher = () => {
                                                             </div>
                                                             <div className="col-xl-3 mb-3">
                                                                 <label for="exampleFormControlInput1" class="form-label">City</label>
-                                                                <input type="text" className="form-control" name="title" placeholder="Enter City" />
+                                                                <Select
+                                                                    showSearch
+                                                                    style={{ width: "100%" }}
+                                                                    placeholder="Select City"
+                                                                    optionFilterProp="city"
+                                                                    value={flight.departure?.city}
+                                                                    // onChange={(value) => handleSelectChange(value, 'city')}
+                                                                    onChange={(value) => handleInputChange(index, "departure", "city", value)}
+                                                                >
+                                                                    {locations?.map((loc) => (
+                                                                        <Option key={loc._id} value={loc._id}>
+                                                                            {loc.name}
+                                                                        </Option>
+                                                                    ))}
+                                                                </Select>
                                                             </div>
                                                             <div className="col-xl-3 mb-3">
                                                                 <label for="exampleFormControlInput1" class="form-label">Date</label>
-                                                                <input type="date" className="form-control" name="title" />
+                                                                <input type="date" className="form-control" value={flight.departure?.date}
+                                                                    onChange={(e) => handleInputChange(index, "departure", "date", e.target.value)} />
                                                             </div>
                                                             <div className="col-xl-3 mb-3">
                                                                 <label for="exampleFormControlInput1" class="form-label">Hours </label>
-                                                                <select className="form-control" aria-label="Default select example">
-                                                                    <option selected>Hours</option>
-                                                                    <option value={1}>One</option>
-                                                                    <option value={2}>Two</option>
-                                                                    <option value={3}>Three</option>
-                                                                </select>
+                                                                <input
+                                                                    type="number"
+                                                                    className="form-control"
+                                                                    min="0"
+                                                                    max="23"
+                                                                    placeholder="Hours"
+                                                                    value={flight.departure.hours}
+                                                                    onChange={(e) => handleInputChange(index, "departure", "hours", e.target.value)}
+                                                                />
                                                             </div>
                                                             <div className="col-xl-3 mb-3">
                                                                 <label for="exampleFormControlInput1" class="form-label">Minute </label>
-                                                                <select className="form-control" aria-label="Default select example">
-                                                                    <option selected>Hours</option>
-                                                                    <option value={1}>One</option>
-                                                                    <option value={2}>Two</option>
-                                                                    <option value={3}>Three</option>
-                                                                </select>
+                                                                <input
+                                                                    type="number"
+                                                                    className="form-control"
+                                                                    min="0"
+                                                                    max="23"
+                                                                    placeholder="Minute"
+                                                                    value={flight.departure.minutes}
+                                                                    onChange={(e) => handleInputChange(index, "departure", "minutes", e.target.value)}
+                                                                />
                                                             </div>
                                                             <div className="col-xl-4 mb-3">
                                                                 <label for="exampleFormControlInput1" class="form-label">Departure Airport</label>
-                                                                <input type="text" className="form-control" name="title" placeholder="Enter Departure Airport" />
+                                                                <input type="text" className="form-control" disabled placeholder="Enter Departure Airport"
+                                                                    value={flight.departure.airport}
+                                                                    onChange={(e) => handleInputChange(index, "departure", "airport", e.target.value)}
+                                                                />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -280,33 +508,59 @@ const AddFlightVoucher = () => {
                                                             </div>
                                                             <div className="col-xl-3 mb-3">
                                                                 <label for="exampleFormControlInput1" class="form-label">City</label>
-                                                                <input type="text" className="form-control" name="title" placeholder="Enter City" />
+                                                                <Select
+                                                                    showSearch
+                                                                    style={{ width: "100%" }}
+                                                                    placeholder="Select City"
+                                                                    optionFilterProp="city"
+                                                                    value={flight.arrival?.city}
+                                                                    // onChange={(value) => handleSelectChange(value, 'city')}
+                                                                    onChange={(value) => handleInputChange(index, "arrival", "city", value)}
+                                                                >
+                                                                    {locations?.map((loc) => (
+                                                                        <Option key={loc._id} value={loc._id}>
+                                                                            {loc.name}
+                                                                        </Option>
+                                                                    ))}
+                                                                </Select>
                                                             </div>
                                                             <div className="col-xl-3 mb-3">
                                                                 <label for="exampleFormControlInput1" class="form-label">Date</label>
-                                                                <input type="date" className="form-control" name="title" />
+                                                                <input type="date" className="form-control"
+                                                                    value={flight.arrival.date}
+                                                                    onChange={(e) => handleInputChange(index, "arrival", "date", e.target.value)}
+                                                                />
                                                             </div>
                                                             <div className="col-xl-3 mb-3">
                                                                 <label for="exampleFormControlInput1" class="form-label">Hours </label>
-                                                                <select className="form-control" aria-label="Default select example">
-                                                                    <option selected>Hours</option>
-                                                                    <option value={1}>One</option>
-                                                                    <option value={2}>Two</option>
-                                                                    <option value={3}>Three</option>
-                                                                </select>
+                                                                <input
+                                                                    type="number"
+                                                                    className="form-control"
+                                                                    min="0"
+                                                                    max="23"
+                                                                    placeholder="Hours"
+                                                                    value={flight.arrival.hours}
+                                                                    onChange={(e) => handleInputChange(index, "arrival", "hours", e.target.value)}
+                                                                />
                                                             </div>
                                                             <div className="col-xl-3 mb-3">
                                                                 <label for="exampleFormControlInput1" class="form-label">Minute </label>
-                                                                <select className="form-control" aria-label="Default select example">
-                                                                    <option selected>Hours</option>
-                                                                    <option value={1}>One</option>
-                                                                    <option value={2}>Two</option>
-                                                                    <option value={3}>Three</option>
-                                                                </select>
+                                                                <input
+                                                                    type="number"
+                                                                    className="form-control"
+                                                                    min="0"
+                                                                    max="23"
+                                                                    placeholder="Hours"
+                                                                    value={flight.arrival.minutes}
+                                                                    onChange={(e) => handleInputChange(index, "arrival", "minutes", e.target.value)}
+                                                                />
                                                             </div>
                                                             <div className="col-xl-4 mb-3">
                                                                 <label for="exampleFormControlInput1" class="form-label">Arrival Airport</label>
-                                                                <input type="text" className="form-control" name="title" placeholder="Enter Arrival Airport" />
+                                                                <input type="text" className="form-control" disabled name="title" placeholder="Enter Arrival Airport"
+                                                                    value={flight.arrival.airport}
+                                                                    onChange={(e) => handleInputChange(index, "arrival", "airport", e.target.value)}
+                                                                />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -331,33 +585,71 @@ const AddFlightVoucher = () => {
                                                                             </div>
                                                                             <div className="col-xl-3 mb-3">
                                                                                 <label for="exampleFormControlInput1" class="form-label">City</label>
-                                                                                <input type="text" className="form-control" name="title" placeholder="Enter City" />
+                                                                                <Select
+                                                                                    showSearch
+                                                                                    style={{ width: "100%" }}
+                                                                                    placeholder="Select City"
+                                                                                    optionFilterProp="city"
+                                                                                    value={cf.departure?.city}
+                                                                                    onChange={(value) =>
+                                                                                        handleNestedChange(index, "connectingFlights", cfIndex, "departure", {
+                                                                                            ...cf.departure,
+                                                                                            city: value,
+                                                                                        })
+                                                                                    }
+                                                                                >
+                                                                                    {locations?.map((loc) => (
+                                                                                        <Option key={loc._id} value={loc._id}>
+                                                                                            {loc.name}
+                                                                                        </Option>
+                                                                                    ))}
+                                                                                </Select>
                                                                             </div>
                                                                             <div className="col-xl-3 mb-3">
                                                                                 <label for="exampleFormControlInput1" class="form-label">Date</label>
-                                                                                <input type="date" className="form-control" name="title" />
+                                                                                <input type="date" className="form-control"
+                                                                                    value={cf.departure.date}
+                                                                                    onChange={(e) =>
+                                                                                        handleNestedChange(index, "connectingFlights", cfIndex, "departure", { ...cf.departure, date: e.target.value })
+                                                                                    }
+                                                                                />
                                                                             </div>
                                                                             <div className="col-xl-3 mb-3">
                                                                                 <label for="exampleFormControlInput1" class="form-label">Hours </label>
-                                                                                <select className="form-control" aria-label="Default select example">
-                                                                                    <option selected>Hours</option>
-                                                                                    <option value={1}>One</option>
-                                                                                    <option value={2}>Two</option>
-                                                                                    <option value={3}>Three</option>
-                                                                                </select>
+                                                                                <input
+                                                                                    type="number"
+                                                                                    className="form-control"
+                                                                                    min="0"
+                                                                                    max="23"
+                                                                                    placeholder="Hours"
+                                                                                    value={cf.departure.hours}
+                                                                                    onChange={(e) =>
+                                                                                        handleNestedChange(index, "connectingFlights", cfIndex, "departure", { ...cf.departure, hours: e.target.value })
+                                                                                    }
+                                                                                />
                                                                             </div>
                                                                             <div className="col-xl-3 mb-3">
                                                                                 <label for="exampleFormControlInput1" class="form-label">Minute </label>
-                                                                                <select className="form-control" aria-label="Default select example">
-                                                                                    <option selected>Hours</option>
-                                                                                    <option value={1}>One</option>
-                                                                                    <option value={2}>Two</option>
-                                                                                    <option value={3}>Three</option>
-                                                                                </select>
+                                                                                <input
+                                                                                    type="number"
+                                                                                    className="form-control"
+                                                                                    min="0"
+                                                                                    max="59"
+                                                                                    placeholder="Minutes"
+                                                                                    value={cf.departure.minutes}
+                                                                                    onChange={(e) =>
+                                                                                        handleNestedChange(index, "connectingFlights", cfIndex, "departure", { ...cf.departure, minutes: e.target.value })
+                                                                                    }
+                                                                                />
                                                                             </div>
                                                                             <div className="col-xl-4 mb-3">
                                                                                 <label for="exampleFormControlInput1" class="form-label">Departure Airport</label>
-                                                                                <input type="text" className="form-control" name="title" placeholder="Enter Departure Airport" />
+                                                                                <input type="text" className="form-control" disabled placeholder="Enter Departure Airport"
+                                                                                    value={cf.departure.airport}
+                                                                                    onChange={(e) =>
+                                                                                        handleNestedChange(index, "connectingFlights", cfIndex, "departure", { ...cf.departure, airport: e.target.value })
+                                                                                    }
+                                                                                />
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -368,33 +660,67 @@ const AddFlightVoucher = () => {
                                                                             </div>
                                                                             <div className="col-xl-3 mb-3">
                                                                                 <label for="exampleFormControlInput1" class="form-label">City</label>
-                                                                                <input type="text" className="form-control" name="title" placeholder="Enter City" />
+                                                                                <Select
+                                                                                    showSearch
+                                                                                    style={{ width: "100%" }}
+                                                                                    placeholder="Select City"
+                                                                                    optionFilterProp="city"
+                                                                                    value={cf.arrival?.city}
+                                                                                    onChange={(value) =>
+                                                                                        handleNestedChange(index, "connectingFlights", cfIndex, "arrival", {
+                                                                                            ...cf.arrival,
+                                                                                            city: value,
+                                                                                        })
+                                                                                    }
+                                                                                >
+                                                                                    {locations?.map((loc) => (
+                                                                                        <Option key={loc._id} value={loc._id}>
+                                                                                            {loc.name}
+                                                                                        </Option>
+                                                                                    ))}
+                                                                                </Select>
                                                                             </div>
                                                                             <div className="col-xl-3 mb-3">
                                                                                 <label for="exampleFormControlInput1" class="form-label">Date</label>
-                                                                                <input type="date" className="form-control" name="title" />
+                                                                                <input type="date" className="form-control" value={cf.arrival.date}
+                                                                                    onChange={(e) =>
+                                                                                        handleNestedChange(index, "connectingFlights", cfIndex, "arrival", { ...cf.arrival, date: e.target.value })
+                                                                                    } />
                                                                             </div>
                                                                             <div className="col-xl-3 mb-3">
                                                                                 <label for="exampleFormControlInput1" class="form-label">Hours </label>
-                                                                                <select className="form-control" aria-label="Default select example">
-                                                                                    <option selected>Hours</option>
-                                                                                    <option value={1}>One</option>
-                                                                                    <option value={2}>Two</option>
-                                                                                    <option value={3}>Three</option>
-                                                                                </select>
+                                                                                <input
+                                                                                    type="number"
+                                                                                    className="form-control"
+                                                                                    min="0"
+                                                                                    max="23"
+                                                                                    placeholder="Hours"
+                                                                                    value={cf.arrival.hours}
+                                                                                    onChange={(e) =>
+                                                                                        handleNestedChange(index, "connectingFlights", cfIndex, "arrival", { ...cf.arrival, hours: e.target.value })
+                                                                                    }
+                                                                                />
                                                                             </div>
                                                                             <div className="col-xl-3 mb-3">
                                                                                 <label for="exampleFormControlInput1" class="form-label">Minute </label>
-                                                                                <select className="form-control" aria-label="Default select example">
-                                                                                    <option selected>Hours</option>
-                                                                                    <option value={1}>One</option>
-                                                                                    <option value={2}>Two</option>
-                                                                                    <option value={3}>Three</option>
-                                                                                </select>
+                                                                                <input
+                                                                                    type="number"
+                                                                                    className="form-control"
+                                                                                    min="0"
+                                                                                    max="59"
+                                                                                    placeholder="Minutes"
+                                                                                    value={cf.arrival.minutes}
+                                                                                    onChange={(e) =>
+                                                                                        handleNestedChange(index, "connectingFlights", cfIndex, "arrival", { ...cf.arrival, minutes: e.target.value })
+                                                                                    }
+                                                                                />
                                                                             </div>
                                                                             <div className="col-xl-4 mb-3">
                                                                                 <label for="exampleFormControlInput1" class="form-label">Arrival Airport</label>
-                                                                                <input type="text" className="form-control" name="title" placeholder="Enter Arrival Airport" />
+                                                                                <input type="text" className="form-control" disabled placeholder="Enter Arrival Airport" value={cf.arrival.airport}
+                                                                                    onChange={(e) =>
+                                                                                        handleNestedChange(index, "connectingFlights", cfIndex, "arrival", { ...cf.arrival, airport: e.target.value })
+                                                                                    } />
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -413,133 +739,6 @@ const AddFlightVoucher = () => {
                                                             </button>
                                                         </div>
                                                     )}
-
-                                                    {/* {flight.connectingFlight && (
-                                                        <div className="connecting-flight-section">
-                                                            <h4>Connecting Flights</h4>
-
-                                                            {flight.connectingFlights.map((cf, cfIndex) => (
-                                                                <div key={cfIndex} className="connecting-flight">
-                                                                    <h5>Connecting Flight {cfIndex + 1}</h5>
-
-                                                                    <input
-                                                                        type="text"
-                                                                        placeholder="Flight Number"
-                                                                        value={cf.flightNumber}
-                                                                        onChange={(e) =>
-                                                                            handleNestedChange(
-                                                                                index,
-                                                                                "connectingFlights",
-                                                                                cfIndex,
-                                                                                "flightNumber",
-                                                                                e.target.value
-                                                                            )
-                                                                        }
-                                                                    />
-
-
-                                                                    <h6>Departure</h6>
-                                                                    <input
-                                                                        type="text"
-                                                                        placeholder="City"
-                                                                        value={cf.departure.city}
-                                                                        onChange={(e) =>
-                                                                            handleNestedChange(
-                                                                                index,
-                                                                                "connectingFlights",
-                                                                                cfIndex,
-                                                                                "departure.city",
-                                                                                e.target.value
-                                                                            )
-                                                                        }
-                                                                    />
-                                                                    <input
-                                                                        type="date"
-                                                                        value={cf.departure.date}
-                                                                        onChange={(e) =>
-                                                                            handleNestedChange(
-                                                                                index,
-                                                                                "connectingFlights",
-                                                                                cfIndex,
-                                                                                "departure.date",
-                                                                                e.target.value
-                                                                            )
-                                                                        }
-                                                                    />
-                                                                    <input
-                                                                        type="text"
-                                                                        placeholder="Airport"
-                                                                        value={cf.departure.airport}
-                                                                        onChange={(e) =>
-                                                                            handleNestedChange(
-                                                                                index,
-                                                                                "connectingFlights",
-                                                                                cfIndex,
-                                                                                "departure.airport",
-                                                                                e.target.value
-                                                                            )
-                                                                        }
-                                                                    />
-
-
-                                                                    <h6>Arrival</h6>
-                                                                    <input
-                                                                        type="text"
-                                                                        placeholder="City"
-                                                                        value={cf.arrival.city}
-                                                                        onChange={(e) =>
-                                                                            handleNestedChange(
-                                                                                index,
-                                                                                "connectingFlights",
-                                                                                cfIndex,
-                                                                                "arrival.city",
-                                                                                e.target.value
-                                                                            )
-                                                                        }
-                                                                    />
-                                                                    <input
-                                                                        type="date"
-                                                                        value={cf.arrival.date}
-                                                                        onChange={(e) =>
-                                                                            handleNestedChange(
-                                                                                index,
-                                                                                "connectingFlights",
-                                                                                cfIndex,
-                                                                                "arrival.date",
-                                                                                e.target.value
-                                                                            )
-                                                                        }
-                                                                    />
-                                                                    <input
-                                                                        type="text"
-                                                                        placeholder="Airport"
-                                                                        value={cf.arrival.airport}
-                                                                        onChange={(e) =>
-                                                                            handleNestedChange(
-                                                                                index,
-                                                                                "connectingFlights",
-                                                                                cfIndex,
-                                                                                "arrival.airport",
-                                                                                e.target.value
-                                                                            )
-                                                                        }
-                                                                    />
-
-
-                                                                    <button
-                                                                        onClick={() => removeConnectingFlight(index, cfIndex)}
-                                                                    >
-                                                                        Remove Connecting Flight
-                                                                    </button>
-                                                                </div>
-                                                            ))}
-
-
-                                                            <button onClick={() => addConnectingFlight(index)} type="button">
-                                                                Add Connecting Flight
-                                                            </button>
-                                                        </div>
-                                                    )} */}
 
                                                 </div>
                                             </div>
@@ -568,67 +767,63 @@ const AddFlightVoucher = () => {
                                     </div>
                                     <div className="col-xl-4 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">First Name </label>
-                                        <input type="text" className="form-control" name="title" placeholder="Enter First Name" />
+                                        <input type="text" className="form-control" placeholder="Enter First Name" name="firstname" value={initialData?.firstname} onChange={chnageHandle} />
                                     </div>
                                     <div className="col-xl-4 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">Last Name </label>
-                                        <input type="text" className="form-control" name="title" placeholder="Enter Last Name" />
+                                        <input type="text" className="form-control" placeholder="Enter Last Name" name="lastname" value={initialData?.lastname} onChange={chnageHandle} />
                                     </div>
                                     <div className="col-xl-4 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">Ticket No </label>
-                                        <input type="text" className="form-control" name="title" placeholder="Enter Ticket No" />
+                                        <input type="text" className="form-control" placeholder="Enter Ticket No" name="ticket_no" value={initialData?.ticket_no} onChange={chnageHandle} />
                                     </div>
                                     <div className="col-xl-4 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">Frequent Flyer </label>
-                                        <input type="text" className="form-control" name="title" placeholder="Enter Frequent Flyer" />
+                                        <input type="text" className="form-control" placeholder="Enter Frequent Flyer" name="frequent_flyer" value={initialData?.frequent_flyer} onChange={chnageHandle} />
                                     </div>
                                     <div className="col-xl-4 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">Basic Fare </label>
-                                        <input type="text" className="form-control" name="title" placeholder="Enter Basic Fare" />
+                                        <input type="text" className="form-control" placeholder="Enter Basic Fare" name="basic_fare" value={initialData?.basic_fare} onChange={chnageHandle} />
                                     </div>
                                     <div className="col-xl-4 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">Tax and Charges </label>
-                                        <input type="text" className="form-control" name="title" placeholder="Enter Tax and Charges" />
+                                        <input type="text" className="form-control" placeholder="Enter Tax and Charges" name="tax_and_charges" value={initialData?.tax_and_charges} onChange={chnageHandle} />
                                     </div>
                                     <div className="col-xl-4 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">Service Tax </label>
-                                        <input type="text" className="form-control" name="title" placeholder="Enter Service Tax" />
+                                        <input type="text" className="form-control" placeholder="Enter Service Tax" name="service_tax" value={initialData?.service_tax} onChange={chnageHandle} />
                                     </div>
                                     <div className="col-xl-4 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">Total Fare </label>
-                                        <input type="text" className="form-control" name="title" placeholder="Enter Total Fare" />
+                                        <input type="text" className="form-control" placeholder="Enter Total Fare" name="total_fare" value={initialData?.total_fare} onChange={chnageHandle} />
                                     </div>
                                     <div className="col-xl-4 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">Baggage </label>
-                                        <input type="text" className="form-control" name="title" placeholder="Enter Baggage" />
+                                        <input type="text" className="form-control" placeholder="Enter Baggage" name="baggage" value={initialData?.baggage} onChange={chnageHandle} />
                                     </div>
                                     <div className="col-xl-4 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">Meals </label>
-                                        <input type="text" className="form-control" name="title" placeholder="Enter Meals" />
+                                        <input type="text" className="form-control" placeholder="Enter Meals" name="meals" value={initialData?.meals} onChange={chnageHandle} />
                                     </div>
                                     <div className="col-xl-4 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">Class </label>
-                                        <input type="text" className="form-control" name="title" placeholder="Enter Class" />
+                                        <input type="text" className="form-control" placeholder="Enter Class" name="class" value={initialData?.class} onChange={chnageHandle} />
                                     </div>
-
 
                                     <div className="col-xl-6 mb-3">
                                         <label for="exampleFormControlInput1" class="form-label">Terms and Conditions</label>
                                         <JoditEditor
                                             ref={editor}
-                                            value={content}
-                                            config={config}
+                                            value={initialData.terms_condition}
+                                            config={{ readonly: false }}
                                             tabIndex={1}
-                                            onBlur={newContent => setContent(newContent)}
-                                            onChange={newContent => { }}
+                                            onBlur={(newContent) => handleEditorChange('terms_condition', newContent)}
                                             className="form-control"
                                         />
                                     </div>
-
-
                                     <div className="col-xl-12 text-center">
-                                        <button type="button" className="btn btn-primary">
-                                            Save
+                                        <button type="button" className="btn btn-primary" onClick={submitData}>
+                                            {params?.updateId ? 'Update' : 'Add'}
                                         </button>
                                     </div>
                                 </div>
@@ -637,6 +832,7 @@ const AddFlightVoucher = () => {
                     </div>
                 </div>
             </div>
+            <ToastContainer />
         </>
     )
 }

@@ -5564,6 +5564,26 @@ export const deletesServiceVoucher = (id) => {
 export const getByIdServiceVoucher = (id) => {
   return axiosInstance.get(`${baseUrl}serviceVoucher/${id}`);
 };
+export const serviceVoucherUpdate = (id, value) => {
+  return axiosInstance.put(`${baseUrl}serviceVoucher/update_type/${id}`, value);
+};
+
+export const addflightVoucher = (data) => {
+  return axiosInstance.post(`${baseUrl}flightVoucher/addType`, data);
+}
+export const getflightVoucher = (value) => {
+  return axiosInstance.get(`${baseUrl}flightVoucher/user?page=${value?.page}&count=${value?.count}&start_date=${value?.start_date}&end_date=${value?.end_date}`);
+};
+export const deletesflightVoucher = (id) => {
+  return axiosInstance.delete(`${baseUrl}flightVoucher/delete_type/${id}`);
+}
+export const getByIdflightVoucher = (id) => {
+  return axiosInstance.get(`${baseUrl}flightVoucher/${id}`);
+};
+
+export const flightVoucherUpdate = (id, value) => {
+  return axiosInstance.put(`${baseUrl}flightVoucher/update_type/${id}`, value);
+};
 
 
 
