@@ -266,9 +266,10 @@ import Breadcrumbs from "../../../../../common/breadcrumb/Breadcrumbs";
 
 
 import { useEffect } from "react";
-import { getAccAddProjectByPage, getAllAccountData, getAllLocationsData, getAllPickupPointsData, getAllProductsData, getAllTaxTypeData, getAllTransportersData, getAttTaxTypeData, getPickupByPage, getTaxtype, postSalesOrder } from "../../../../../api/login/Login";
+import { getAccAddProjectByPage, getAllAccountData, getAllLocationsData, getAllPickupPointsData, getAllProductsData, getAllTaxTypeData, getAllTransportersData, getAttTaxTypeData, getPickupByPage, getSalesOrderById, getTaxtype, postSalesOrder, updateSalesOrder } from "../../../../../api/login/Login";
 import { toast, ToastContainer } from "react-toastify";
 import Loadar from "../../../../../common/loader/Loader";
+import { useParams } from "react-router-dom";
 
 
 const SalseOrderAdd = () => {
@@ -284,6 +285,10 @@ const SalseOrderAdd = () => {
     const [allTransports, setAllTransports] = useState();
     const [allProducts, setAllProducts] = useState();
     const [allPickupPoints, setAllPickupPoints] = useState();
+
+
+    const params = useParams();
+    console.log('params ID------', params?.id)
 
     const [formData, setFormData] = useState({
         date: '',
@@ -609,6 +614,22 @@ const SalseOrderAdd = () => {
 
     const [load, setLoad] = useState(false)
 
+
+    const getByIdData = async () => {
+        try {
+            const res = await getSalesOrderById(params?.id);
+            setFormData(res?.data);
+            setRows(res?.data?.products)
+            console.log('SalesOrder By ID------', res?.data)
+        } catch (error) {
+
+        }
+    };
+
+    useEffect(() => {
+        getByIdData();
+    }, [params?.id])
+
     const handleSubmitData = async () => {
         setLoad(true)
         const produ = rows.map((item) => {
@@ -640,19 +661,40 @@ const SalseOrderAdd = () => {
         const obj = { ...formData, products: produ, total_items: produ.length, quantity: Quantity, product_amount: Product_amount, total_amount: Product_amount }
         // console.log("obj----", obj)
 
-        try {
-            const res = await postSalesOrder(obj)
-            if (res?.statusCode == '200') {
-                setLoad(false)
-                toastSuccessMessage(" Added successfully");
-            } else {
+        if (params?.id) {
+            const payload = { id: params?.id, data: obj }
+            try {
+                const res = await updateSalesOrder(payload)
+                if (res?.statusCode == '200') {
+                    setLoad(false)
+                    toastSuccessMessage(" Updated successfully");
+                } else {
+                    toastErrorMessage("Not Updated")
+                }
+            } catch (error) {
+                toastErrorMessage("Not Updated")
+            }
+            setLoad(false)
+        } else {
+            try {
+                const res = await postSalesOrder(obj)
+                if (res?.statusCode == '200') {
+                    setLoad(false)
+                    toastSuccessMessage(" Added successfully");
+                } else {
+                    toastErrorMessage("Not Added")
+                }
+            } catch (error) {
                 toastErrorMessage("Not Added")
             }
-        } catch (error) {
-            toastErrorMessage("Not Added")
+            setLoad(false)
         }
-        setLoad(false)
     };
+
+
+
+
+
 
 
 
@@ -668,7 +710,7 @@ const SalseOrderAdd = () => {
                         <div className="card-body p-0">
                             <div className="table-responsive active-projects style-1">
                                 <div className="tbl-caption tbl-caption-2">
-                                    <h4 className="heading mb-0 p-2">Add Sales Order</h4>
+                                    <h4 className="heading mb-0 p-2">{params?.id ? "Update" : "Save"} Sales Order</h4>
                                 </div>
                                 <div className="row">
                                     <div className="col-md-3 mb-3">
@@ -677,7 +719,7 @@ const SalseOrderAdd = () => {
                                             type="date"
                                             className="form-control"
                                             name="date"
-                                            value={formData.date}
+                                            value={formData?.date}
                                             onChange={handleInputChange}
                                             placeholder="Enter Date"
                                         />
@@ -688,7 +730,7 @@ const SalseOrderAdd = () => {
                                             type="date"
                                             className="form-control"
                                             name="due_date"
-                                            value={formData.due_date}
+                                            value={formData?.due_date}
                                             onChange={handleInputChange}
                                             placeholder="Enter Due Date"
                                         />
@@ -792,7 +834,7 @@ const SalseOrderAdd = () => {
                                         <select
                                             className="form-control"
                                             name="transporter"
-                                            value={formData.transporter}
+                                            value={formData?.transporter}
                                             onChange={handleInputChange}
                                         >
                                             <option value="">Select Transporter</option>
@@ -889,7 +931,7 @@ const SalseOrderAdd = () => {
                                     </h5>
                                 </div>
                                 <div className="col-lg-12 text-center">
-                                    <button type="button" className="btn btn-primary" onClick={handleSubmitData}>Save</button>
+                                    <button type="button" className="btn btn-primary" onClick={handleSubmitData}>{params?.id ? "Update" : "Save"}</button>
                                 </div>
                             </div>
                         </div>

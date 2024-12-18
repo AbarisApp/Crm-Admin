@@ -2358,6 +2358,7 @@ function App() {
               <Route path="purchasequotation/add" element={<PurchaseQuatationAdd />} />
               <Route path="salesorder/list" element={<SalesOrderPage />} />
               <Route path="salesorder/add" element={<SalseOrderAdd />} />
+              <Route path="salesorder/edit/:id" element={<SalseOrderAdd />} />
               <Route path="purchaseorder/list" element={<PurchageOrderPage />} />
               <Route path="purchaseorder/Add" element={<PurchageOrderAdd />} />
               <Route path="purchaseorder/edit/:id" element={<PurchageOrderAdd />} />
@@ -3052,7 +3053,9 @@ function App() {
               <Route path="travel-Vouchers-Add/:id" element={<AddHotelVoucher />} />
               <Route path="travel-Vouchers-Add/:id/:updateId" element={<AddHotelVoucher />} />
               <Route path="travel-service-Add/:id" element={<AddServiceVoucher />} />
-              <Route path="travel-flight-Add" element={<AddFlightVoucher />} />
+              <Route path="travel-service-Add/:id/:updateId" element={<AddServiceVoucher />} />
+              <Route path="travel-flight-Add/:id" element={<AddFlightVoucher />} />
+              <Route path="travel-flight-Add/:id/:updateId" element={<AddFlightVoucher />} />
               <Route path="travel-invoice-list" element={<TravelInvoice />} />
               <Route path="travel-invoice-create" element={<InvoiceAdd />} />
               <Route path="travel-payment-receipt-create" element={<AddpaymentReceipt />} />

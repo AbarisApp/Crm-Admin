@@ -40,7 +40,8 @@ const LeadWise = () => {
         last_name: '',
         email_id: '',
         tag: '',
-        mobile_number: ''
+        mobile_number: '',
+        createdBy: ''
         // sortType: '',
         // sortType: ''
     })

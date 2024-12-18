@@ -5564,6 +5564,26 @@ export const deletesServiceVoucher = (id) => {
 export const getByIdServiceVoucher = (id) => {
   return axiosInstance.get(`${baseUrl}serviceVoucher/${id}`);
 };
+export const serviceVoucherUpdate = (id, value) => {
+  return axiosInstance.put(`${baseUrl}serviceVoucher/update_type/${id}`, value);
+};
+
+export const addflightVoucher = (data) => {
+  return axiosInstance.post(`${baseUrl}flightVoucher/addType`, data);
+}
+export const getflightVoucher = (value) => {
+  return axiosInstance.get(`${baseUrl}flightVoucher/user?page=${value?.page}&count=${value?.count}&start_date=${value?.start_date}&end_date=${value?.end_date}`);
+};
+export const deletesflightVoucher = (id) => {
+  return axiosInstance.delete(`${baseUrl}flightVoucher/delete_type/${id}`);
+}
+export const getByIdflightVoucher = (id) => {
+  return axiosInstance.get(`${baseUrl}flightVoucher/${id}`);
+};
+
+export const flightVoucherUpdate = (id, value) => {
+  return axiosInstance.put(`${baseUrl}flightVoucher/update_type/${id}`, value);
+};
 
 
 
@@ -6508,6 +6528,14 @@ export const postSalesOrder = (data) => {
     },
   });
 };
+export const updateSalesOrder = (payload) => {
+  return axiosInstance.put(`${baseUrl}lead_sales_order_master/update_type/${payload?.id}`, payload.data, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
 
 export const deletetravelPurchase = (id) => {
   return axiosInstance.delete(
@@ -6525,6 +6553,13 @@ export const getAllSalesData = (page, count) => {
     `${baseUrl}lead_sales_order_master/user?page=${page}&count=${count}`
   );
 };
+export const deleteSalesOrderById = (id) => {
+  return axiosInstance.delete(`${baseUrl}lead_sales_order_master/delete_type/${id}`);
+};
+export const getSalesOrderById = (id) => {
+  return axiosInstance.get(`${baseUrl}lead_sales_order_master/${id}`);
+};
+
 
 // Sales quotationMaster api Apis  start //
 export const postquotationMaster = (data) => {
@@ -6586,6 +6621,16 @@ export const getAllMistryData = () => {
   });
 };
 
+export const getAllPurchseQuoationData = (page, count) => {
+  return axiosInstance.get(
+    `${baseUrl}lead_quotation_master/user?page=${page}&count=${count}`
+  );
+};
+
+export const deletePurchaseQuoatationById = (id) => {
+  return axiosInstance.delete(`${baseUrl}lead_quotation_master/delete_type/${id}`);
+};
+
 // ====purchase Challan====
 export const postPurchaseChallan = (data) => {
   return axiosInstance.post(`${baseUrl}lead_purchase_challan_master/addType`, data, {
@@ -6600,6 +6645,9 @@ export const getPurchaseChallan = (page, count) => {
   return axiosInstance.get(
     `${baseUrl}lead_purchase_challan_master/user?page=${page}&count=${count}`
   );
+};
+export const deletePurchaseChallanById = (id) => {
+  return axiosInstance.delete(`${baseUrl}lead_purchase_challan_master/delete_type/${id}`);
 };
 
 // ====Sales Challan====
@@ -6616,6 +6664,9 @@ export const getSalesChallan = (page, count) => {
   return axiosInstance.get(
     `${baseUrl}lead_sales_challan_master/user?page=${page}&count=${count}`
   );
+};
+export const deleteSalesChallanById = (id) => {
+  return axiosInstance.delete(`${baseUrl}lead_sales_challan_master/delete_type/${id}`);
 };
 
 // ====Challan Return====
@@ -6640,4 +6691,7 @@ export const getChallanReturn = (page, count) => {
   return axiosInstance.get(
     `${baseUrl}lead_sales_return_master/user?page=${page}&count=${count}`
   );
+};
+export const deleteChallanReturnById = (id) => {
+  return axiosInstance.delete(`${baseUrl}lead_sales_return_master/delete_type/${id}`);
 };
