@@ -113,12 +113,10 @@ import { Link } from "react-router-dom";
 import { PDFViewer } from "@react-pdf/renderer";
 import { useEffect, useState } from "react";
 import Loadar from "../../../../common/loader/Loader";
-import { getChallanReturn } from "../../../../api/login/Login";
+import { deleteChallanReturnById, getChallanReturn } from "../../../../api/login/Login";
 import Breadcrumbs from "../../../../common/breadcrumb/Breadcrumbs";
 import { message, Pagination, Popconfirm } from "antd";
-import PdfBanks from "../../order/salseOrder/pdfBank/PdfBanks";
-
-
+import ChallanReturnPdf from "./challanReturnPdf/ChallanReturnPdf";
 
 
 const ChallanReturn = () => {
@@ -131,12 +129,15 @@ const ChallanReturn = () => {
     };
     const [pdf, setPdf] = useState(false)
 
-    const pdfGenerateDefault = () => {
-        setPdf(!pdf)
+    const [val, setVal] = useState(null)
+    const pdfGenerateDefault = (item) => {
+        setLoading(true)
+        setVal(item)
+        setTimeout(() => {
+            setLoading(false)
+            setPdf(!pdf)
+        }, 2000);
     }
-
-
-
 
 
 
@@ -168,9 +169,9 @@ const ChallanReturn = () => {
     const deleteBlockAdd = async (id) => {
         setLoading(true)
         try {
-            // await deleteAccGroupById(id)
-            // let backList = totalCount % 11 === 0 ? page - 1 : page
-            // getFloorMasters(backList)
+            await deleteChallanReturnById(id)
+            let backList = totalCount % 11 === 0 ? page - 1 : page
+            getFloorMasters(backList)
         } catch (error) {
             // toastSuccessMessage(error.message)
         }
@@ -207,7 +208,7 @@ const ChallanReturn = () => {
                 {pdf && <div className="pdfcs">
                     <div className="loader-overlay">
                         <PDFViewer style={{ width: '100%', height: '100vh' }}>
-                            <PdfBanks />
+                            <ChallanReturnPdf val={val} />
                         </PDFViewer>
                     </div>
 
@@ -252,7 +253,7 @@ const ChallanReturn = () => {
                                                 <td>{item?.product_amount}</td>
                                                 <td>{item?.createdBy?.name}</td>
                                                 <td>
-                                                    <button className="btn btn-sm btn-success ms-2" onClick={pdfGenerateDefault}>Print PDF</button>
+                                                    <button className="btn btn-sm btn-success ms-2" onClick={() => { pdfGenerateDefault(item) }}>Print PDF</button>
                                                     <div className="d-flex">
                                                         <Link to={`/purchaseorder/edit/${item?._id}`} className="btn btn-primary shadow btn-xs sharp me-1">
                                                             <i className="fa fa-pencil" />

@@ -114,9 +114,10 @@ import { Link } from "react-router-dom";
 import { PDFViewer } from "@react-pdf/renderer";
 import { useEffect, useState } from "react";
 import Loadar from "../../../../common/loader/Loader";
-import {getAllquotationMasterData, getPurchaseChallan } from "../../../../api/login/Login";
+import { deletePurchaseChallanById, getPurchaseChallan } from "../../../../api/login/Login";
 import Breadcrumbs from "../../../../common/breadcrumb/Breadcrumbs";
 import { message, Pagination, Popconfirm } from "antd";
+import PurchaseChallanPdfs from "./purchaseChallanPdf/PurchaseChallanPdf";
 
 const PurchaseChallan = () => {
     const breadCrumbsTitle = {
@@ -128,10 +129,16 @@ const PurchaseChallan = () => {
     };
     const [pdf, setPdf] = useState(false)
 
-    const pdfGenerateDefault = () => {
-        setPdf(!pdf)
-    }
+    const [val, setVal] = useState(null)
 
+    const pdfGenerateDefault = (item) => {
+        setLoading(true)
+        setVal(item)
+        setTimeout(() => {
+            setLoading(false)
+            setPdf(!pdf)
+        }, 2000);
+    }
 
 
 
@@ -165,9 +172,9 @@ const PurchaseChallan = () => {
     const deleteBlockAdd = async (id) => {
         setLoading(true)
         try {
-            // await deleteAccGroupById(id)
-            // let backList = totalCount % 11 === 0 ? page - 1 : page
-            // getFloorMasters(backList)
+            await deletePurchaseChallanById(id)
+            let backList = totalCount % 11 === 0 ? page - 1 : page
+            getFloorMasters(backList)
         } catch (error) {
             // toastSuccessMessage(error.message)
         }
@@ -196,16 +203,16 @@ const PurchaseChallan = () => {
 
     return (
         <>
-            {loading && <Loadar/>}
+            {loading && <Loadar />}
             <Breadcrumbs
                 breadCrumbsTitle={breadCrumbsTitle} />
             {/* <GroupSummaryFilter /> */}
             <div style={{ margin: "14px" }}>
                 {pdf && <div className="pdfcs">
                     <div className="loader-overlay">
-                        {/* <PDFViewer style={{ width: '100%', height: '100vh' }}>
-                            <PdfBanks />
-                        </PDFViewer> */}
+                        <PDFViewer style={{ width: '100%', height: '100vh' }}>
+                            <PurchaseChallanPdfs val={val} />
+                        </PDFViewer>
                     </div>
 
                 </div>}
@@ -240,7 +247,7 @@ const PurchaseChallan = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {data && data?.map((item ,i) => {
+                                        {data && data?.map((item, i) => {
                                             return <tr role="row" className="odd" >
                                                 <td>{i + 1}</td>
                                                 <td>{item?.date}</td>
@@ -249,7 +256,7 @@ const PurchaseChallan = () => {
                                                 <td>{item?.product_amount}</td>
                                                 <td>{item?.createdBy?.name}</td>
                                                 <td>
-                                                    <button className="btn btn-sm btn-success ms-2" onClick={pdfGenerateDefault}>Print PDF</button>
+                                                    <button className="btn btn-sm btn-success ms-2" onClick={() => { pdfGenerateDefault(item) }}>Print PDF</button>
                                                     <div className="d-flex">
                                                         <Link to={`/purchaseorder/edit/${item?._id}`} className="btn btn-primary shadow btn-xs sharp me-1">
                                                             <i className="fa fa-pencil" />

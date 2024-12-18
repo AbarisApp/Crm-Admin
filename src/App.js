@@ -2358,6 +2358,7 @@ function App() {
               <Route path="purchasequotation/add" element={<PurchaseQuatationAdd />} />
               <Route path="salesorder/list" element={<SalesOrderPage />} />
               <Route path="salesorder/add" element={<SalseOrderAdd />} />
+              <Route path="salesorder/edit/:id" element={<SalseOrderAdd />} />
               <Route path="purchaseorder/list" element={<PurchageOrderPage />} />
               <Route path="purchaseorder/Add" element={<PurchageOrderAdd />} />
               <Route path="purchaseorder/edit/:id" element={<PurchageOrderAdd />} />
