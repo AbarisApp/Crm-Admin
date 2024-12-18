@@ -3234,8 +3234,8 @@ function App() {
               <Route path="create-task-stage" element={<TaskStageForm />} />
               <Route path="update-task-stage/:id" element={<TaskStageForm />} />
               <Route path="system_settings" element={<SystemSettingss />} />
-              <Route path="billings-invoice" element={<InvoiceTab />} />
-              <Route path="create-billings-invoice" element={<InvoiceForm />} />
+              <Route path="billings-invoice/:id" element={<InvoiceTab />} />
+              <Route path="create-billings-invoice/:id" element={<InvoiceForm />} />
               <Route path="billings-credit" element={<CancilaionTab />} />
               <Route path="billings-multiprinting" element={<MultiplePrintings />} />
               {/* <Route path="billings-hotel/cruisevoucher" element={<HotelCruieseVoucher />} /> */}
