@@ -7,12 +7,14 @@ import InvoiceSearch from './invoiceSearch/InvoiceSearch'
 import InvoiceSearchList from './invoiceSearch/invoceSearchList/InvoiceSearchList'
 import { deletetravelInvoice, gettravelInvoice } from '../../api/login/Login'
 import { message } from 'antd'
+import { useParams } from 'react-router-dom'
 
 function InvoiceTab() {
   const breadCrumbsTitle = {
     title_1: "Billings",
     title_2: "Invoice",
   }
+  const params = useParams()
   const [data, setData] = useState()
   const [loading, setLoading] = useState(false);
   const [count, setCount] = useState(10)
@@ -70,7 +72,7 @@ function InvoiceTab() {
       <Breadcrumbs breadCrumbsTitle={breadCrumbsTitle} />
       <section className='m-4'>
         <InvoiceSearch />
-        <InvoiceSearchList totalCount={totalCount} page={page} onChangeVal={onChangeVal} data={data}  count={count} confirm={confirm} cancel={cancel} loading={loading}/>
+        <InvoiceSearchList params={params} totalCount={totalCount} page={page} onChangeVal={onChangeVal} data={data} count={count} confirm={confirm} cancel={cancel} loading={loading} />
       </section>
     </>
   )

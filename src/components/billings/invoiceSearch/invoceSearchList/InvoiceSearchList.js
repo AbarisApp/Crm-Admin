@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-function InvoiceSearchList({ totalCount, page, onChangeVal, data, count, confirm, cancel, loading }) {
+function InvoiceSearchList({ params, totalCount, page, onChangeVal, data, count, confirm, cancel, loading }) {
     return (
         <>
             <div className="table-responsive active-projects style-1">
@@ -9,7 +9,7 @@ function InvoiceSearchList({ totalCount, page, onChangeVal, data, count, confirm
                     <h4 className="heading mb-0 p-2">Invoice List</h4>
                     <Link
                         className="btn btn-primary btn-sm"
-                        to="/create-billings-invoice"
+                        to={`/create-billings-invoice/${params?.id}`}
                         role="button"
                         aria-controls="offcanvasExample"
                     >
