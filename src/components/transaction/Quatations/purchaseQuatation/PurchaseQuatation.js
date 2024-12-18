@@ -2,9 +2,11 @@ import { Link } from "react-router-dom";
 import { PDFViewer } from "@react-pdf/renderer";
 import { useEffect, useState } from "react";
 import Loadar from "../../../../common/loader/Loader";
-import {getAllquotationMasterData } from "../../../../api/login/Login";
+import { deletePurchaseQuoatationById, getAllPurchseQuoationData } from "../../../../api/login/Login";
 import Breadcrumbs from "../../../../common/breadcrumb/Breadcrumbs";
 import { message, Pagination, Popconfirm } from "antd";
+import PurchaseQuotationPdf from "./purchaseQuotationPdf/PurchaseQuotationPdf";
+import { toast } from "react-toastify";
 
 
 // const PurchaseQuatation = () => {
@@ -88,14 +90,16 @@ const PurchaseQuatation = () => {
         path_2: ``
     };
     const [pdf, setPdf] = useState(false)
+    const [val, setVal] = useState(null)
 
-    const pdfGenerateDefault = () => {
-        setPdf(!pdf)
+    const pdfGenerateDefault = (item) => {
+        setLoading(true)
+        setVal(item)
+        setTimeout(() => {
+            setLoading(false)
+            setPdf(!pdf)
+        }, 2000);
     }
-
-
-
-
 
 
     const [data, setData] = useState()
@@ -105,10 +109,9 @@ const PurchaseQuatation = () => {
     const [totalCount, setTotalCount] = useState()
 
     const getFloorMasters = async (page) => {
-
         setLoading(true)
         try {
-            const res = await getAllquotationMasterData(page, count)
+            const res = await getAllPurchseQuoationData(page, count)
             setTotalCount(res?.totalCount)
             setData(res?.data)
             setPage(page)
@@ -123,14 +126,28 @@ const PurchaseQuatation = () => {
         getFloorMasters(e - 1)
 
     };
+
+    const toastSuccessMessage = (message) => {
+        toast.success(`${message}`, {
+            position: "top-right",
+        });
+    };
+    const toastErrorMessage = (message) => {
+        toast.error(`${message}`, {
+            position: "top-right",
+        });
+    };
+
+
     const deleteBlockAdd = async (id) => {
         setLoading(true)
         try {
-            // await deleteAccGroupById(id)
-            // let backList = totalCount % 11 === 0 ? page - 1 : page
-            // getFloorMasters(backList)
+            await deletePurchaseQuoatationById(id)
+            let backList = totalCount % 11 === 0 ? page - 1 : page
+            getFloorMasters(backList)
+            // toastSuccessMessage("Deleted")
         } catch (error) {
-            // toastSuccessMessage(error.message)
+            // toastErrorMessage(error.message)
         }
         setLoading(false)
     }
@@ -139,7 +156,6 @@ const PurchaseQuatation = () => {
         console.log(id);
         deleteBlockAdd(id)
         message.success('Delete Successfull!');
-
     };
     const cancel = (e) => {
         // console.log(e);
@@ -157,16 +173,16 @@ const PurchaseQuatation = () => {
 
     return (
         <>
-            {loading && <Loadar/>}
+            {loading && <Loadar />}
             <Breadcrumbs
                 breadCrumbsTitle={breadCrumbsTitle} />
             {/* <GroupSummaryFilter /> */}
             <div style={{ margin: "14px" }}>
                 {pdf && <div className="pdfcs">
                     <div className="loader-overlay">
-                        {/* <PDFViewer style={{ width: '100%', height: '100vh' }}>
-                            <PdfBanks />
-                        </PDFViewer> */}
+                        <PDFViewer style={{ width: '100%', height: '100vh' }}>
+                            <PurchaseQuotationPdf val={val} />
+                        </PDFViewer>
                     </div>
 
                 </div>}
@@ -201,7 +217,7 @@ const PurchaseQuatation = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {data && data?.map((item ,i) => {
+                                        {data && data?.map((item, i) => {
                                             return <tr role="row" className="odd" >
                                                 <td>{i + 1}</td>
                                                 <td>{item?.date}</td>
@@ -210,7 +226,7 @@ const PurchaseQuatation = () => {
                                                 <td>{item?.product_amount}</td>
                                                 <td>{item?.createdBy?.name}</td>
                                                 <td>
-                                                    <button className="btn btn-sm btn-success ms-2" onClick={pdfGenerateDefault}>Print PDF</button>
+                                                    <button className="btn btn-sm btn-success ms-2" onClick={() => { pdfGenerateDefault(item) }}>Print PDF</button>
                                                     <div className="d-flex">
                                                         <Link to={`/purchaseorder/edit/${item?._id}`} className="btn btn-primary shadow btn-xs sharp me-1">
                                                             <i className="fa fa-pencil" />
