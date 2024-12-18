@@ -2,10 +2,10 @@ import { Link } from "react-router-dom";
 import { PDFViewer } from "@react-pdf/renderer";
 import { useEffect, useState } from "react";
 import Loadar from "../../../../common/loader/Loader";
-import { getSalesChallan } from "../../../../api/login/Login";
+import { deleteSalesChallanById, getSalesChallan } from "../../../../api/login/Login";
 import Breadcrumbs from "../../../../common/breadcrumb/Breadcrumbs";
 import { message, Pagination, Popconfirm } from "antd";
-import PdfBanks from "../../order/purchageOrder/pdfBank/PdfBanks";
+import SalesChallanPdfs from "./salesChallanPdf/SalesChallanPdf";
 
 const SalesChallan = () => {
     const breadCrumbsTitle = {
@@ -16,9 +16,15 @@ const SalesChallan = () => {
         path_2: ``
     };
     const [pdf, setPdf] = useState(false)
+    const [val, setVal] = useState(null)
 
-    const pdfGenerateDefault = () => {
-        setPdf(!pdf)
+    const pdfGenerateDefault = (item) => {
+        setLoading(true)
+        setVal(item)
+        setTimeout(() => {
+            setLoading(false)
+            setPdf(!pdf)
+        }, 2000);
     }
 
 
@@ -54,9 +60,9 @@ const SalesChallan = () => {
     const deleteBlockAdd = async (id) => {
         setLoading(true)
         try {
-            // await deleteAccGroupById(id)
-            // let backList = totalCount % 11 === 0 ? page - 1 : page
-            // getFloorMasters(backList)
+            await deleteSalesChallanById(id)
+            let backList = totalCount % 11 === 0 ? page - 1 : page
+            getFloorMasters(backList)
         } catch (error) {
             // toastSuccessMessage(error.message)
         }
@@ -77,12 +83,6 @@ const SalesChallan = () => {
         getFloorMasters(page)
     }, [])
 
-
-
-
-
-
-
     return (
         <>
             {loading && <Loadar />}
@@ -93,7 +93,7 @@ const SalesChallan = () => {
                 {pdf && <div className="pdfcs">
                     <div className="loader-overlay">
                         <PDFViewer style={{ width: '100%', height: '100vh' }}>
-                            <PdfBanks />
+                            <SalesChallanPdfs val={val}/>
                         </PDFViewer>
                     </div>
 
@@ -138,7 +138,7 @@ const SalesChallan = () => {
                                                 <td>{item?.product_amount}</td>
                                                 <td>{item?.createdBy?.name}</td>
                                                 <td>
-                                                    <button className="btn btn-sm btn-success ms-2" onClick={pdfGenerateDefault}>Print PDF</button>
+                                                    <button className="btn btn-sm btn-success ms-2" onClick={() => { pdfGenerateDefault(item) }}>Print PDF</button>
                                                     <div className="d-flex">
                                                         <Link to={`/purchaseorder/edit/${item?._id}`} className="btn btn-primary shadow btn-xs sharp me-1">
                                                             <i className="fa fa-pencil" />
