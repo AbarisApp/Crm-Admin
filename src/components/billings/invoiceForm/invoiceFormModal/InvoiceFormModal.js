@@ -7,9 +7,6 @@ const { Option } = Select;
 
 const InvoiceFormModal = ({ ...props }) => {
     // console.log(props);
-
-
-
     return (
         <Modal
             {...props}
@@ -246,7 +243,7 @@ const InvoiceFormModal = ({ ...props }) => {
                                                 <div class="col-md-2 mb-3">
                                                     <label class="form-label">Discount</label>
                                                     <input type="number" class="form-control" placeholder="discount" value={invoice.discount} onChange={(e) =>
-                                                        props?.handleInputChangeModel(index, 'oc', e.target.value)} />
+                                                        props?.handleInputChangeModel(index, 'discount', e.target.value)} />
                                                 </div>
                                                 <div class="col-md-3 mb-3">
                                                     <label class="form-label">Taxable</label>
@@ -290,44 +287,75 @@ const InvoiceFormModal = ({ ...props }) => {
                                                         props?.handleInputChangeModel(index, 'total_sale', e.target.value)} />
                                                 </div>
                                             </div>
-                                            <div class="row">
-                                                <div class="col-md-3 mb-3">
+                                            <div className="row">
+                                                <div className="col-md-3 mb-3">
                                                     <div className="form-check">
-                                                        <input className="form-check-input" type="radio" name={`tax_type_${index}`} value="18% GST on Fee"
+                                                        <input
+                                                            className="form-check-input"
+                                                            type="radio"
+                                                            name={`tax_type_${index}`}
+                                                            id={`tax_type_18_GST_${index}`}
+                                                            value="18% GST on Fee"
                                                             checked={invoice?.tax_type === "18% GST on Fee"}
                                                             onChange={(e) =>
                                                                 props?.handleInputChangeModel(index, "tax_type", e.target.value)
-                                                            } />
-                                                        <label className="form-check-label" htmlFor="flexRadioDefault1">
+                                                            }
+                                                        />
+                                                        <label className="form-check-label" htmlFor={`tax_type_18_GST_${index}`}>
                                                             18% GST on Fee
                                                         </label>
                                                     </div>
-
                                                 </div>
-                                                <div class="col-md-3 mb-3">
+                                                <div className="col-md-3 mb-3">
                                                     <div className="form-check">
-                                                        <input className="form-check-input" type="radio" name={`tax_type_${index}`} value="No ITC 5%" checked={invoice?.tax_type === "No ITC 5%"}
-                                                            onChange={(e) => props?.handleInputChangeModel(index, 'tax_type', e.target.value)} />
-                                                        <label className="form-check-label" htmlFor="flexRadioDefault2">
+                                                        <input
+                                                            className="form-check-input"
+                                                            type="radio"
+                                                            name={`tax_type_${index}`}
+                                                            id={`tax_type_no_itc_${index}`}
+                                                            value="No ITC 5%"
+                                                            checked={invoice?.tax_type === "No ITC 5%"}
+                                                            onChange={(e) =>
+                                                                props?.handleInputChangeModel(index, "tax_type", e.target.value)
+                                                            }
+                                                        />
+                                                        <label className="form-check-label" htmlFor={`tax_type_no_itc_${index}`}>
                                                             No ITC 5%
                                                         </label>
                                                     </div>
-
                                                 </div>
-                                                <div class="col-md-3 mb-3">
+                                                <div className="col-md-3 mb-3">
                                                     <div className="form-check">
-                                                        <input className="form-check-input" type="radio" name={`tax_type_${index}`} value="18% On Bill Amount" checked={invoice?.tax_type === "No ITC 5%"}
-                                                            onChange={(e) => props?.handleInputChangeModel(index, 'tax_type', e.target.value)} />
-                                                        <label className="form-check-label" htmlFor="flexRadioDefault2">
+                                                        <input
+                                                            className="form-check-input"
+                                                            type="radio"
+                                                            name={`tax_type_${index}`}
+                                                            id={`tax_type_18_bill_${index}`}
+                                                            value="18% On Bill Amount"
+                                                            checked={invoice?.tax_type === "18% On Bill Amount"}
+                                                            onChange={(e) =>
+                                                                props?.handleInputChangeModel(index, "tax_type", e.target.value)
+                                                            }
+                                                        />
+                                                        <label className="form-check-label" htmlFor={`tax_type_18_bill_${index}`}>
                                                             18% On Bill Amount
                                                         </label>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-3 mb-3">
+                                                <div className="col-md-3 mb-3">
                                                     <div className="form-check">
-                                                        <input className="form-check-input" type="radio" name="tax_type" value="Manual" checked={invoice?.tax_type === "Manual"}
-                                                            onChange={(e) => props?.handleInputChangeModel(index, 'tax_type', e.target.value)} />
-                                                        <label className="form-check-label" htmlFor="flexRadioDefault2">
+                                                        <input
+                                                            className="form-check-input"
+                                                            type="radio"
+                                                            name={`tax_type_${index}`}
+                                                            id={`tax_type_manual_${index}`}
+                                                            value="Manual"
+                                                            checked={invoice?.tax_type === "Manual"}
+                                                            onChange={(e) =>
+                                                                props?.handleInputChangeModel(index, "tax_type", e.target.value)
+                                                            }
+                                                        />
+                                                        <label className="form-check-label" htmlFor={`tax_type_manual_${index}`}>
                                                             Manual
                                                         </label>
                                                     </div>
