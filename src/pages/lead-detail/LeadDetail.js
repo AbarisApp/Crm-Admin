@@ -39,9 +39,9 @@ function LeadDetail() {
                     <div className="card-body p-0">
                         <div className="table-responsive active-projects style-1">
                             <div className="tbl-caption tbl-caption-2">
-                                <h4 className="heading mb-0">Lead Detail</h4>
+                                <h4 className="heading mb-0 p-2">Lead Detail</h4>
                             </div>
-                            <div className="tbl-caption tbl-caption-2 d-block" style={{ marginTop: "15px" }}>
+                            <div className="tbl-caption tbl-caption-2 d-block p-2" style={{ marginTop: "15px" }}>
                                 <h5 className="heading">Name : {data?.name}</h5>
                                 <h5 className="heading">Mobile  : {data?.mobile}</h5>
                                 <h5 className="heading">Email : {data?.email}</h5>

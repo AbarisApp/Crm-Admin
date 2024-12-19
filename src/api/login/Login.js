@@ -956,6 +956,12 @@ export const getReasonId = (id) => {
 export const getStatus = () => {
   return axiosInstance.get(`${baseUrl}dmtstatus/admin`)
 }
+export const getLeadStatus = () => {
+  return axiosInstance.get(`${baseUrl}status`)
+}
+export const getLeadSubStatus = () => {
+  return axiosInstance.get(`${baseUrl}subStatus/admin`)
+}
 export const deleteStatusId = (id, token) => {
   return axiosInstance.delete(`${baseUrl}dmtstatus/delete_dispute/${id}`)
 }
@@ -5481,6 +5487,9 @@ export const getTRCRM_trip_type_master_admin = (id) => {
 export const getsource = (id) => {
   return axiosInstance.get(`${baseUrl}source/admin`);
 };
+export const getleadMedium = (id) => {
+  return axiosInstance.get(`${baseUrl}leadMedium/admin`);
+};
 export const getTRCRMstaff_admin = (id) => {
   return axiosInstance.get(`${baseUrl}staff/admin`);
 };
@@ -5499,7 +5508,12 @@ export const getTRCRM_service_masteradmin = (id) => {
   return axiosInstance.get(`${baseUrl}TRCRM_service_master/admin`);
 };
 
-
+export const getCource = (id) => {
+  return axiosInstance.get(`${baseUrl}course/admin`);
+};
+export const getStream = (id) => {
+  return axiosInstance.get(`${baseUrl}stream/all`);
+};
 
 export const getAirlLine = (value) => {
   return axiosInstance.get(`${extraBaseUrl}airlines/destination?search=&id=673b1d7c85dbbfa354004889`);
@@ -6694,4 +6708,19 @@ export const getChallanReturn = (page, count) => {
 };
 export const deleteChallanReturnById = (id) => {
   return axiosInstance.delete(`${baseUrl}lead_sales_return_master/delete_type/${id}`);
+};
+
+
+export const postLead = (data) => {
+  return axiosInstance.post(`/auth/lead_register_staff`, data, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
+
+export const getLeadDashbord = () => {
+  return axiosInstance.get(`${baseUrl}user_dashboard/lead`);
 };
