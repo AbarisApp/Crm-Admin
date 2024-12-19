@@ -5691,6 +5691,24 @@ export const updateTRCRM_tr_quotation_master = (id, data) => {
 };
 
 
+export const addAccount_invoice = (data) => {
+  return axiosInstance.post(`${baseUrl}account_invoice/addType`, data);
+};
+export const getaccount_invoice = (value) => {
+  return axiosInstance.get(`${baseUrl}account_invoice/page?page=${value?.page}&count=${value?.count}&start_date=${value?.start_date}&end_date=${value?.end_date}`);
+};
+
+export const deleteaccount_invoice = (id) => {
+  return axiosInstance.delete(`${baseUrl}account_invoice/delete_type/${id}`);
+};
+export const getByIdaccount_invoice = (id) => {
+  return axiosInstance.get(`${baseUrl}account_invoice/${id}`);
+};
+export const updateaccount_invoice = (id, data) => {
+  return axiosInstance.put(`${baseUrl}account_invoice/update_type/${id}`, data);
+};
+
+
 // jilani
 
 

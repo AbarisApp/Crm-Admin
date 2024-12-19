@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import InvoicePartyClientSelectedSearch from './invoicePartyClientSelectedSearch/InvoicePartyClientSelectedSearch';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { addTravelRoomType, cityMainGett, getTravelAllCountry, masterget, posttravelInvoice, updatetravelInvoice } from '../../../api/login/Login';
-import { toast } from 'react-toastify';
+import { addAccount_invoice, addTravelRoomType, cityMainGett, getByIdaccount_invoice, getTravelAllCountry, masterget, posttravelInvoice, updateaccount_invoice, updatetravelInvoice } from '../../../api/login/Login';
+import { toast, ToastContainer } from 'react-toastify';
 import InvoiceFormModal from './invoiceFormModal/InvoiceFormModal';
 import { Select } from 'antd';
+import { FaEdit } from 'react-icons/fa';
 const { Option } = Select;
 
 function InvoiceForm() {
@@ -13,6 +14,8 @@ function InvoiceForm() {
     const params = useParams()
     const navigate = useNavigate()
     const [commiandMode, setCommiandMode] = useState(false)
+    const [editTableShow, setEditTableShow] = useState(false)
+    const [tableData, setTableData] = useState(null)
     const [initialValues, setinitialValues] = useState({
         lead_id: '',
         invoice_type: '',
@@ -99,6 +102,69 @@ function InvoiceForm() {
     const handleInputChangeModel = (index, field, value) => {
         const newInvoices = [...initialValues.invoices];
         newInvoices[index][field] = value;
+
+        const invoice = newInvoices[index];
+        const final_amt = parseFloat(invoice.final_amt || 0);
+        const feeMarkup = parseFloat(invoice.fee_amt || 0); // Fee/Markup
+        const otherCharges = parseFloat(invoice.oc || 0); // Other Charges
+        const discount = parseFloat(invoice.discount || 0); // Discount
+        const taxPercent = parseFloat(invoice.tax || 0); // Tax Percentage (default: 18%)
+
+        // Calculate taxable amount
+        const taxableAmount = final_amt + feeMarkup + otherCharges - discount;
+
+        let igstAmount = 0;
+        let cgstAmount = 0;
+        let sgstAmount = 0;
+        let totalSaleAmount = 0;
+
+        // Apply logic based on selected tax type
+        switch (invoice.tax_type) {
+            case "18% GST on Fee":
+                igstAmount = (taxableAmount * 18) / 100; // 18% IGST
+                cgstAmount = igstAmount / 2; // 50% CGST
+                sgstAmount = igstAmount / 2; // 50% SGST
+                totalSaleAmount = taxableAmount + igstAmount;
+                break;
+
+            case "No ITC 5%":
+                igstAmount = (taxableAmount * 5) / 100; // 5% IGST
+                totalSaleAmount = taxableAmount + igstAmount;
+                break;
+
+            case "18% On Bill Amount":
+                totalSaleAmount = (taxableAmount * 118) / 100; // Total = 118% of taxable
+                igstAmount = totalSaleAmount - taxableAmount; // 18% IGST
+                cgstAmount = igstAmount / 2;
+                sgstAmount = igstAmount / 2;
+                break;
+
+            case "Manual":
+                totalSaleAmount = parseFloat(invoice.final_amt || taxableAmount); // Use manual input
+                igstAmount = cgstAmount = sgstAmount = 0; // Reset tax components
+                break;
+
+            default:
+                igstAmount = (taxableAmount * taxPercent) / 100; // Default tax
+                cgstAmount = igstAmount / 2;
+                sgstAmount = igstAmount / 2;
+                totalSaleAmount = taxableAmount + igstAmount;
+                break;
+        }
+
+        // Update invoice object
+        invoice.taxable = taxableAmount;
+        invoice.igst = igstAmount;
+        invoice.cgst = cgstAmount;
+        invoice.sgst = sgstAmount;
+        invoice.total_sale = totalSaleAmount;
+
+        // If not manual, update final amount to match total sale
+        if (invoice.tax_type !== "Manual") {
+            invoice.final_amt = totalSaleAmount;
+        }
+
+        // Save updated invoices
         setinitialValues({ ...initialValues, invoices: newInvoices });
     };
 
@@ -124,20 +190,20 @@ function InvoiceForm() {
                     meal_plan: '',
                     remarks: '',
                     booking_date: '',
-                    final_amt: '',
+                    final_amt: '0',
                     is_tax: false,
-                    purchase_amt: '',
-                    fee_amt: '',
-                    oc: '',
-                    discount: '',
-                    taxable: '',
-                    tax: '',
-                    cgst: '',
-                    sgst: '',
-                    igst: '',
-                    xt: '',
-                    tcs: '',
-                    total_sale: '',
+                    purchase_amt: '0',
+                    fee_amt: '0',
+                    oc: '0',
+                    discount: '0',
+                    taxable: '0',
+                    tax: '18',
+                    cgst: '0',
+                    sgst: '0',
+                    igst: '0',
+                    xt: '0',
+                    tcs: '0',
+                    total_sale: '0',
                     tax_type: '18% GST on Fee',
                     supplier_party: '',
                     invoice_no: '',
@@ -168,14 +234,6 @@ function InvoiceForm() {
         const newInvoices = initialValues.invoices.filter((_, i) => i !== index);
         setinitialValues({ ...initialValues, invoices: newInvoices });
     };
-
-
-    const toastSuccessMessage = (message) => {
-        toast.success(`${params?.id ? "Update" : "Add"} ${message}`, {
-            position: "top-right",
-        });
-    };
-
 
     const [hotelSundry, setHotelSundry] = useState(null)
     const [country, setCountry] = useState(null)
@@ -220,17 +278,79 @@ function InvoiceForm() {
         setCommiandMode(true)
     }
 
+    const toastSuccessMessage = (message) => {
+        toast.success(`${params?.id ? `${message}` : `${message}`}`, {
+            position: "top-right",
+        });
+    };
+
+    const toastErroeMessage = (message) => {
+        toast.error(`${message}`, {
+            position: "top-right",
+        });
+    };
+
 
     const handleSubmit = async (e) => {
-
         const clone = { ...initialValues, lead_id: params?.id }
         console.log(clone);
+        try {
+            if (!params?.updateId) {
+                const res = await addAccount_invoice(clone)
+                // console.log(res);
+                if (res?.error == false) {
+                    toastSuccessMessage(res?.message)
+                    // setLoader(false)
+                    setTimeout(() => {
+                        navigate(`/billings-invoice/${params?.id}`)
+                    }, 2000)
+                } else {
+                    toastErroeMessage(res?.message)
+                }
+            } else {
+                const res = await updateaccount_invoice(params?.updateId, clone)
+                // console.log(res);
+                if (res?.error == false) {
+                    toastSuccessMessage(res?.message)
+                    // setLoader(false)
+                    setTimeout(() => {
+                        navigate(`/billings-invoice/${params?.id}`)
+                    }, 2000)
+                } else {
+                    toastErroeMessage(res?.message)
+                }
+            }
+
+
+        } catch (error) {
+
+        }
 
     };
 
     // console.log(initialValues);
 
+    useEffect(() => {
+        const getIdData = async () => {
+            try {
+                const res = await getByIdaccount_invoice(params.updateId)
+                // console.log(res);
+                if (res?.data) {
+                    setinitialValues(res?.data)
+                    setTableData(res?.data)
+                    setCommiandMode(true)
+                    setEditTableShow(true)
 
+
+                }
+            } catch (error) {
+
+            }
+        }
+        if (params?.updateId) {
+            getIdData();
+        }
+    }, [params?.updateId])
 
 
     // useEffect(() => {
@@ -426,6 +546,55 @@ function InvoiceForm() {
                                 </div>
                             </div>
 
+                            {editTableShow &&
+                                <table className="table">
+                                    <thead>
+                                        <tr>
+                                            <th>S NO.</th>
+                                            <th>Description</th>
+                                            <th className="amount-column">Amount</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {tableData && tableData?.invoices?.map((item) => {
+                                            return <tr className="table-row" key={item?._id}>
+                                                <td>1</td>
+                                                <td>
+                                                    <a href="#" className="text-decoration-none">Name - </a>
+                                                    <br />
+                                                    <span className="description-subtext">
+                                                        Room Type: {item?.room_type}
+                                                        <br />
+                                                        No of Rooms: {item?.no_of_room}
+                                                        <br />
+                                                        {/* AKBAR TRAVELS OF INDIA PVT. LTD. Invoice: */}
+                                                        <span className="invoice-info">{item?.booking_date} Amt: {item?.final_amt}</span>
+                                                    </span>
+                                                </td>
+                                                <td className="amount-column">
+                                                    {item?.total_sale}
+                                                    {/* <i className="bi bi-trash delete-icon" /> */}
+                                                </td>
+                                                <td className="" onClick={add} >
+                                                    <FaEdit style={{ width: '30px', height: '30px' }} />
+                                                </td>
+                                            </tr>
+                                        })}
+
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            {/* <td colSpan={2} className="purchase-sale">Purchase: ₹2,000.00</td> */}
+                                            {/* <td className="amount-column purchase-sale">Sale: ₹{item?.total_sale}</td> */}
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            }
+
+
+
+
                             {commiandMode && <div className='row mt-2'>
                                 <div className='col-lg-6'>
                                     <div className='row'>
@@ -583,7 +752,7 @@ function InvoiceForm() {
                             <div className="row mt-4">
                                 <div className='d-flex '>
                                     <button className="btn btn-primary me-2" type="button" onClick={handleSubmit}>
-                                        Save
+                                        {params?.updateId ? 'Update' : 'Add'}
                                     </button>
                                     <div className="col text-end">
                                         <button className="btn btn-primary me-2" type="button" onClick={add}>
@@ -618,6 +787,8 @@ function InvoiceForm() {
                 show={modalShow}
                 onHide={() => setModalShow(false)}
             />
+
+            <ToastContainer />
         </>
     );
 }
