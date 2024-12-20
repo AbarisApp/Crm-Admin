@@ -128,7 +128,6 @@ const PurchaseChallan = () => {
         path_2: ``
     };
     const [pdf, setPdf] = useState(false)
-
     const [val, setVal] = useState(null)
 
     const pdfGenerateDefault = (item) => {
@@ -258,7 +257,7 @@ const PurchaseChallan = () => {
                                                 <td>
                                                     <button className="btn btn-sm btn-success ms-2" onClick={() => { pdfGenerateDefault(item) }}>Print PDF</button>
                                                     <div className="d-flex">
-                                                        <Link to={`/purchaseorder/edit/${item?._id}`} className="btn btn-primary shadow btn-xs sharp me-1">
+                                                        <Link to={`/purchasechallan/edit/${item?._id}`} className="btn btn-primary shadow btn-xs sharp me-1">
                                                             <i className="fa fa-pencil" />
                                                         </Link>
                                                         <Popconfirm

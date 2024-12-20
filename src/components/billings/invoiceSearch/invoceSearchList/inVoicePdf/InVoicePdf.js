@@ -1,6 +1,8 @@
 import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
 
-const InVoicePdf = () => {
+const InVoicePdf = ({ pdfData }) => {
+    console.log(pdfData);
+
     const styles = StyleSheet.create({
         page: {
             backgroundColor: '#FFFFFF',
@@ -88,14 +90,14 @@ const InVoicePdf = () => {
                         </View>
                         <View style={{ textAlign: 'right' }}>
                             <Text>Invoice Date:</Text>
-                            <Text style={styles.boldText}>16/12/2024</Text>
+                            <Text style={styles.boldText}>{pdfData?.due_date}</Text>
                         </View>
                     </View>
 
                     {/* Invoice Number */}
                     <View style={styles.row}>
                         <Text>Invoice #:</Text>
-                        <Text style={styles.boldText}>0002</Text>
+                        <Text style={styles.boldText}>{pdfData?.invoice_no}</Text>
                     </View>
 
                     {/* Table */}
@@ -107,39 +109,44 @@ const InVoicePdf = () => {
                         </View>
 
                         {/* Table Row */}
-                        <View style={styles.tableRow}>
-                            <Text style={styles.tableCell}>Accommodation</Text>
-                            <Text style={styles.tableCell}>
-                                UDAI KOTHI
-                                \nUDAIPUR, India
-                                \nCheck-In: 16/12/24 Check-Out: 18/12/24
-                            </Text>
-                            <Text style={styles.tableCell}>4,542.37</Text>
-                        </View>
+                        {pdfData && pdfData?.invoices?.map((item) => {
+                            return <View style={styles.tableRow} key={item?._id}>
+                                <Text style={styles.tableCell}>{item?.remarks}</Text>
+                                <Text style={styles.tableCell}>
+                                    UDAI KOTHI
+                                    \nUDAIPUR, India
+                                    \nCheck-In: {item?.check_in} Check-Out: {item?.check_out}
+                                </Text>
+                                <Text style={styles.tableCell}>{item?.total_sale}</Text>
+                            </View>
+                        })}
                     </View>
 
                     {/* Tax Summary */}
                     <View style={styles.table}>
                         <View style={styles.tableHeader}>
-                            <Text style={styles.tableColumn}>SAC</Text>
+                            <Text style={styles.tableColumn}>Final Amount</Text>
                             <Text style={styles.tableColumn}>Taxable</Text>
                             <Text style={styles.tableColumn}>CGST</Text>
                             <Text style={styles.tableColumn}>SGST</Text>
                             <Text style={styles.tableColumn}>IGST</Text>
                         </View>
-                        <View style={styles.tableRow}>
-                            <Text style={styles.tableCell}>998552</Text>
-                            <Text style={styles.tableCell}>4,542.37</Text>
-                            <Text style={styles.tableCell}>0</Text>
-                            <Text style={styles.tableCell}>0</Text>
-                            <Text style={styles.tableCell}>457.63</Text>
-                        </View>
+                        {pdfData && pdfData?.invoices?.map((item) => {
+                            return <View style={styles.tableRow} key={item?._id}>
+                                <Text style={styles.tableCell}>{item?.final_amt}</Text>
+                                <Text style={styles.tableCell}>{item?.taxable}</Text>
+                                <Text style={styles.tableCell}>{item?.cgst}</Text>
+                                <Text style={styles.tableCell}>{item?.sgst}</Text>
+                                <Text style={styles.tableCell}>{item?.igst}</Text>
+                            </View>
+                        })}
+
                     </View>
 
                     {/* Total */}
-                    <View style={styles.totalContainer}>
+                    {/* <View style={styles.totalContainer}>
                         <Text>Total: ₹5,000.00</Text>
-                    </View>
+                    </View> */}
 
                     {/* QR Code Section */}
                     <View style={styles.qrCode}>

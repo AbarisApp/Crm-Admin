@@ -140,7 +140,7 @@ const SalesChallan = () => {
                                                 <td>
                                                     <button className="btn btn-sm btn-success ms-2" onClick={() => { pdfGenerateDefault(item) }}>Print PDF</button>
                                                     <div className="d-flex">
-                                                        <Link to={`/purchaseorder/edit/${item?._id}`} className="btn btn-primary shadow btn-xs sharp me-1">
+                                                        <Link to={`/saleschallan/edit/${item?._id}`} className="btn btn-primary shadow btn-xs sharp me-1">
                                                             <i className="fa fa-pencil" />
                                                         </Link>
                                                         <Popconfirm

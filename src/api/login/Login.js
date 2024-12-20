@@ -5723,6 +5723,16 @@ export const updateaccount_invoice = (id, data) => {
 };
 
 
+export const getAcc_email_setup = (id) => {
+  return axiosInstance.get(`${baseUrl}acc_email_setup/admin`);
+};
+export const UpdateAcc_email_setup = (data) => {
+  return axiosInstance.put(`${baseUrl}acc_email_setup/update`, data);
+};
+export const Updatelead_email = (data) => {
+  return axiosInstance.post(`${baseUrl}lead_email/sendMail`, data);
+};
+
 // jilani
 
 
@@ -6602,6 +6612,17 @@ export const postquotationMaster = (data) => {
     },
   });
 };
+export const getQuotationMasterById = (id) => {
+  return axiosInstance.get(`${baseUrl}lead_quotation_master/${id}`);
+};
+export const updateQuotationMaster = (payload) => {
+  return axiosInstance.put(`${baseUrl}lead_quotation_master/update_type/${payload?.id}`, payload.data, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
 
 export const getAllquotationMasterData = (page, count) => {
   return axiosInstance.get(
@@ -6673,6 +6694,18 @@ export const postPurchaseChallan = (data) => {
   });
 };
 
+export const getPurchaseChallanById = (id) => {
+  return axiosInstance.get(`${baseUrl}lead_purchase_challan_master/${id}`);
+};
+export const updatePurchaseChallan = (payload) => {
+  return axiosInstance.put(`${baseUrl}lead_purchase_challan_master/update_type/${payload?.id}`, payload.data, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
 export const getPurchaseChallan = (page, count) => {
   return axiosInstance.get(
     `${baseUrl}lead_purchase_challan_master/user?page=${page}&count=${count}`
@@ -6685,6 +6718,17 @@ export const deletePurchaseChallanById = (id) => {
 // ====Sales Challan====
 export const postSalesChallan = (data) => {
   return axiosInstance.post(`${baseUrl}lead_sales_challan_master/addType`, data, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+export const getSalesChallanById = (id) => {
+  return axiosInstance.get(`${baseUrl}lead_sales_challan_master/${id}`);
+};
+export const updateSalesChallan = (payload) => {
+  return axiosInstance.put(`${baseUrl}lead_sales_challan_master/update_type/${payload?.id}`, payload.data, {
     headers: {
       "Content-Type": "application/json; charset=UTF-8",
       Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
@@ -6710,6 +6754,18 @@ export const postChallanReturn = (data) => {
     },
   });
 };
+export const getChallanReturnById = (id) => {
+  return axiosInstance.get(`${baseUrl}lead_sales_return_master/${id}`);
+};
+export const updateChallanReturn = (payload) => {
+  return axiosInstance.put(`${baseUrl}lead_sales_return_master/update_type/${payload?.id}`, payload.data, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
 export const getAllInvoiceTypeData = () => {
   return axios.get(`${baseUrl}acc_select_invoice_type/admin`, {
     headers: {
@@ -6742,3 +6798,6 @@ export const postLead = (data) => {
 export const getLeadDashbord = () => {
   return axiosInstance.get(`${baseUrl}user_dashboard/lead`);
 };
+
+
+// ======Agro Featured reports =======
