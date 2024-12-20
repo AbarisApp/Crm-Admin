@@ -1,28 +1,33 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { getCource, getStream } from '../../api/login/Login';
 
-const RequirementDetails = () => {
-  const [formData, setFormData] = useState({
-    course: '',
-    streamType: '',
-    budget: '',
-    location: ''
-  });
+const RequirementDetails = ({ handleChange, formData }) => {
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
+  const [data, setData] = useState({
+    courceData: [],
+    streemDara: [],
+  })
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(formData);
-    // Handle form submission logic here
-  };
+  const getValues = async () => {
+    const val = { ...data }
+    try {
+      const assign = await getCource()
+      val.courceData = assign?.data
 
+      const source = await getStream()
+      val.streemDara = source?.data
+
+    } catch (error) {
+
+    }
+    setData(val)
+  }
+
+  useEffect(() => {
+    getValues()
+  }, [])
   return (
-    <form onSubmit={handleSubmit} className="row">
+    <form className="row">
       <div className="form-group col-4">
         <label htmlFor="course">Course</label>
         <select
@@ -33,9 +38,9 @@ const RequirementDetails = () => {
           className="form-control"
         >
           <option value="">Select Course</option>
-          <option value="course1">Course 1</option>
-          <option value="course2">Course 2</option>
-          <option value="course3">Course 3</option>
+          {data?.courceData?.map((item) => {
+            return <option value={item._id}>{item?.service_name}</option>
+          })}
         </select>
       </div>
 
@@ -49,9 +54,9 @@ const RequirementDetails = () => {
           className="form-control"
         >
           <option value="">Select Stream Type</option>
-          <option value="stream1">Stream 1</option>
-          <option value="stream2">Stream 2</option>
-          <option value="stream3">Stream 3</option>
+          {data?.streemDara?.map((item) => {
+            return <option value={item._id}>{item?.name}</option>
+          })}
         </select>
       </div>
 

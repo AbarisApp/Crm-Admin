@@ -2,10 +2,10 @@ import React from 'react'
 import InvoiceSearchFilter from './invoiceSearchFilter/InvoiceSearchFilter'
 import InvoiceSearchList from './invoceSearchList/InvoiceSearchList'
 
-function InvoiceSearch() {
+function InvoiceSearch({ params, filterInitial, handleChange, getTransitionReport }) {
     return (
         <>
-            <InvoiceSearchFilter />
+            <InvoiceSearchFilter params={params} filterInitial={filterInitial} handleChange={handleChange} getTransitionReport={getTransitionReport} />
         </>
     )
 }

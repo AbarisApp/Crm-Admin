@@ -956,6 +956,12 @@ export const getReasonId = (id) => {
 export const getStatus = () => {
   return axiosInstance.get(`${baseUrl}dmtstatus/admin`)
 }
+export const getLeadStatus = () => {
+  return axiosInstance.get(`${baseUrl}status`)
+}
+export const getLeadSubStatus = () => {
+  return axiosInstance.get(`${baseUrl}subStatus/admin`)
+}
 export const deleteStatusId = (id, token) => {
   return axiosInstance.delete(`${baseUrl}dmtstatus/delete_dispute/${id}`)
 }
@@ -5481,6 +5487,9 @@ export const getTRCRM_trip_type_master_admin = (id) => {
 export const getsource = (id) => {
   return axiosInstance.get(`${baseUrl}source/admin`);
 };
+export const getleadMedium = (id) => {
+  return axiosInstance.get(`${baseUrl}leadMedium/admin`);
+};
 export const getTRCRMstaff_admin = (id) => {
   return axiosInstance.get(`${baseUrl}staff/admin`);
 };
@@ -5499,7 +5508,12 @@ export const getTRCRM_service_masteradmin = (id) => {
   return axiosInstance.get(`${baseUrl}TRCRM_service_master/admin`);
 };
 
-
+export const getCource = (id) => {
+  return axiosInstance.get(`${baseUrl}course/admin`);
+};
+export const getStream = (id) => {
+  return axiosInstance.get(`${baseUrl}stream/all`);
+};
 
 export const getAirlLine = (value) => {
   return axiosInstance.get(`${extraBaseUrl}airlines/destination?search=&id=673b1d7c85dbbfa354004889`);
@@ -5563,6 +5577,26 @@ export const deletesServiceVoucher = (id) => {
 };
 export const getByIdServiceVoucher = (id) => {
   return axiosInstance.get(`${baseUrl}serviceVoucher/${id}`);
+};
+export const serviceVoucherUpdate = (id, value) => {
+  return axiosInstance.put(`${baseUrl}serviceVoucher/update_type/${id}`, value);
+};
+
+export const addflightVoucher = (data) => {
+  return axiosInstance.post(`${baseUrl}flightVoucher/addType`, data);
+}
+export const getflightVoucher = (value) => {
+  return axiosInstance.get(`${baseUrl}flightVoucher/user?page=${value?.page}&count=${value?.count}&start_date=${value?.start_date}&end_date=${value?.end_date}`);
+};
+export const deletesflightVoucher = (id) => {
+  return axiosInstance.delete(`${baseUrl}flightVoucher/delete_type/${id}`);
+}
+export const getByIdflightVoucher = (id) => {
+  return axiosInstance.get(`${baseUrl}flightVoucher/${id}`);
+};
+
+export const flightVoucherUpdate = (id, value) => {
+  return axiosInstance.put(`${baseUrl}flightVoucher/update_type/${id}`, value);
 };
 
 
@@ -5668,6 +5702,24 @@ export const getIdTRCRM_tr_quotation_master = (id) => {
 };
 export const updateTRCRM_tr_quotation_master = (id, data) => {
   return axiosInstance.put(`${baseUrl}TRCRM_tr_quotation_master/update_type/${id}`, data);
+};
+
+
+export const addAccount_invoice = (data) => {
+  return axiosInstance.post(`${baseUrl}account_invoice/addType`, data);
+};
+export const getaccount_invoice = (value) => {
+  return axiosInstance.get(`${baseUrl}account_invoice/page?page=${value?.page}&count=${value?.count}&start_date=${value?.start_date}&end_date=${value?.end_date}`);
+};
+
+export const deleteaccount_invoice = (id) => {
+  return axiosInstance.delete(`${baseUrl}account_invoice/delete_type/${id}`);
+};
+export const getByIdaccount_invoice = (id) => {
+  return axiosInstance.get(`${baseUrl}account_invoice/${id}`);
+};
+export const updateaccount_invoice = (id, data) => {
+  return axiosInstance.put(`${baseUrl}account_invoice/update_type/${id}`, data);
 };
 
 
@@ -6720,6 +6772,21 @@ export const getChallanReturn = (page, count) => {
 };
 export const deleteChallanReturnById = (id) => {
   return axiosInstance.delete(`${baseUrl}lead_sales_return_master/delete_type/${id}`);
+};
+
+
+export const postLead = (data) => {
+  return axiosInstance.post(`/auth/lead_register_staff`, data, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
+
+export const getLeadDashbord = () => {
+  return axiosInstance.get(`${baseUrl}user_dashboard/lead`);
 };
 
 

@@ -1,29 +1,10 @@
 import React, { useState } from 'react';
 
-const SystematicInformation = () => {
-    const [formData, setFormData] = useState({
-        entityId: '',
-        callId: '',
-        feedback: '',
-        live: false,
-    });
-
-    const handleChange = (e) => {
-        const { name, value, type, checked } = e.target;
-        setFormData({
-            ...formData,
-            [name]: type === 'checkbox' ? checked : value,
-        });
-    };
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log(formData);
-        // Handle form submission logic here
-    };
+const SystematicInformation = ({handleChange,formData}) => {
+   
 
     return (
-        <form onSubmit={handleSubmit} className='row'>
+        <form  className='row'>
             <div className="form-group col-4">
                 <label htmlFor="entityId">Entity ID</label>
                 <input

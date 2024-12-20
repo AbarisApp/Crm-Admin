@@ -36,7 +36,7 @@ function HotelVoucherList({ page, count, onChangeVal, data, totalCount }) {
                                                     return <tr role="row" >
                                                         <td valign="top" className="dataTables_empty">{(i + 1) + (page * count)}</td>
                                                         <td className="text-center">
-                                                            {item?._id}
+                                                            {item?.city?.name}
                                                         </td>
                                                         <td className="text-center">
                                                             {item?.firstname} {item?.lastname}
@@ -45,7 +45,7 @@ function HotelVoucherList({ page, count, onChangeVal, data, totalCount }) {
                                                             {item?.voucher_number}
                                                         </td>
                                                         <td className="text-center">
-                                                            {item?.hotel}
+                                                            {item?.hotel?.hotel_name}
                                                         </td>
                                                         <td className="text-center">
                                                             {item?.booking_date}

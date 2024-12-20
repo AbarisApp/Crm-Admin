@@ -31,7 +31,7 @@ const Travelvouchers = () => {
                                         <div>
                                             <Link to={`/travel-Vouchers-Add/${params?.id}`} className="btn btn-primary">Add Hotel Voucher</Link>
                                             <Link to={`/travel-service-Add/${params?.id}`} className="btn btn-primary">Add Service Voucher</Link>
-                                            <Link to='/travel-flight-Add' className="btn btn-primary">Add Flight Voucher</Link>
+                                            <Link to={`/travel-flight-Add/${params?.id}`} className="btn btn-primary">Add Flight Voucher</Link>
                                         </div>
 
                                     </div>

@@ -3065,7 +3065,9 @@ function App() {
               <Route path="travel-Vouchers-Add/:id" element={<AddHotelVoucher />} />
               <Route path="travel-Vouchers-Add/:id/:updateId" element={<AddHotelVoucher />} />
               <Route path="travel-service-Add/:id" element={<AddServiceVoucher />} />
-              <Route path="travel-flight-Add" element={<AddFlightVoucher />} />
+              <Route path="travel-service-Add/:id/:updateId" element={<AddServiceVoucher />} />
+              <Route path="travel-flight-Add/:id" element={<AddFlightVoucher />} />
+              <Route path="travel-flight-Add/:id/:updateId" element={<AddFlightVoucher />} />
               <Route path="travel-invoice-list" element={<TravelInvoice />} />
               <Route path="travel-invoice-create" element={<InvoiceAdd />} />
               <Route path="travel-payment-receipt-create" element={<AddpaymentReceipt />} />
@@ -3244,8 +3246,9 @@ function App() {
               <Route path="create-task-stage" element={<TaskStageForm />} />
               <Route path="update-task-stage/:id" element={<TaskStageForm />} />
               <Route path="system_settings" element={<SystemSettingss />} />
-              <Route path="billings-invoice" element={<InvoiceTab />} />
-              <Route path="create-billings-invoice" element={<InvoiceForm />} />
+              <Route path="billings-invoice/:id" element={<InvoiceTab />} />
+              <Route path="create-billings-invoice/:id" element={<InvoiceForm />} />
+              <Route path="update-billings-invoice/:id/:updateId" element={<InvoiceForm />} />
               <Route path="billings-credit" element={<CancilaionTab />} />
               <Route path="billings-multiprinting" element={<MultiplePrintings />} />
               {/* <Route path="billings-hotel/cruisevoucher" element={<HotelCruieseVoucher />} /> */}
