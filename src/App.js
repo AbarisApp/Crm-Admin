@@ -1137,6 +1137,10 @@ import ProductOrderSummery from "./components/Empoyee/Order/product-order-summer
 import PendingOrderSummery from "./components/Empoyee/Order/pending-order-summery.js";
 import DispatchOrderSummery from "./components/Empoyee/Order/dispatch-order-summery.js";
 import PartyOrderSummery from "./components/Empoyee/Order/party-order-summery.js";
+import AllPayablePage from "./pages/payble/index.js";
+import MonthView from "./components/travelCrmReports/payble/allCustomerList/MonthView.js";
+import LRRegisterPage from "./pages/transaction/LRregister/purchageOrder/index.js";
+import LRAdd from "./components/transaction/LRregister/purchageOrderAdd/LRAdd.js";
 // adil
 
 
@@ -3337,6 +3341,14 @@ function App() {
               <Route path="dispatachorder" element={<DispatchOrderSummery />} />
               {/* adil */}
 
+              {/* junaid */}
+
+              <Route path="payable-master" element={<AllPayablePage />} />
+              <Route path="payable-month-view/:id" element={<MonthView />} /> 
+
+              <Route path="L-r-register" element={<LRRegisterPage />} />
+              <Route path="L-r-register/Add" element={<LRAdd />} />
+              <Route path="L-r-register/edit/:id" element={<LRAdd />} />
 
             </Route>
           </>
