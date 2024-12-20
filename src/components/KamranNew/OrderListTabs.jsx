@@ -3,19 +3,15 @@ import React from 'react'
 function OrderListTabs() {
   return (
     <div className=''>
-      
-      
-       <div className='table-responsive active-projects style-1' >
-      <h3 className='tbl-caption text-light'>
-    Sample Order Report
-    </h3> </div>
+
+
+      <div className='table-responsive active-projects style-1' >
+        <h3 className='tbl-caption text-light'>
+          Sample Order Report
+        </h3> </div>
       <div className="mt-3">
         <table className="w-100">
           <tr className="p-1 bg-light">
-            <th className="p-1">
-
-
-            </th>
             <th className="p-1">S.NO</th>
             <th className="p-1">Order.No/ Date </th>
             <th className="p-1">Ref Order No /Remarks</th>
@@ -28,13 +24,9 @@ function OrderListTabs() {
 
           </tr>
           <tr className="border p-1">
-
-            <td className="p-1">
-
-            </td>
             <td className='p-1'>1</td>
             <td className='p-1'>GJ13441
-            12-Dec-2024 12:16 AM</td>
+              12-Dec-2024 12:16 AM</td>
             <td className='p-1'>N/A</td>
             <td className='p-1'>Maruti Agro Center - Patdi</td>
             <td className='p-1'>Rjt</td>
@@ -53,7 +45,7 @@ function OrderListTabs() {
           </tr>
         </table>
       </div>
-      
+
     </div>
   )
 }
