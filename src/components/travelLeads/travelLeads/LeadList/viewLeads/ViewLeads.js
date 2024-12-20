@@ -20,6 +20,7 @@ import TravelVault from './travelVault/TravelVault';
 import TravelMap from './travelMap/TravelMap';
 import TravelExpense from './travelExpense/TravelExpense';
 import TravelHistory from './travelHistory/TravelHistory';
+import FollowUp from './FollowUp/followUp';
 
 const ViewLeads = () => {
     const breadCrumbsTitle = {
@@ -119,9 +120,7 @@ const ViewLeads = () => {
                                             <TravellerDetail />
                                         </Tab>
                                         <Tab eventKey="FollowUp" title="Follow Up">
-                                            <div className="p-3">
-                                                <p>Follow Up</p>
-                                            </div>
+                                            <FollowUp />
                                         </Tab>
                                         <Tab eventKey="Quote" title="Quote">
                                             <TravelQuoteListComp />

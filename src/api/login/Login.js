@@ -5709,6 +5709,16 @@ export const updateaccount_invoice = (id, data) => {
 };
 
 
+export const getAcc_email_setup = (id) => {
+  return axiosInstance.get(`${baseUrl}acc_email_setup/admin`);
+};
+export const UpdateAcc_email_setup = (data) => {
+  return axiosInstance.put(`${baseUrl}acc_email_setup/update`, data);
+};
+export const Updatelead_email = (data) => {
+  return axiosInstance.post(`${baseUrl}lead_email/sendMail`, data);
+};
+
 // jilani
 
 

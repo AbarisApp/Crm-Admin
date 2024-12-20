@@ -9,19 +9,45 @@ import { Link } from 'react-router-dom'
 import ModalEmail from './modalEmail/ModalEmail'
 
 import { PDFViewer } from "@react-pdf/renderer";
+import { pdf } from "@react-pdf/renderer";
 import InVoicePdf from './inVoicePdf/InVoicePdf'
+import { getByIdaccount_invoice } from '../../../../api/login/Login'
 
 function InvoiceSearchList({ params, totalCount, page, onChangeVal, data, count, confirm, cancel, loading }) {
     const [modalShow, setModalShow] = useState(false);
-    const modelOpen = () => {
+    const [modalidData, setModalIddata] = useState(null)
+    const modelOpen = (id) => {
+        setModalIddata(id)
         setModalShow(true)
+
     }
 
-    const [pdf, setPdf] = useState(false)
+    // const [pdf, setPdf] = useState(false)
+    const [pdfData, setPdfData] = useState(null)
 
-    const pdfGenerateDefault = () => {
-        setPdf(!pdf)
-    }
+    const getByIdData = async (id) => {
+        try {
+            const res = await getByIdaccount_invoice(id); // Fetch the invoice data
+            if (res?.data) {
+                setPdfData(res.data); // Set fetched data in state
+                openPdfInNewTab(res.data); // Open the PDF in a new tab
+            }
+        } catch (error) {
+            console.error("Error fetching invoice data:", error);
+        }
+    };
+
+    const openPdfInNewTab = async (data) => {
+        const blob = await pdf(<InVoicePdf pdfData={data} />).toBlob();
+        const url = URL.createObjectURL(blob);
+        window.open(url, "_blank");
+    };
+
+    const pdfGenerateDefault = (item) => {
+        if (item?._id) {
+            getByIdData(item._id);
+        }
+    };
 
 
     return (
@@ -61,10 +87,10 @@ function InvoiceSearchList({ params, totalCount, page, onChangeVal, data, count,
                             return <tr key={item?._id}>
                                 <td valign="top" className="dataTables_empty">{(i + 1) + (page * count)}</td>
                                 <td className="text-center">
-                                    <FaRegFilePdf style={{ color: 'red' }} onClick={pdfGenerateDefault} />
+                                    <FaRegFilePdf style={{ color: 'red' }} onClick={() => pdfGenerateDefault(item)} />
                                 </td>
                                 <td className="text-center">
-                                    <MdOutlineEmail onClick={modelOpen} />
+                                    <MdOutlineEmail onClick={() => modelOpen(item?._id)} />
                                 </td>
                                 <td className="text-center">
                                     <FaWhatsapp style={{ color: 'green' }} />
@@ -150,19 +176,19 @@ function InvoiceSearchList({ params, totalCount, page, onChangeVal, data, count,
                 <ModalEmail
                     show={modalShow}
                     onHide={() => setModalShow(false)}
+                    modalidData={modalidData}
                 />
-                {pdf && <div className="pdfcs">
-                    <div className="loader-overlay">
-                        <PDFViewer style={{ width: '100%', height: '100vh' }}>
-                            <InVoicePdf />
-                        </PDFViewer>
+                {/* {pdf && pdfData && (
+                    <div className="pdfcs">
+                        <div className="loader-overlay">
+                            <PDFViewer style={{ width: "100%", height: "100vh" }}>
+                                <InVoicePdf pdfData={pdfData} />
+                            </PDFViewer>
+                        </div>
                     </div>
+                )} */}
 
-                </div>}
 
-                {/* {pdf && <PDFViewer style={{ width: '100%', height: '100vh' }}>
-
-                </PDFViewer>} */}
             </div>
 
         </>
