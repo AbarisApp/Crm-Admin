@@ -956,6 +956,12 @@ export const getReasonId = (id) => {
 export const getStatus = () => {
   return axiosInstance.get(`${baseUrl}dmtstatus/admin`)
 }
+export const getLeadStatus = () => {
+  return axiosInstance.get(`${baseUrl}status`)
+}
+export const getLeadSubStatus = () => {
+  return axiosInstance.get(`${baseUrl}subStatus/admin`)
+}
 export const deleteStatusId = (id, token) => {
   return axiosInstance.delete(`${baseUrl}dmtstatus/delete_dispute/${id}`)
 }
@@ -5481,6 +5487,9 @@ export const getTRCRM_trip_type_master_admin = (id) => {
 export const getsource = (id) => {
   return axiosInstance.get(`${baseUrl}source/admin`);
 };
+export const getleadMedium = (id) => {
+  return axiosInstance.get(`${baseUrl}leadMedium/admin`);
+};
 export const getTRCRMstaff_admin = (id) => {
   return axiosInstance.get(`${baseUrl}staff/admin`);
 };
@@ -5499,7 +5508,12 @@ export const getTRCRM_service_masteradmin = (id) => {
   return axiosInstance.get(`${baseUrl}TRCRM_service_master/admin`);
 };
 
-
+export const getCource = (id) => {
+  return axiosInstance.get(`${baseUrl}course/admin`);
+};
+export const getStream = (id) => {
+  return axiosInstance.get(`${baseUrl}stream/all`);
+};
 
 export const getAirlLine = (value) => {
   return axiosInstance.get(`${extraBaseUrl}airlines/destination?search=&id=673b1d7c85dbbfa354004889`);
@@ -6598,6 +6612,17 @@ export const postquotationMaster = (data) => {
     },
   });
 };
+export const getQuotationMasterById = (id) => {
+  return axiosInstance.get(`${baseUrl}lead_quotation_master/${id}`);
+};
+export const updateQuotationMaster = (payload) => {
+  return axiosInstance.put(`${baseUrl}lead_quotation_master/update_type/${payload?.id}`, payload.data, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
 
 export const getAllquotationMasterData = (page, count) => {
   return axiosInstance.get(
@@ -6669,6 +6694,18 @@ export const postPurchaseChallan = (data) => {
   });
 };
 
+export const getPurchaseChallanById = (id) => {
+  return axiosInstance.get(`${baseUrl}lead_purchase_challan_master/${id}`);
+};
+export const updatePurchaseChallan = (payload) => {
+  return axiosInstance.put(`${baseUrl}lead_purchase_challan_master/update_type/${payload?.id}`, payload.data, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
 export const getPurchaseChallan = (page, count) => {
   return axiosInstance.get(
     `${baseUrl}lead_purchase_challan_master/user?page=${page}&count=${count}`
@@ -6681,6 +6718,17 @@ export const deletePurchaseChallanById = (id) => {
 // ====Sales Challan====
 export const postSalesChallan = (data) => {
   return axiosInstance.post(`${baseUrl}lead_sales_challan_master/addType`, data, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+export const getSalesChallanById = (id) => {
+  return axiosInstance.get(`${baseUrl}lead_sales_challan_master/${id}`);
+};
+export const updateSalesChallan = (payload) => {
+  return axiosInstance.put(`${baseUrl}lead_sales_challan_master/update_type/${payload?.id}`, payload.data, {
     headers: {
       "Content-Type": "application/json; charset=UTF-8",
       Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
@@ -6706,6 +6754,18 @@ export const postChallanReturn = (data) => {
     },
   });
 };
+export const getChallanReturnById = (id) => {
+  return axiosInstance.get(`${baseUrl}lead_sales_return_master/${id}`);
+};
+export const updateChallanReturn = (payload) => {
+  return axiosInstance.put(`${baseUrl}lead_sales_return_master/update_type/${payload?.id}`, payload.data, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
 export const getAllInvoiceTypeData = () => {
   return axios.get(`${baseUrl}acc_select_invoice_type/admin`, {
     headers: {
@@ -6723,3 +6783,21 @@ export const getChallanReturn = (page, count) => {
 export const deleteChallanReturnById = (id) => {
   return axiosInstance.delete(`${baseUrl}lead_sales_return_master/delete_type/${id}`);
 };
+
+
+export const postLead = (data) => {
+  return axiosInstance.post(`/auth/lead_register_staff`, data, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
+
+export const getLeadDashbord = () => {
+  return axiosInstance.get(`${baseUrl}user_dashboard/lead`);
+};
+
+
+// ======Agro Featured reports =======

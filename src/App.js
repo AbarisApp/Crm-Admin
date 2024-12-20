@@ -1137,6 +1137,14 @@ import ProductOrderSummery from "./components/Empoyee/Order/product-order-summer
 import PendingOrderSummery from "./components/Empoyee/Order/pending-order-summery.js";
 import DispatchOrderSummery from "./components/Empoyee/Order/dispatch-order-summery.js";
 import PartyOrderSummery from "./components/Empoyee/Order/party-order-summery.js";
+import LrListPage from "./pages/lrListPage/index.js";
+import LrAddPage from "./pages/lrAddPage/index.js";
+import MemoEntryListPage from "./pages/memoEntryListPage/index.js";
+import MemoEntryAddPage from "./pages/memoEntryAddPage/index.js";
+import DeliveryOfLrListPage from "./pages/deliveryOfLrListPage/index.js";
+import DeliveryOfLrAdPage from "./pages/deliveryOfLrAddPage/index.js";
+import FullLoadListPage from "./pages/fullLoadListPage/index.js";
+import FullLoadAddPage from "./pages/fullLoadAddPage/index.js";
 // adil
 
 
@@ -2356,6 +2364,7 @@ function App() {
               <Route path="quotation/add" element={<QuatationAdd />} />
               <Route path="purchasequotation/list" element={<PurchaseQuatationPage />} />
               <Route path="purchasequotation/add" element={<PurchaseQuatationAdd />} />
+              <Route path="purchasequotation/edit/:id" element={<PurchaseQuatationAdd />} />
               <Route path="salesorder/list" element={<SalesOrderPage />} />
               <Route path="salesorder/add" element={<SalseOrderAdd />} />
               <Route path="salesorder/edit/:id" element={<SalseOrderAdd />} />
@@ -2368,8 +2377,10 @@ function App() {
               <Route path="purchaseorderfrm/add" element={<PurchaseOrderFromQuotationAdd />} />
               <Route path="saleschallan/list" element={<SalesChallanPage />} />
               <Route path="saleschallan/add" element={<SalesChallanAdd />} />
+              <Route path="saleschallan/edit/:id" element={<SalesChallanAdd />} />
               <Route path="purchasechallan/list" element={<PurchaseChallanPage />} />
               <Route path="purchasechallan/add" element={<PurchaseChallanAdd />} />
+              <Route path="purchasechallan/edit/:id" element={<PurchaseChallanAdd />} />
               <Route path="saleschallanfrm/list" element={<SalesFromOrderPage />} />
               <Route path="saleschallanfrm/add" element={<SalesFromOrderAdd />} />
               <Route path="saleschallanfrm/edit/:id" element={<SalesFromOrderAdd />} />
@@ -2377,6 +2388,7 @@ function App() {
               <Route path="purchasechallanfrm/add" element={<PurchangefromChalanAdd />} />
               <Route path="challanreturn/list" element={<ChallanReturnPage />} />
               <Route path="challanreturn/add" element={<ChallanReturnAdd />} />
+              <Route path="challanreturn/edit/:id" element={<ChallanReturnAdd />} />
               <Route path="stocktransfer/list" element={<StocksTrasferPage />} />
               <Route path="stocktransfer/add" element={<StockTransferAdd />} />
 
@@ -3336,6 +3348,18 @@ function App() {
               <Route path="pendingordersummery" element={<PendingOrderSummery />} />
               <Route path="dispatachorder" element={<DispatchOrderSummery />} />
               {/* adil */}
+
+
+              {/* Moin routes start*/}
+              <Route path="lr/list" element={<LrListPage />} />
+              <Route path="lr/add" element={<LrAddPage />} />
+              <Route path="memo/list" element={<MemoEntryListPage />} />
+              <Route path="memo/add" element={<MemoEntryAddPage />} />
+              <Route path="deliveryOfLr/list" element={<DeliveryOfLrListPage />} />
+              <Route path="deliveryOfLr/add" element={<DeliveryOfLrAdPage />} />
+              <Route path="fullLoad/list" element={<FullLoadListPage />} />
+              <Route path="fullLoad/add" element={<FullLoadAddPage />} />
+              {/* Moin routes end */}
 
 
             </Route>

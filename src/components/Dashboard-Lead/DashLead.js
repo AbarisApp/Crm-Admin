@@ -1,35 +1,121 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './Dashcss.css';
 import { FaCalendarAlt, FaPhone, FaUsers, FaClipboardList, FaCheckCircle, FaBolt } from 'react-icons/fa';
+import { getLeadDashbord } from '../../api/login/Login';
 
 const DashLead = () => {
-    const cards = [
-        { title: 'New Leads', count: 5, icon: <FaUsers /> },
-        { title: 'WTD Site Visit Compl...', count: 0, icon: <FaCalendarAlt /> },
-        { title: 'Booked', count: 0, icon: <FaCheckCircle /> },
-        { title: 'Site Visit Completed', count: 0, icon: <FaCalendarAlt /> },
-        { title: 'MTD Site Visit Compl...', count: 0, icon: <FaClipboardList /> },
-        { title: 'Re-Engaged', count: 2, icon: <FaUsers /> },
-        { title: 'Today Follow Up', count: 2, icon: <FaBolt /> },
-        { title: 'Missed Follow Up', count: 20, icon: <FaPhone /> },
-        { title: 'Today Leads', count: 2, icon: <FaUsers /> },
-        { title: 'All Leads', count: 26, icon: <FaClipboardList /> },
-    ];
+    const [data, setData] = useState(null)
+    const [data2, setData2] = useState(null)
+    const getData = async () => {
+        try {
+            const res = await getLeadDashbord()
+            setData(res.data?.user)
+            setData2(res.data?.statusWise)
 
+        } catch (error) {
+
+        }
+    }
+    useEffect(() => {
+        getData()
+    }, [])
     return (
         <div className="dashboard row">
-            {cards.map((card, index) => (
-                <div className='col-xl-4' key={index}>
-                    <div className="cards">
-                        <div className="card-title">{card.title}</div>
-                        <div className='icon-contain'>
-                            <div className="card-count">{card.count}</div>
-                            <div className="card-icon">{card.icon}</div>
-                        </div>
-
+            <div className='col-xl-4'>
+                <div className="cards">
+                    <div className="card-title">New Leads</div>
+                    <div className='icon-contain'>
+                        <div className="card-count">{data?.new_count}</div>
+                        <div className="card-icon"><FaUsers /></div>
                     </div>
                 </div>
-            ))}
+            </div>
+
+
+            <div className='col-xl-4'>
+                <div className="cards">
+                    <div className="card-title">Today Follow Up</div>
+                    <div className='icon-contain'>
+                        <div className="card-count">{data?.today_follow_up}</div>
+                        <div className="card-icon"><FaBolt /></div>
+                    </div>
+                </div>
+            </div>
+            <div className='col-xl-4'>
+                <div className="cards">
+                    <div className="card-title">Missed Follow Up</div>
+                    <div className='icon-contain'>
+                        <div className="card-count">{data?.missed_follow_up}</div>
+                        <div className="card-icon"><FaPhone /></div>
+                    </div>
+                </div>
+            </div>
+            <div className='col-xl-4'>
+                <div className="cards">
+                    <div className="card-title">Today Leads</div>
+                    <div className='icon-contain'>
+                        <div className="card-count">{data?.today_count}</div>
+                        <div className="card-icon"><FaUsers /></div>
+                    </div>
+                </div>
+            </div>
+            <div className='col-xl-4'>
+                <div className="cards">
+                    <div className="card-title">All Leads</div>
+                    <div className='icon-contain'>
+                        <div className="card-count">{data?.all}</div>
+                        <div className="card-icon"><FaClipboardList /></div>
+                    </div>
+                </div>
+            </div>
+            <div className='col-xl-4'>
+                <div className="cards">
+                    <div className="card-title">Re-Engaged</div>
+                    <div className='icon-contain'>
+                        <div className="card-count">2</div>
+                        <div className="card-icon"><FaUsers /></div>
+                    </div>
+                </div>
+            </div>
+            {data2?.map((item) => {
+                return <div className='col-xl-4'>
+                    <div className="cards">
+                        <div className="card-title">{item?.name}</div>
+                        <div className='icon-contain'>
+                            <div className="card-count">{item?.count}</div>
+                            <div className="card-icon"><FaCalendarAlt /></div>
+                        </div>
+                    </div>
+                </div>
+            })}
+
+            {/* <div className='col-xl-4'>
+                <div className="cards">
+                    <div className="card-title">Booked</div>
+                    <div className='icon-contain'>
+                        <div className="card-count">0</div>
+                        <div className="card-icon"><FaCheckCircle /></div>
+                    </div>
+                </div>
+            </div>
+            <div className='col-xl-4'>
+                <div className="cards">
+                    <div className="card-title">Site Visit Completed</div>
+                    <div className='icon-contain'>
+                        <div className="card-count">0</div>
+                        <div className="card-icon"><FaCalendarAlt /></div>
+                    </div>
+                </div>
+            </div>
+            <div className='col-xl-4'>
+                <div className="cards">
+                    <div className="card-title">MTD Site Visit Compl...</div>
+                    <div className='icon-contain'>
+                        <div className="card-count">0</div>
+                        <div className="card-icon"><FaClipboardList /></div>
+                    </div>
+                </div>
+            </div> */}
         </div>
     );
 };

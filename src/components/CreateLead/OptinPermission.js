@@ -1,27 +1,9 @@
 import React, { useState } from 'react';
 
-const OptInForm = () => {
-  const [optIns, setOptIns] = useState({
-    whatsapp: false,
-    sms: false,
-    email: false,
-  });
-
-  const handleChange = (event) => {
-    const { name, checked } = event.target;
-    setOptIns({
-      ...optIns,
-      [name]: checked,
-    });
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log('Opt-in choices:', optIns);
-  };
-
+const OptInForm = ({handleChange,optIns}) => {
+  
   return (
-    <form onSubmit={handleSubmit} className='row'>
+    <form  className='row'>
       <div className='col-4'>
         <label>
           <input
@@ -48,8 +30,8 @@ const OptInForm = () => {
         <label>
           <input
             type="checkbox"
-            name="email"
-            checked={optIns.email}
+            name="emailB"
+            checked={optIns.emailB}
             onChange={handleChange}
           />
           Email Option

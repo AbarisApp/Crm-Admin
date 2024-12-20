@@ -1,362 +1,10 @@
 import { useEffect, useState } from "react";
 import Breadcrumbs from "../../../../../common/breadcrumb/Breadcrumbs";
-import { getAccAddProjectByPage, getAllAccountData, getAllInvoiceTypeData, getAllProductsData, getAllRatesheetData, getAllTaxTypeData, getAllTransportersData, getAttTaxTypeData, getPickupByPage, getTaxtype, postChallanReturn, postquotationMaster } from "../../../../../api/login/Login";
+import { getAccAddProjectByPage, getAllAccountData, getAllInvoiceTypeData, getAllProductsData, getAllRatesheetData, getAllTaxTypeData, getAllTransportersData, getAttTaxTypeData, getChallanReturnById, getPickupByPage, getTaxtype, postChallanReturn, postquotationMaster, updateChallanReturn } from "../../../../../api/login/Login";
 import { toast, ToastContainer } from "react-toastify";
 import Loadar from "../../../../../common/loader/Loader";
+import { useParams } from "react-router-dom";
 
-// const ChallanReturnAdd = () => {
-//     const breadCrumbsTitle = {
-//         id: "1",
-//         title_1: "Transaction",
-//         title_2: 'Challan',
-//         title_3: `Add Challan Return`,
-//         path_2: ``
-//     };
-
-//     const [formData, setFormData] = useState({
-//         voucher: '',
-//         date: '',
-//         voucherAmount: '',
-//         taxType: ''
-//     });
-
-//     // State for dynamic expense and taxes data
-//     const [expenses, setExpenses] = useState([]);
-
-//     // Sample expense data based on tax type
-//     const taxTypeData = {
-//         "GST 5%": [
-//             { name: 'CGST 1.5%', Product: 'CGST (O/P)', rate: 1.5, amount: 0 },
-//             { name: 'SGST 1.5%', Product: 'SGST (O/P)', rate: 1.5, amount: 0 },
-//         ],
-//         "GST 12%": [
-//             { name: 'CGST 6%', Product: 'CGST (O/P)', rate: 6, amount: 0 },
-//             { name: 'SGST 6%', Product: 'SGST (O/P)', rate: 6, amount: 0 },
-//         ],
-//         "GST MULTIPLE": [
-//             { name: 'CGST 1.5%', Product: 'CGST (O/P)', rate: 1.5, amount: 0 },
-//             { name: 'SGST 1.5%', Product: 'SGST (O/P)', rate: 1.5, amount: 0 },
-//             { name: 'CGST 2.5%', Product: 'CGST (O/P)', rate: 2.5, amount: 0 },
-//         ]
-//     };
-
-//     // Handle form input change
-//     const handleInputChange = (e) => {
-//         setFormData({
-//             ...formData,
-//             [e.target.name]: e.target.value
-//         });
-
-//         // Update expenses when tax type is selected
-//         if (e.target.name === 'taxType') {
-//             setExpenses(taxTypeData[e.target.value] || []);
-//         }
-//     };
-
-
-//     ////////
-//     const [rows, setRows] = useState([
-//         { id: 1, Amount: 0, item: '', Tax: 0, Location: '', Quantity2: '', Quantity: 0, Rate: 0, Amount: 0 },
-//         { id: 2, Amount: 0, item: '', Tax: 0, Location: '', Quantity2: '', Quantity: 0, Rate: 0, Amount: 0 },
-//         { id: 3, Amount: 0, item: '', Tax: 0, Location: '', Quantity2: '', Quantity: 0, Rate: 0, Amount: 0 },
-//         { id: 4, Amount: 0, item: '', Tax: 0, Location: '', Quantity2: '', Quantity: 0, Rate: 0, Amount: 0 },
-//     ]);
-
-//     // Function to handle value changes in the input fields
-//     const handleChange = (index, key, value) => {
-//         const updatedRows = rows.map((row, i) =>
-//             i === index ? { ...row, [key]: value } : row
-//         );
-//         setRows(updatedRows);
-//     };
-
-//     // Function to render each row of the table
-//     const renderRow = (row, index) => (
-//         <tr key={row.id}>
-//             {/* Cr/Db Select */}
-//             <td>
-//                 <input
-//                     type="number"
-//                     value={row.Amount}
-//                     onChange={(e) => handleChange(index, 'Amount', e.target.value)}
-//                 />
-//             </td>
-//             <td>
-//                 <select
-//                     value={row.item}
-//                     onChange={(e) => handleChange(index, 'item', e.target.value)}
-//                 >
-//                     <option value="">Select</option>
-//                     <option value="Cr">Cr</option>
-//                     <option value="Db">Db</option>
-//                 </select>
-//             </td>
-
-//             {/* Account Name Select */}
-//             <td>
-//                 <input
-//                     type="number"
-//                     value={row.Tax}
-//                     onChange={(e) => handleChange(index, 'Tax', e.target.value)}
-//                 />
-//             </td>
-
-//             <td>
-//                 <select
-//                     value={row.Location}
-//                     onChange={(e) => handleChange(index, 'Location', e.target.value)}
-//                 >
-//                     <option value="">Select</option>
-//                     <option value="Cr">Cr</option>
-//                     <option value="Db">Db</option>
-//                 </select>
-//             </td>
-//             <td>
-//                 <input
-//                     type="number"
-//                     value={row.Quantity2}
-//                     onChange={(e) => handleChange(index, 'Quantity2', e.target.value)}
-//                 />
-//             </td>
-
-//             {/* HSNCode Input */}
-//             <td>
-//                 <input
-//                     type="number"
-//                     value={row.Quantity}
-//                     onChange={(e) => handleChange(index, 'Quantity', e.target.value)}
-//                 />
-//             </td>
-
-//             <td>
-//                 <input
-//                     type="number"
-//                     value={row.Rate}
-//                     onChange={(e) => handleChange(index, 'Rate', e.target.value)}
-//                 />
-//             </td>
-
-
-
-
-//             {/* Amount Input */}
-
-//             <td>
-//                 <input
-//                     type="number"
-//                     value={row.Amount}
-//                     onChange={(e) => handleChange(index, 'Amount', e.target.value)}
-//                 />
-//             </td>
-
-//             {/* Delete Button */}
-//             <td>
-//                 <button onClick={() => handleDeleteRow(index)}>🗑️</button>
-//             </td>
-//         </tr>
-//     );
-
-//     // Function to handle row deletion
-//     const handleDeleteRow = (index) => {
-//         const updatedRows = rows.filter((_, i) => i !== index);
-//         setRows(updatedRows);
-//     };
-
-//     // Function to add a new row
-//     const handleAddRow = () => {
-//         setRows([
-//             ...rows,
-//             { id: rows.length + 1, ExpenseAc: '', Product: '', HSNCode: 0, Commodity: 0, Amount: 0 },
-//         ]);
-//     };
-
-
-//     /////
-//     return (
-//         <>
-//             <Breadcrumbs
-//                 breadCrumbsTitle={breadCrumbsTitle} />
-//             <div className="row m-4">
-//                 <div className="col-xl-12">
-//                     <div className="card">
-//                         <div className="card-body p-0">
-//                             <div className="table-responsive active-projects style-1">
-//                                 <div className="tbl-caption tbl-caption-2">
-//                                     <h4 className="heading mb-0">Add Challan Return</h4>
-//                                 </div>
-//                                 <div className="row">
-//                                     <div className="col-md-3 mb-3">
-//                                         <label htmlFor="voucher">Date </label>
-//                                         <input
-//                                             type="date"
-//                                             className="form-control"
-//                                             name="voucher"
-//                                             value={formData.voucher}
-//                                             onChange={handleInputChange}
-//                                             placeholder="Enter Voucher"
-//                                         />
-//                                     </div>
-
-
-
-//                                     <div className="col-md-3 mb-3">
-//                                         <label htmlFor="taxType">Account</label>
-//                                         <select
-//                                             className="form-control"
-//                                             name="taxType"
-
-//                                         >
-//                                             <option value="">Select Tax Type</option>
-//                                             <option value="GST 5%">GST 5%</option>
-//                                             <option value="GST 12%">GST 12%</option>
-//                                             <option value="GST MULTIPLE">GST MULTIPLE</option>
-//                                         </select>
-//                                     </div>
-
-//                                     <div className="col-md-3 mb-3">
-//                                         <label htmlFor="taxType">C/D:</label>
-//                                         <select
-//                                             className="form-control"
-//                                             name="taxType"
-
-//                                         >
-//                                             <option value="">Select Tax Type</option>
-//                                             <option value="GST 5%">GST 5%</option>
-//                                             <option value="GST 12%">GST 12%</option>
-//                                             <option value="GST MULTIPLE">GST MULTIPLE</option>
-//                                         </select>
-//                                     </div>
-//                                     <div className="col-md-3 mb-3">
-//                                         <label htmlFor="taxType">Challan No.</label>
-//                                         <input type="text" className="form-control" placeholder="Challan No." />
-//                                     </div>
-
-//                                     <div className="col-md-3 mb-3">
-//                                         <label htmlFor="taxType">Tax Type </label>
-//                                         <select
-//                                             className="form-control"
-//                                             name="taxType"
-//                                             value={formData.taxType}
-//                                             onChange={handleInputChange}
-//                                         >
-//                                             <option value="">Select Tax Type</option>
-//                                             <option value="GST 5%">GST 5%</option>
-//                                             <option value="GST 12%">GST 12%</option>
-//                                             <option value="GST MULTIPLE">GST MULTIPLE</option>
-//                                         </select>
-//                                     </div>
-//                                     <div className="col-md-3 mb-3">
-//                                         <label htmlFor="taxType">S\P A\c </label>
-//                                         <select
-//                                             className="form-control"
-//                                             name="taxType"
-
-//                                         >
-//                                             <option value="">Select Tax Type</option>
-//                                             <option value="GST 5%">GST 5%</option>
-//                                             <option value="GST 12%">GST 12%</option>
-//                                             <option value="GST MULTIPLE">GST MULTIPLE</option>
-//                                         </select>
-//                                     </div>
-
-
-//                                     <div className="col-md-3 mb-3">
-//                                         <label htmlFor="taxType">Barcode :</label>
-//                                         <input type="date" className="form-control" placeholder="Enter Barcode " />
-//                                     </div>
-//                                     <div className="col-md-3 mb-3">
-//                                         <label htmlFor="taxType">Rate Sheet :</label>
-//                                         <input type="date" className="form-control" placeholder="Enter Rate Sheet " />
-//                                     </div>
-
-
-
-
-//                                 </div>
-
-//                                 <div className="col-lg-12">
-//                                     <table border="1" cellPadding="10">
-//                                         <thead>
-//                                             <tr>
-//                                                 <th>Amount</th>
-//                                                 <th>	Item</th>
-//                                                 <th>Tax %</th>
-//                                                 <th>Location</th>
-//                                                 <th>Quantity2</th>
-//                                                 <th>Quantity</th>
-//                                                 <th>Rate</th>
-
-
-//                                                 <th>Amount</th>
-//                                                 <th>Action</th>
-//                                             </tr>
-//                                         </thead>
-//                                         <tbody>
-//                                             {rows.map((row, index) => renderRow(row, index))}
-//                                         </tbody>
-//                                     </table>
-//                                     {/* <button type="button" onClick={handleAddRow}>Add Row</button>    */}
-//                                 </div>
-
-
-//                                 {/* Expense and Taxes Table */}
-//                                 <div className="table-responsive">
-//                                     <table className="table table-bordered">
-//                                         <thead>
-//                                             <tr>
-//                                                 <th>Name</th>
-//                                                 <th>Account Name</th>
-//                                                 <th>Rate</th>
-//                                                 <th>Amount</th>
-//                                             </tr>
-//                                         </thead>
-//                                         <tbody>
-//                                             {expenses.length > 0 ? (
-//                                                 expenses.map((expense, index) => (
-//                                                     <tr key={index}>
-//                                                         <td>{expense.name}</td>
-//                                                         <td>{expense.Product}</td>
-//                                                         <td>{expense.rate}</td>
-//                                                         <td>{expense.amount}</td>
-//                                                     </tr>
-//                                                 ))
-//                                             ) : (
-//                                                 <tr>
-//                                                     <td colSpan="4" className="text-center">
-//                                                         Amount expenses available for the selected tax type.
-//                                                     </td>
-//                                                 </tr>
-//                                             )}
-//                                         </tbody>
-//                                     </table>
-//                                 </div>
-
-//                                 <div className="col-lg-12">
-//                                     <label htmlFor="taxType">Narration</label>
-//                                     <textarea name="" id="" cols={180}></textarea>
-//                                 </div>
-
-//                                 {/* Total Amount */}
-//                                 <div className="mt-3">
-//                                     <h4>
-//                                         Total Amount: {expenses.reduce((total, expense) => total + expense.amount, 0)}
-//                                     </h4>
-//                                 </div>
-//                                 <div className="col-lg-12 text-center">
-//                                     <button type="button" className="btn btn-primary">Save</button>
-//                                 </div>
-//                             </div>
-//                         </div>
-//                     </div>
-//                 </div>
-//             </div>
-
-
-//         </>
-//     )
-// }
-
-// export default ChallanReturnAdd
 
 
 const ChallanReturnAdd = () => {
@@ -374,6 +22,8 @@ const ChallanReturnAdd = () => {
     const [allPickupPoints, setAllPickupPoints] = useState();
     const [allRatesheetD, setAllRatesheetD] = useState();
     const [allInvoiceTypeD, setAllInvoiceTypeD] = useState();
+
+    const params = useParams();
 
     const [formData, setFormData] = useState({
         date: '',
@@ -393,6 +43,7 @@ const ChallanReturnAdd = () => {
         inv_date: '',
         inv_no: '',
         bill_no: '',
+        narration: '',
         invoice_type: '673843f385dbbfa354004834',
     });
 
@@ -721,6 +372,46 @@ const ChallanReturnAdd = () => {
         });
     };
 
+
+    const getByIdData = async () => {
+        try {
+            const res = await getChallanReturnById(params?.id);
+            console.log('ChallanReturnBy ID------', res?.data)
+            const formattedDate = res?.data?.date.split("T")[0];
+            const formatteInvDate = res?.data?.inv_date.split("T")[0];
+            // const formatteLrDate = res?.data?.lr_date.split("T")[0];
+            setFormData({
+                date: formattedDate,
+                inv_date: formatteInvDate,
+                // lr_date: formatteLrDate,
+                account: res?.data?.account,
+                transporter: res?.data?.transporter,
+                prj_id: res?.data?.prj_id,
+                tax_type: res?.data?.tax_type,
+                c_d: res?.data?.c_d,
+                sp_account: res?.data?.sp_account,
+                lr_no: res?.data?.lr_no,
+                barcode: res?.data?.barcode,
+                ratesheet: res?.data?.ratesheet,
+                org_bill_amount: res?.data?.org_bill_amount,
+                port_code: res?.data?.port_code,
+                inv_no: res?.data?.inv_no,
+                bill_no: res?.data?.bill_no,
+                invoice_type: res?.data?.invoice_type,
+                narration: res?.data?.narration,
+            });
+            // setFormData(res?.data)
+            setRows(res?.data?.products)
+
+        } catch (error) {
+
+        }
+    };
+
+    useEffect(() => {
+        getByIdData();
+    }, [params?.id])
+
     const [load, setLoad] = useState(false)
     const handleSubmitData = async () => {
         setLoad(true)
@@ -753,18 +444,36 @@ const ChallanReturnAdd = () => {
         const obj = { ...formData, products: produ, total_items: produ.length, quantity: Quantity, product_amount: Product_amount }
         // console.log("obj----", obj)
 
-        try {
-            const res = await postChallanReturn(obj)
-            if (res?.statusCode == '200') {
-                setLoad(false)
-                toastSuccessMessage(" Added successfully");
-            } else {
+
+        if (params?.id) {
+            const payload = { id: params?.id, data: obj }
+            try {
+                const res = await updateChallanReturn(payload)
+                if (res?.statusCode == '200') {
+                    setLoad(false)
+                    toastSuccessMessage(" Updated successfully");
+                } else {
+                    toastErrorMessage("Not Updated")
+                }
+            } catch (error) {
+                toastErrorMessage("Not Updated")
+            }
+            setLoad(false)
+        } else {
+            try {
+                const res = await postChallanReturn(obj)
+                if (res?.statusCode == '200') {
+                    setLoad(false)
+                    toastSuccessMessage(" Added successfully");
+                } else {
+                    toastErrorMessage("Not Added")
+                }
+            } catch (error) {
                 toastErrorMessage("Not Added")
             }
-        } catch (error) {
-            toastErrorMessage("Not Added")
+            setLoad(false)
         }
-        setLoad(false)
+
     };
 
 
@@ -781,7 +490,7 @@ const ChallanReturnAdd = () => {
                         <div className="card-body p-0">
                             <div className="table-responsive active-projects style-1">
                                 <div className="tbl-caption tbl-caption-2">
-                                    <h4 className="heading mb-0 p-2">Add Challan Return</h4>
+                                    <h4 className="heading mb-0 p-2">{params?.id ? "Update" : "Add"} Challan Return</h4>
                                 </div>
                                 <div className="row">
                                     <div className="col-md-3 mb-3">
@@ -790,7 +499,7 @@ const ChallanReturnAdd = () => {
                                             type="date"
                                             className="form-control"
                                             name="date"
-                                            // value={formData.date}
+                                            value={formData.date}
                                             onChange={handleInputChange}
                                             placeholder="Enter Date"
                                         />
@@ -817,7 +526,7 @@ const ChallanReturnAdd = () => {
                                             type="number"
                                             className="form-control"
                                             name="order_no"
-                                            value={formData.order_no}
+                                            value={formData?.order_no}
                                             onChange={handleInputChange}
                                             placeholder="Enter Order No"
                                         />
@@ -902,7 +611,7 @@ const ChallanReturnAdd = () => {
                                             type="number"
                                             className="form-control"
                                             name="lr_no"
-                                            value={formData.lr_no}
+                                            value={formData?.lr_no}
                                             onChange={handleInputChange}
                                             placeholder="Enter LR No"
                                         />
@@ -914,7 +623,7 @@ const ChallanReturnAdd = () => {
                                             type="date"
                                             className="form-control"
                                             name="lr_date"
-                                            value={formData.lr_date}
+                                            value={formData?.lr_date}
                                             onChange={handleInputChange}
                                             placeholder="Enter LR Date"
                                         />
@@ -1093,7 +802,7 @@ const ChallanReturnAdd = () => {
                                     </h5>
                                 </div>
                                 <div className="col-lg-12 text-center">
-                                    <button type="button" className="btn btn-primary" onClick={handleSubmitData}>Save</button>
+                                    <button type="button" className="btn btn-primary" onClick={handleSubmitData}>{params?.id ? "Update" : "Save"}</button>
                                 </div>
                             </div>
                         </div>
