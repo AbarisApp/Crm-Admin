@@ -1,103 +1,208 @@
 import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
 
-const AccountStatementPdf = ({ data }) => {
+const PurchaseQuotationPdf = ({ val }) => {
+    console.log('val', val);
+
+    const data = {
+        header: {
+            headOffice: "HEAD OFFICE",
+            title: "(Sales Order)",
+            original: "Original",
+        },
+        quoteDetails: {
+            quoteNo: val?.quote_no,
+            quotationNo: val?.quotation_no,
+            OrderDate: val?.createdAt,
+            validTill: val?.valid_till,
+        },
+        recipient: {
+            name: val?.prj_id,
+            contact: "--",
+        },
+        subject: val?.subject,
+        items: val?.products?.map((item, i) => {
+            return {
+                no: i + 1,
+                particular: item?.product_id,
+                qty: item?.quantity,
+                unit: "",
+                rate: item?.rate,
+                amount: item?.amount,
+            }
+        }),
+        totals: {
+            totalQty: val?.product_amount,
+            subTotal: val?.product_amount,
+            grandTotal: val?.product_amount,
+        },
+        rupees: "--",
+        notes: val?.narration,
+        bankDetails: {
+            bank: "123",
+            account: "125231184616",
+            ifsc: "123",
+        },
+        terms: [
+            "1. Incase item(s) offered have any adverse impact on Environment, Health & Safety, please specify relevant details in your quote categorically. Kindly provide applicable legislation for the same.",
+        ],
+    };
+
     const styles = StyleSheet.create({
         page: {
+            backgroundColor: '#FFFFFF',
             padding: 20,
+        },
+        container: {
+            border: '1px solid black',
+            padding: 10,
             fontSize: 10,
-            backgroundColor: '#fff',
         },
         header: {
-            textAlign: 'center',
-            marginBottom: 20,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: 10,
         },
         title: {
-            fontSize: 14,
+            fontSize: 18,
+            fontWeight: 'bold',
+            textAlign: 'center',
+        },
+        boldText: {
             fontWeight: 'bold',
         },
-        subTitle: {
-            fontSize: 12,
+        row: {
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginBottom: 5,
         },
         table: {
+            display: 'table',
             width: '100%',
             border: '1px solid black',
             marginTop: 10,
         },
         tableRow: {
             flexDirection: 'row',
-            borderBottom: '1px solid black',
+        },
+        tableCol: {
+            width: '20%',
+            borderRight: '1px solid black',
+            padding: 5,
         },
         tableHeader: {
-            fontWeight: 'bold',
+            width: '20%',
+            borderRight: '1px solid black',
             backgroundColor: '#f0f0f0',
             padding: 5,
-            borderRight: '1px solid black',
-        },
-        tableCell: {
-            padding: 5,
-            borderRight: '1px solid black',
-        },
-        tableFooter: {
-            flexDirection: 'row',
-            padding: 5,
             fontWeight: 'bold',
-            borderTop: '1px solid black',
         },
-        closingBalance: {
+        totalRow: {
+            flexDirection: 'row',
+            borderTop: '1px solid black',
+            padding: 5,
+        },
+        noteSection: {
+            borderTop: '1px solid black',
+            marginTop: 10,
+            paddingTop: 5,
+        },
+        footer: {
             marginTop: 20,
             textAlign: 'right',
-            fontSize: 12,
-            fontWeight: 'bold',
+            fontStyle: 'italic',
+        },
+        flexb: {
+            flexDirection: 'row',
+            justifyContent: 'space-between',
         },
     });
 
     return (
         <Document>
             <Page size="A4" style={styles.page}>
-                {/* Header Section */}
-                <View style={styles.header}>
-                    <Text style={styles.title}>Account Statement For TY</Text>
-                    <Text style={styles.subTitle}>From 01/04/2024 To 31/03/2025</Text>
-                </View>
+                <View style={styles.container}>
 
-                {/* Table Section */}
-                <View style={styles.table}>
-                    {/* Table Header */}
-                    <View style={styles.tableRow}>
-                        <Text style={[styles.tableHeader, { width: '20%' }]}>Date</Text>
-                        <Text style={[styles.tableHeader, { width: '40%' }]}>Particular</Text>
-                        <Text style={[styles.tableHeader, { width: '15%' }]}>Credit</Text>
-                        <Text style={[styles.tableHeader, { width: '15%' }]}>Debit</Text>
-                        <Text style={[styles.tableHeader, { width: '10%' }]}>Closing</Text>
+                    {/* Header */}
+                    <View style={styles.header}>
+                        <Text>{data.header.headOffice}</Text>
+                        <Text style={styles.title}>{data.header.title}</Text>
+                        <Text>{data.header.original}</Text>
                     </View>
 
-                    {/* Table Rows */}
-                    {data.entries.map((entry, index) => (
-                        <View style={styles.tableRow} key={index}>
-                            <Text style={[styles.tableCell, { width: '20%' }]}>{entry.date}</Text>
-                            <Text style={[styles.tableCell, { width: '40%' }]}>{entry.particular}</Text>
-                            <Text style={[styles.tableCell, { width: '15%' }]}>{entry.credit}</Text>
-                            <Text style={[styles.tableCell, { width: '15%' }]}>{entry.debit}</Text>
-                            <Text style={[styles.tableCell, { width: '10%' }]}>{entry.closing}</Text>
+                    {/* Quote Details */}
+                    <View style={styles.flexb}>
+                        <View>
+                            <Text>M/s: <Text style={styles.boldText}>{data.recipient.name}</Text></Text>
+                            <Text>M: {data.recipient.contact}</Text>
+                            <Text>Subject: {data.subject}</Text>
                         </View>
+                        <View >
+                            <Text>Quote No: <Text style={styles.boldText}>{data.quoteDetails.quoteNo}</Text></Text>
+                            <Text>Quotation No: <Text style={styles.boldText}>{data.quoteDetails.quotationNo}</Text></Text>
+                            <Text>Date: <Text style={styles.boldText}>{data.quoteDetails.OrderDate}</Text></Text>
+                            <Text>Valid Till: <Text style={styles.boldText}>{data.quoteDetails.validTill}</Text></Text>
+                        </View>
+                    </View>
+
+                    {/* Table */}
+                    <View style={styles.table}>
+                        <View style={styles.tableRow}>
+                            <Text style={styles.tableHeader}>No.</Text>
+                            <Text style={styles.tableHeader}>Product</Text>
+                            <Text style={styles.tableHeader}>Qty</Text>
+                            <Text style={styles.tableHeader}>Unit</Text>
+                            <Text style={styles.tableHeader}>Rate</Text>
+                            <Text style={styles.tableHeader}>Amount</Text>
+                        </View>
+
+                        {data.items.map((item, index) => (
+                            <View style={styles.tableRow} key={index}>
+                                <Text style={styles.tableCol}>{item.no}</Text>
+                                <Text style={styles.tableCol}>{item.particular}</Text>
+                                <Text style={styles.tableCol}>{item.qty}</Text>
+                                <Text style={styles.tableCol}>{item.unit}</Text>
+                                <Text style={styles.tableCol}>{item.rate}</Text>
+                                <Text style={styles.tableCol}>{item.amount}</Text>
+                            </View>
+                        ))}
+
+                        {/* Total Row */}
+                        <View style={styles.totalRow}>
+                            <Text style={{ width: '80%' }}>Total Qty</Text>
+                            <Text style={{ width: '20%' }}></Text>
+                        </View>
+                        <View style={styles.totalRow}>
+                            <Text style={{ width: '80%' }}>Sub Total</Text>
+                            <Text style={{ width: '20%' }}>{data.totals.subTotal}</Text>
+                        </View>
+                        <View style={styles.totalRow}>
+                            <Text style={{ width: '80%' }}>Grand Total</Text>
+                            <Text style={{ width: '20%' }}>{data.totals.grandTotal}</Text>
+                        </View>
+                    </View>
+
+                    {/* Amount in Words */}
+                    <Text>Rupees: {data.rupees}</Text>
+
+                    {/* Notes Section */}
+                    <View style={styles.noteSection}>
+                        <Text>Narration: {data.notes}</Text>
+                    </View>
+
+                    {/* Terms & Conditions */}
+                    <Text>Terms & Condition:</Text>
+                    {data.terms.map((term, index) => (
+                        <Text key={index}>{term}</Text>
                     ))}
 
-                    {/* Table Footer */}
-                    <View style={styles.tableFooter}>
-                        <Text style={{ width: '60%' }}>Total:</Text>
-                        <Text style={{ width: '15%' }}>{data.totalCredit}</Text>
-                        <Text style={{ width: '15%' }}>{data.totalDebit}</Text>
-                        <Text style={{ width: '10%' }}></Text>
-                    </View>
+                    {/* Footer */}
+                    <Text style={styles.footer}>{data.header.headOffice}</Text>
+                    <Text style={styles.footer}>( Authorized Signatory )</Text>
                 </View>
-
-                {/* Closing Balance */}
-                <Text style={styles.closingBalance}>
-                    Closing Balance: {data.closingBalance} Cr
-                </Text>
             </Page>
         </Document>
     );
-};
+}
 
-export default AccountStatementPdf;
+export default PurchaseQuotationPdf;
