@@ -7,34 +7,33 @@ import CardParty from './suborder/card-party-pending';
 
 
 function PartyPending() {
+  const listTitleD = "Party Pending Order List"
   return (
-  
-  <div className='card'style={{marginTop: "10px", marginLeft: "4px", marginRight: "4px"}}>
-        <div className='table-responsive active-projects style-1' >
-      <h3 className='tbl-caption text-light'>
-      Party Pending Order
-
-    <div>
-        <Link className="btn btn-primary btn-sm" to="" role="button" aria-controls="offcanvasExample" aria-label="Import PDF" style={{ marginLeft: '8px' }}>
-          <FaFilePdf /> PDF
-        </Link>
-        <Link className="btn btn-primary btn-sm" to="" role="button" aria-controls="offcanvasExample" aria-label="Import JSON" style={{ marginLeft: '8px' }}>
-          <BiSolidFileJson /> JSON
-        </Link>
-        <Link className="btn btn-primary btn-sm" to="" role="button" aria-controls="offcanvasExample" aria-label="Import Excel" style={{ marginLeft: '8px' }}>
-          <FaFileExcel /> Excel
-        </Link>
+    <div className='card' >
+      <div className='table-responsive active-projects style-1' >
+        <h3 className='tbl-caption text-light'>
+          Party Pending Order
+          <div>
+            <Link className="btn btn-primary btn-sm" to="" role="button" aria-controls="offcanvasExample" aria-label="Import PDF" style={{ marginLeft: '8px' }}>
+              <FaFilePdf /> PDF
+            </Link>
+            <Link className="btn btn-primary btn-sm" to="" role="button" aria-controls="offcanvasExample" aria-label="Import JSON" style={{ marginLeft: '8px' }}>
+              <BiSolidFileJson /> JSON
+            </Link>
+            <Link className="btn btn-primary btn-sm" to="" role="button" aria-controls="offcanvasExample" aria-label="Import Excel" style={{ marginLeft: '8px' }}>
+              <FaFileExcel /> Excel
+            </Link>
+          </div>
+        </h3>
       </div>
-      </h3> </div>
-      <DateToDownline/>
-      <CardParty/>
-      
-      </div>
-      
-     
+      <DateToDownline />
+      <CardParty listTitleD={listTitleD} />
+    </div>
 
 
-)
+
+
+  )
 }
 
-export default PartyPending ;
+export default PartyPending;
