@@ -1,5 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Breadcrumbs from "../../../../../common/breadcrumb/Breadcrumbs";
+import { getAccAddProjectByPage, getAllAccountData, getAllMistryData, getAllProductsData, getAllRatesheetData, getAllSalesmanData, getAllSubjectData, getAllTaxTypeData, getAllTransportersData, getAttTaxTypeData, getPickupByPage, getQuotationMasterById, getQuoteNo, getTaxtype, postquotationMaster, updateQuotationMaster } from "../../../../../api/login/Login";
+import { toast, ToastContainer } from "react-toastify";
+import Loadar from "../../../../../common/loader/Loader";
+import { useParams } from "react-router-dom";
+
 
 
 const QuatationAdd = () => {
@@ -10,12 +15,34 @@ const QuatationAdd = () => {
         title_3: `Add Quotation`,
         path_2: ``
     };
+    const [allAccounts, setAllAccounts] = useState();
+    const [allTaxes, setAllTaxes] = useState();
+    const [allTransports, setAllTransports] = useState();
+    const [allProducts, setAllProducts] = useState();
+    const [allPickupPoints, setAllPickupPoints] = useState();
+    const [allQuoteNo, setAllQuoteNo] = useState();
+    const [allSubjectD, setAllSubjectD] = useState();
+    const [allRatesheetD, setAllRatesheetD] = useState();
+    const [allSalesmanD, setAllSalesmanD] = useState();
+    const [allMistryD, setAllMistryD] = useState();
+
+    const params = useParams();
 
     const [formData, setFormData] = useState({
-        voucher: '',
         date: '',
-        voucherAmount: '',
-        taxType: ''
+        account: '',
+        order_no: '',
+        transporter: '673843f385dbbfa354004862',
+        prj_id: '',
+        tax_type: '',
+        quote_no: '',
+        quotation_no: '',
+        subject: '',
+        ratesheet: '',
+        salesman: '',
+        mistry: '',
+        narration: '',
+        valid_till: '',
     });
 
     // State for dynamic expense and taxes data
@@ -51,130 +78,422 @@ const QuatationAdd = () => {
         }
     };
 
-
-    ////////
     const [rows, setRows] = useState([
-        { id: 1, item: '', Tax: 0, Quantity2: '', Quantity: 0, RateTax: '', DiscRs: '', Rate: 0, DiscType: '', Amount: 0 },
-        { id: 2, item: '', Tax: 0, Quantity2: '', Quantity: 0, RateTax: '', DiscRs: '', Rate: 0, DiscType: '', Amount: 0 },
-        { id: 3, item: '', Tax: 0, Quantity2: '', Quantity: 0, RateTax: '', DiscRs: '', Rate: 0, DiscType: '', Amount: 0 },
-        { id: 4, item: '', Tax: 0, Quantity2: '', Quantity: 0, RateTax: '', DiscRs: '', Rate: 0, DiscType: '', Amount: 0 },
+        { id: 1, item: '', variant: '', sku: "", Tax: 0, pickupPoint: '', quantity2: '', quantity: 0, rate: 0, disc_rs: '', disc_type: '', amount: 0 },
     ]);
+    const handleDeleteRow = (index) => {
+        const updatedRows = rows.filter((_, i) => i !== index);
+        setRows(updatedRows);
+    };
+    const handleAddRow = () => {
+        setRows([
+            ...rows,
+            { id: rows.length + 1, item: '', variant: '', sku: "", Tax: 0, pickupPoint: '', quantity2: '', quantity: 0, rate: 0, disc_rs: '', disc_type: '', amount: 0 },
+        ]);
+    };
 
-    // Function to handle value changes in the input fields
-    const handleChange = (index, key, value) => {
-        const updatedRows = rows.map((row, i) =>
-            i === index ? { ...row, [key]: value } : row
-        );
+    const handleChange = (index, key, value, varArr) => {
+        if (key === "item") {
+            const variantItem = allProducts?.find((item) => item?._id?.uid === value);
+            const updatedRows = rows.map((row, i) =>
+                i === index
+                    ? {
+                        ...row,
+                        product_id: value,
+                        variant: '',
+                        variantArr: variantItem?.product?.variations,
+                    }
+                    : row
+            );
+            setRows(updatedRows);
+            return;
+        }
+
+        if (key === "variant") {
+            const skuD = varArr?.find((item) => item?._id === value);
+            const updatedRows = rows.map((row, i) =>
+                i === index
+                    ? {
+                        ...row,
+                        variant_id: value,
+                        sku: skuD?.sku,
+                    }
+                    : row
+            );
+            setRows(updatedRows);
+            return;
+        }
+
+        const updatedRows = rows.map((row, i) => {
+            if (i === index) {
+                const updatedRow = { ...row, [key]: value };
+
+                // Perform calculations for Amount based on Quantity, Quantity2, Rate, Discount, etc.
+                const totalQuantity = parseFloat(updatedRow.quantity || 0) + parseFloat(updatedRow.quantity2 || 0);
+                const rate = parseFloat(updatedRow.rate || 0);
+                let discount = 0;
+
+                if (updatedRow.disc_type === "Fixed") {
+                    discount = parseFloat(updatedRow.disc_rs || 0);
+                } else if (updatedRow.disc_type === "per") {
+                    discount = (parseFloat(updatedRow.disc_rs || 0) / 100) * (rate * totalQuantity);
+                }
+
+                // Calculate Amount
+                const amount = (rate * totalQuantity) - discount;
+                updatedRow.amount = amount > 0 ? amount.toFixed(2) : 0;
+                return updatedRow;
+            }
+            return row;
+        });
+
         setRows(updatedRows);
     };
 
-    // Function to render each row of the table
     const renderRow = (row, index) => (
         <tr key={row.id}>
-            {/* Cr/Db Select */}
             <td>
                 <select
-                    value={row.item}
+                    value={row.product_id}
                     onChange={(e) => handleChange(index, 'item', e.target.value)}
                 >
-                    <option value="">Select</option>
-                    <option value="Cr">Cr</option>
-                    <option value="Db">Db</option>
+                    <option value="">Select Product</option>
+                    {allProducts?.map((item, i) => (
+                        <option key={i} value={item?._id?.uid}>
+                            {/* {item?._id?.uid} */}
+                            {item?.product?.name}
+                        </option>
+                    ))}
                 </select>
             </td>
-
-            {/* Account Name Select */}
             <td>
+                <select
+                    value={row.variant_id}
+                    name="variant_id"
+                    onChange={(e) => handleChange(index, 'variant', e.target.value, row.variantArr)}
+                >
+                    <option value="">Select Variant</option>
+                    {row?.variantArr?.map((item, i) => (
+                        <option key={i} value={item?.uid}>
+                            {item?.weight}
+                        </option>
+                    ))}
+                </select>
+            </td>
+            <td>
+                <input
+                    type="text"
+                    // disabled
+                    value={row.sku}
+                    onChange={(e) => handleChange(index, 'sku', e.target.value)}
+                />
+            </td>
+            {/* <td>
                 <input
                     type="number"
                     value={row.Tax}
                     onChange={(e) => handleChange(index, 'Tax', e.target.value)}
                 />
-            </td>
+            </td> */}
             <td>
-                <input
-                    type="number"
-                    value={row.Quantity2}
-                    onChange={(e) => handleChange(index, 'Quantity2', e.target.value)}
-                />
-            </td>
-
-            {/* HSNCode Input */}
-            <td>
-                <input
-                    type="number"
-                    value={row.Quantity}
-                    onChange={(e) => handleChange(index, 'Quantity', e.target.value)}
-                />
-            </td>
-
-            <td>
-                <input
-                    type="number"
-                    value={row.Rate}
-                    onChange={(e) => handleChange(index, 'Rate', e.target.value)}
-                />
-            </td>
+                <select
+                    value={row.tax}
+                    onChange={(e) => handleChange(index, 'tax', e.target.value)}
+                >
+                    <option value="">Select Tax Type</option>
+                    {allTaxes && allTaxes?.map((item, i) => {
+                        return <option value={item?._id}>{item?.name}</option>
+                    })}
 
 
-            {/* Amount Input */}
-            <td>
-                <input
-                    type="number"
-                    value={row.RateTax}
-                    onChange={(e) => handleChange(index, 'RateTax', e.target.value)}
-                />
-            </td>
-            <td>
-                <input
-                    type="number"
-                    value={row.DiscRs}
-                    onChange={(e) => handleChange(index, 'DiscRs', e.target.value)}
-                />
+                </select>
             </td>
             <td>
                 <select
-                    value={row.DiscType}
-                    onChange={(e) => handleChange(index, 'DiscType', e.target.value)}
+                    value={row.location}
+                    onChange={(e) => handleChange(index, 'location', e.target.value)}
                 >
-                    <option value="">Select</option>
-                    <option value="Cr">Cr</option>
-                    <option value="Db">Db</option>
+                    <option value="">Select PickupPoint</option>
+                    {allPickupPoints?.map((item, i) => (
+                        <option key={i} value={item?._id}>
+                            {item?.pickupPoint_name}
+                        </option>
+                    ))}
                 </select>
             </td>
             <td>
                 <input
                     type="number"
-                    value={row.Amount}
-                    onChange={(e) => handleChange(index, 'Amount', e.target.value)}
+                    value={row.quantity2}
+                    onChange={(e) => handleChange(index, 'quantity2', e.target.value)}
                 />
             </td>
+            <td>
+                <input
+                    type="number"
+                    value={row.quantity}
+                    onChange={(e) => handleChange(index, 'quantity', e.target.value)}
+                />
+            </td>
+            <td>
+                <input
+                    type="number"
+                    value={row.rate}
+                    onChange={(e) => handleChange(index, 'rate', e.target.value)}
+                />
+            </td>
+            <td>
+                <input
+                    type="number"
+                    value={row.disc_rs}
+                    onChange={(e) => handleChange(index, 'disc_rs', e.target.value)}
+                />
+            </td>
+            <td>
+                <select
+                    value={row.disc_type}
+                    onChange={(e) => handleChange(index, 'disc_type', e.target.value)}
+                >
+                    <option value="">Select Disc Type</option>
+                    <option value="Fixed">Fixed</option>
+                    <option value="per">Per</option>
+                    <option value="Quantity">Quantity</option>
 
-            {/* Delete Button */}
+                </select>
+            </td>
+            <td>
+                <input type="number" value={row.amount} disabled />
+            </td>
             <td>
                 <button onClick={() => handleDeleteRow(index)}>🗑️</button>
             </td>
         </tr>
     );
 
-    // Function to handle row deletion
-    const handleDeleteRow = (index) => {
-        const updatedRows = rows.filter((_, i) => i !== index);
-        setRows(updatedRows);
+    const getAllAccount = async () => {
+        try {
+            const res = await getAllAccountData();
+            setAllAccounts(res?.data?.voucher)
+        } catch (error) {
+
+        }
     };
 
-    // Function to add a new row
-    const handleAddRow = () => {
-        setRows([
-            ...rows,
-            { id: rows.length + 1, ExpenseAc: '', Product: '', HSNCode: 0, Commodity: 0, Amount: 0 },
-        ]);
+    const getAllTaxType = async () => {
+        try {
+            const res = await getAllTaxTypeData();
+            setAllTaxes(res?.data)
+        } catch (error) {
+
+        }
+    };
+    const getAllTransporters = async () => {
+        try {
+            const res = await getAllTransportersData();
+            setAllTransports(res?.data)
+        } catch (error) {
+
+        }
+    };
+    const getAllProducts = async () => {
+        try {
+            const res = await getAllProductsData();
+            console.log('Products---', res)
+            setAllProducts(res)
+        } catch (error) {
+
+        }
+    };
+    const getAllPickupPoints = async () => {
+        try {
+            const res = await getPickupByPage();
+            setAllPickupPoints(res.data)
+        } catch (error) {
+
+        }
+    };
+    const getAllQuoteNo = async () => {
+        try {
+            const res = await getQuoteNo();
+            console.log('quoteNo----', res?.data?.data)
+            setAllQuoteNo(res?.data?.data)
+        } catch (error) {
+
+        }
+    };
+    const getAllSubject = async () => {
+        try {
+            const res = await getAllSubjectData();
+            console.log('subject----', res?.data?.data)
+            setAllSubjectD(res?.data?.data)
+        } catch (error) {
+
+        }
+    };
+    const getAllRatesheet = async () => {
+        try {
+            const res = await getAllRatesheetData();
+            console.log('ratesheet----', res?.data?.data)
+            setAllRatesheetD(res?.data?.data)
+        } catch (error) {
+
+        }
+    };
+    const getAllSalesman = async () => {
+        try {
+            const res = await getAllSalesmanData();
+            console.log('salesman----', res?.data?.data)
+            setAllSalesmanD(res?.data?.data)
+        } catch (error) {
+
+        }
+    };
+    const getAllMistry = async () => {
+        try {
+            const res = await getAllMistryData();
+            console.log('mistry----', res?.data?.data)
+            setAllMistryD(res?.data?.data)
+        } catch (error) {
+
+        }
     };
 
 
+
+    const [peoject, setProjects] = useState()
+    const getAllProject = async () => {
+        try {
+            const res = await getAccAddProjectByPage(0, 200, '67444e0fcd1dc218d6090ddc');
+            setProjects(res.data)
+        } catch (error) {
+
+        }
+    };
+
+    useEffect(() => {
+        getAllAccount();
+        getAllTaxType();
+        getAllTransporters();
+        getAllProject();
+        getAllProducts();
+        getAllPickupPoints();
+        getAllQuoteNo();
+        getAllSubject();
+        getAllRatesheet();
+        getAllSalesman();
+        getAllMistry();
+    }, []);
+    const toastSuccessMessage = (message) => {
+        toast.success(`${message}`, {
+            position: "top-right",
+        });
+    };
+    const toastErrorMessage = (message) => {
+        toast.error(`${message}`, {
+            position: "top-right",
+        });
+    };
+    const [load, setLoad] = useState(false)
+
+
+
+    const getByIdData = async () => {
+        try {
+            const res = await getQuotationMasterById(params?.id);
+            const formattedDate = res?.data?.date.split("T")[0];
+            const formatteValidTill = res?.data?.valid_till.split("T")[0];
+            setFormData({
+                date: formattedDate,
+                account: res?.data?.account,
+                order_no: res?.data?.order_no,
+                transporter: res?.data?.transporter,
+                prj_id: res?.data?.prj_id,
+                tax_type: res?.data?.tax_type,
+                order_no: res?.data?.order_no,
+                quotation_no: res?.data?.quotation_no,
+                subject: res?.data?.subject,
+                ratesheet: res?.data?.ratesheet,
+                salesman: res?.data?.salesman,
+                mistry: res?.data?.mistry,
+                narration: res?.data?.narration,
+                valid_till: formatteValidTill,
+            });
+            setRows(res?.data?.products)
+            console.log('ChallanReturnBy ID------', res?.data)
+        } catch (error) {
+
+        }
+    };
+
+    useEffect(() => {
+        getByIdData();
+    }, [params?.id])
+
+    const handleSubmitData = async () => {
+        setLoad(true)
+        const produ = rows.map((item) => {
+            return {
+                product_id: item.product_id,
+                variant_id: item.variant_id,
+                sku: item.sku,
+                tax: item.tax,
+                location: item.location,
+                quantity2: item.quantity2,
+                quantity: item.quantity,
+                rate: item.rate,
+                rate: item.rate,
+                disc_rs: item.disc_rs,
+                disc_type: item.disc_type,
+                amount: item.amount,
+            }
+        })
+        let Quantity = 0
+        produ.forEach(element => {
+            Quantity = Quantity + +element.quantity
+
+        });
+        let Product_amount = 0
+        produ.forEach(element => {
+            Product_amount = Product_amount + +element.amount
+
+        });
+        const obj = { ...formData, products: produ, total_items: produ.length, quantity: Quantity, product_amount: Product_amount }
+        // console.log("obj----", obj)
+
+        if (params?.id) {
+            const payload = { id: params?.id, data: obj }
+            try {
+                const res = await updateQuotationMaster(payload)
+                if (res?.statusCode == '200') {
+                    setLoad(false)
+                    toastSuccessMessage(" Updated successfully");
+                } else {
+                    toastErrorMessage("Not Updated")
+                }
+            } catch (error) {
+                toastErrorMessage("Not Updated")
+            }
+            setLoad(false)
+        } else {
+            try {
+                const res = await postquotationMaster(obj)
+                if (res?.statusCode == '200') {
+                    setLoad(false)
+                    toastSuccessMessage(" Added successfully");
+                } else {
+                    toastErrorMessage("Not Added")
+                }
+            } catch (error) {
+                toastErrorMessage("Not Added")
+            }
+            setLoad(false)
+        }
+
+
+    };
     /////
     return (
-        <>
+        <> <ToastContainer />
             <Breadcrumbs
                 breadCrumbsTitle={breadCrumbsTitle} />
             <div className="row m-4">
@@ -183,7 +502,7 @@ const QuatationAdd = () => {
                         <div className="card-body p-0">
                             <div className="table-responsive active-projects style-1">
                                 <div className="tbl-caption tbl-caption-2">
-                                    <h4 className="heading mb-0">Add Quotation</h4>
+                                    <h4 className="heading mb-0 p-2">Add Quotation</h4>
                                 </div>
                                 <div className="row">
                                     <div className="col-md-3 mb-3">
@@ -191,145 +510,194 @@ const QuatationAdd = () => {
                                         <input
                                             type="date"
                                             className="form-control"
-                                            name="voucher"
-                                            value={formData.voucher}
+                                            name="date"
+                                            value={formData.date}
                                             onChange={handleInputChange}
-                                            placeholder="Enter Voucher"
+                                            placeholder="Enter Date"
                                         />
                                     </div>
 
                                     <div className="col-md-3 mb-3">
-                                        <label htmlFor="taxType">Contac</label>
+                                        <label htmlFor="account">Account</label>
                                         <select
                                             className="form-control"
-                                            name="taxType"
-
+                                            name="account"
+                                            value={formData.account}
+                                            onChange={handleInputChange}
                                         >
-                                            <option value="">Select Tax Type</option>
-                                            <option value="GST 5%">GST 5%</option>
-                                            <option value="GST 12%">GST 12%</option>
-                                            <option value="GST MULTIPLE">GST MULTIPLE</option>
+                                            <option value="">Select Account</option>
+                                            {allAccounts && allAccounts?.map((item, i) => {
+                                                return <option value={item?._id}>{item?.name}</option>
+                                            })}
                                         </select>
                                     </div>
 
                                     <div className="col-md-3 mb-3">
-                                        <label htmlFor="taxType">Account</label>
-                                        <select
+                                        <label htmlFor="taxType">Order No</label>
+                                        <input
+                                            type="number"
                                             className="form-control"
-                                            name="taxType"
-
-                                        >
-                                            <option value="">Select Tax Type</option>
-                                            <option value="GST 5%">GST 5%</option>
-                                            <option value="GST 12%">GST 12%</option>
-                                            <option value="GST MULTIPLE">GST MULTIPLE</option>
-                                        </select>
-                                    </div>
-
-                                    <div className="col-md-3 mb-3">
-                                        <label htmlFor="taxType">Quote No</label>
-                                        <select
-                                            className="form-control"
-                                            name="taxType"
-
-                                        >
-                                            <option value="">Select Tax Type</option>
-                                            <option value="GST 5%">GST 5%</option>
-                                            <option value="GST 12%">GST 12%</option>
-                                            <option value="GST MULTIPLE">GST MULTIPLE</option>
-                                        </select>
+                                            name="order_no"
+                                            value={formData?.order_no}
+                                            onChange={handleInputChange}
+                                            placeholder="Enter Order No"
+                                        />
                                     </div>
 
                                     <div className="col-md-3 mb-3">
                                         <label htmlFor="taxType">Tax Type </label>
                                         <select
                                             className="form-control"
-                                            name="taxType"
-                                            value={formData.taxType}
+                                            name="tax_type"
+                                            value={formData.tax_type}
                                             onChange={handleInputChange}
                                         >
                                             <option value="">Select Tax Type</option>
-                                            <option value="GST 5%">GST 5%</option>
-                                            <option value="GST 12%">GST 12%</option>
-                                            <option value="GST MULTIPLE">GST MULTIPLE</option>
+                                            {allTaxes && allTaxes?.map((item, i) => {
+                                                return <option value={item?._id}>{item?.name}</option>
+                                            })}
+                                        </select>
+                                    </div>
+
+                                    <div className="col-md-3 mb-3">
+                                        <label htmlFor="taxType">Transporter</label>
+                                        <select
+                                            className="form-control"
+                                            name="transporter"
+                                            value={formData.transporter}
+                                            onChange={handleInputChange}
+                                        >
+                                            <option value="">Select Transporter</option>
+                                            {allTransports && allTransports?.map((item, i) => {
+                                                return <option value={item?._id}>{item?.name}</option>
+                                            })}
                                         </select>
                                     </div>
                                     <div className="col-md-3 mb-3">
-                                        <label htmlFor="taxType">Valid Till  </label>
+                                        <label htmlFor="taxType">Project</label>
+                                        <select
+                                            className="form-control"
+                                            name="prj_id"
+                                            value={formData.prj_id}
+                                            onChange={handleInputChange}
+                                        >
+                                            <option value="">Select Project</option>
+                                            {peoject && peoject?.map((item, i) => {
+                                                return <option value={item?._id}>{item?.project_name}</option>
+                                            })}
+                                        </select>
+                                    </div>
+
+
+
+                                    <div className="col-md-3 mb-3">
+                                        <label htmlFor="taxType">Quote No</label>
+                                        <select
+                                            className="form-control"
+                                            name="quote_no"
+                                            value={formData.quote_no}
+                                            onChange={handleInputChange}
+                                        >
+                                            <option value="">Select Quote No</option>
+                                            {allQuoteNo && allQuoteNo?.map((item, i) => {
+                                                return <option value={item?._id}>{item?.prefix}</option>
+                                            })}
+                                        </select>
+                                    </div>
+
+                                    <div className="col-md-3 mb-3">
+                                        <label htmlFor="taxType">Quotation No</label>
+                                        <input
+                                            type="number"
+                                            className="form-control"
+                                            name="quotation_no"
+                                            value={formData.quotation_no}
+                                            onChange={handleInputChange}
+                                            placeholder="Enter Quotation No"
+                                        />
+                                    </div>
+                                    <div className="col-md-3 mb-3">
+                                        <label htmlFor="voucher">Valid Till </label>
                                         <input
                                             type="date"
                                             className="form-control"
-                                            name="voucherAmount"
-
-                                            placeholder="Enter Org Bill No:"
+                                            name="valid_till"
+                                            value={formData?.valid_till}
+                                            onChange={handleInputChange}
+                                            placeholder="Enter valid_till"
                                         />
                                     </div>
-
-
                                     <div className="col-md-3 mb-3">
-                                        <label htmlFor="taxType">Subject : </label>
+                                        <label htmlFor="taxType">Subject</label>
                                         <select
                                             className="form-control"
-                                            name="taxType"
-
+                                            name="subject"
+                                            value={formData.subject}
+                                            onChange={handleInputChange}
                                         >
-                                            <option value="">Select Tax Type</option>
-                                            <option value="GST 5%">GST 5%</option>
-                                            <option value="GST 12%">GST 12%</option>
-                                            <option value="GST MULTIPLE">GST MULTIPLE</option>
+                                            <option value="">Select Subject</option>
+                                            {allSubjectD && allSubjectD?.map((item, i) => {
+                                                return <option value={item?._id}>{item?.subject_name}</option>
+                                            })}
                                         </select>
                                     </div>
                                     <div className="col-md-3 mb-3">
-                                        <label htmlFor="taxType">Rate Sheet : </label>
+                                        <label htmlFor="taxType">Rate Sheet</label>
                                         <select
                                             className="form-control"
-                                            name="taxType"
-
+                                            name="ratesheet"
+                                            value={formData.ratesheet}
+                                            onChange={handleInputChange}
                                         >
-                                            <option value="">Select Tax Type</option>
-                                            <option value="GST 5%">GST 5%</option>
-                                            <option value="GST 12%">GST 12%</option>
-                                            <option value="GST MULTIPLE">GST MULTIPLE</option>
+                                            <option value="">Select ratesheet</option>
+                                            {allRatesheetD && allRatesheetD?.map((item, i) => {
+                                                return <option value={item?._id}>{item?.name}</option>
+                                            })}
                                         </select>
                                     </div>
                                     <div className="col-md-3 mb-3">
-                                        <label htmlFor="taxType">Salesman :</label>
+                                        <label htmlFor="taxType">Salesman</label>
                                         <select
                                             className="form-control"
-                                            name="taxType"
+                                            name="salesman"
+                                            value={formData.salesman}
+                                            onChange={handleInputChange}
                                         >
-                                            <option value="">Select Tax Type</option>
-                                            <option value="GST 5%">GST 5%</option>
-                                            <option value="GST 12%">GST 12%</option>
-                                            <option value="GST MULTIPLE">GST MULTIPLE</option>
+                                            <option value="">Select salesman</option>
+                                            {allSalesmanD && allSalesmanD?.map((item, i) => {
+                                                return <option value={item?._id}>{item?.name}</option>
+                                            })}
                                         </select>
                                     </div>
                                     <div className="col-md-3 mb-3">
-                                        <label htmlFor="taxType">Mistry : </label>
+                                        <label htmlFor="taxType">Mistry</label>
                                         <select
                                             className="form-control"
-                                            name="taxType"
-
+                                            name="mistry"
+                                            value={formData.mistry}
+                                            onChange={handleInputChange}
                                         >
-                                            <option value="">Select Tax Type</option>
-                                            <option value="GST 5%">GST 5%</option>
-                                            <option value="GST 12%">GST 12%</option>
-                                            <option value="GST MULTIPLE">GST MULTIPLE</option>
+                                            <option value="">Select Mistry</option>
+                                            {allMistryD && allMistryD?.map((item, i) => {
+                                                return <option value={item?._id}>{item?.mistry_name}</option>
+                                            })}
                                         </select>
                                     </div>
 
                                 </div>
 
-                                <div className="col-lg-12">
-                                    <table border="1" cellPadding="10">
+                                <div className="col-lg-12" style={{ overflow: "auto" }}>
+                                    <table border="1" cellPadding="10" >
                                         <thead>
                                             <tr>
-                                                <th>	Item</th>
+                                                <th>Item</th>
+                                                <th>Variants</th>
+                                                <th>SKU</th>
                                                 <th>Tax %</th>
+                                                <th>Location</th>
                                                 <th>Quantity2</th>
                                                 <th>Quantity</th>
                                                 <th>Rate</th>
-                                                <th>Rate + Tax</th>
                                                 <th>Disc.(Rs.)</th>
                                                 <th>Disc Type</th>
                                                 <th>Amount</th>
@@ -340,7 +708,7 @@ const QuatationAdd = () => {
                                             {rows.map((row, index) => renderRow(row, index))}
                                         </tbody>
                                     </table>
-                                    {/* <button type="button" onClick={handleAddRow}>Add Row</button>    */}
+                                    <button type="button" onClick={handleAddRow}>Add Row</button>
                                 </div>
 
 
@@ -375,12 +743,19 @@ const QuatationAdd = () => {
                                         </tbody>
                                     </table>
                                 </div>
-
+                                <div className="col-lg-12">
+                                    <label htmlFor="taxType">Narration</label>
+                                    <textarea name="narration" id="" cols={180} value={formData.narration}
+                                        onChange={handleInputChange}></textarea>
+                                </div>
                                 {/* Total Amount */}
                                 <div className="mt-3">
                                     <h4>
                                         Total Amount: {expenses.reduce((total, expense) => total + expense.amount, 0)}
                                     </h4>
+                                </div>
+                                <div className="col-lg-12 text-center">
+                                    <button type="button" className="btn btn-primary" onClick={handleSubmitData}>{params?.id ? "Update" : "Save"}</button>
                                 </div>
                             </div>
                         </div>

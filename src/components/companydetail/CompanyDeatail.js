@@ -4,13 +4,10 @@ import { toast, ToastContainer } from 'react-toastify';
 import Loadar from '../../common/loader/Loader';
 import { baseUrlImage } from '../../baseUrl';
 
-const CompanyDetail = ({ handleFileChange, formValues, setFormValues }) => {
+const CompanyDetail = ({ handleFileChange, formValues, setFormValues ,initialValues}) => {
     const [errors, setErrors] = useState({});
     const [loader, setLoader] = useState(false);
     const params = useParams();
-
-    console.log(formValues);
-
 
     const toastSuccessMessage = () => {
         toast.success(`${params?.id ? 'Update' : 'Add'} Company Successfully.`, {
@@ -26,7 +23,7 @@ const CompanyDetail = ({ handleFileChange, formValues, setFormValues }) => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormValues({ ...formValues, [name]: value });
+        setFormValues({ ...formValues, ...initialValues,[name]: value });
     };
 
 

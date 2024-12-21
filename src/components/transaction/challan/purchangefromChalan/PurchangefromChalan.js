@@ -1,9 +1,10 @@
-import { Pagination } from "antd";
+import { message, Pagination, Popconfirm } from "antd";
 import Breadcrumbs from "../../../../common/breadcrumb/Breadcrumbs";
 import { Link } from "react-router-dom";
 import { PDFViewer } from "@react-pdf/renderer";
 import PdfBanks from "../pdfBank/PdfBanks";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { deleteChallans, deletepostPurchFromQuat, getAllPurchaseChallanData, getpostPurchFromQuatData } from "../../../../api/login/Login";
 
 export const PurchangefromChalan = () => {
     const breadCrumbsTitle = {
@@ -18,6 +19,57 @@ export const PurchangefromChalan = () => {
     const pdfGenerateDefault = () => {
         setPdf(!pdf)
     }
+
+    const [data, setData] = useState()
+    const [loading, setLoading] = useState(false);
+    const [count, setCount] = useState(10)
+    const [page, setPage] = useState(0)
+    const [totalCount, setTotalCount] = useState()
+
+    const getFloorMasters = async (page) => {
+
+        setLoading(true)
+        try {
+            const res = await getAllPurchaseChallanData(page, count)
+            setTotalCount(res?.totalCount)
+            setData(res?.data)
+            setPage(page)
+        } catch (error) {
+
+        }
+        setLoading(false)
+    }
+    // add Area
+    const onChangeVal = (e) => {
+        // console.log(e);
+        getFloorMasters(e - 1)
+
+    };
+    const deleteBlockAdd = async (id) => {
+        setLoading(true)
+        try {
+            await deleteChallans(id)
+            let backList = totalCount % 11 === 0 ? page - 1 : page
+            getFloorMasters(backList)
+        } catch (error) {
+            // toastSuccessMessage(error.message)
+        }
+        setLoading(false)
+    }
+
+    const confirm = (id) => {
+        console.log(id);
+        deleteBlockAdd(id)
+        message.success('Delete Successfull!');
+
+    };
+    const cancel = (e) => {
+        // console.log(e);
+        message.error('Cancle Successfull!');
+    };
+    useEffect(() => {
+        getFloorMasters(page)
+    }, [])
     return (
         <>
             <Breadcrumbs
@@ -44,45 +96,57 @@ export const PurchangefromChalan = () => {
                                 <table id="empoloyees-tblwrapper" className="table dataTable no-footer" role="grid" aria-describedby="empoloyees-tblwrapper_info">
                                     <thead>
                                         <tr role="row">
-                                            <th style={{ width: '150px' }}>A</th>
+                                            <th style={{ width: '150px' }}>#</th>
                                             <th style={{ width: '150px' }}>Date</th>
-                                            <th style={{ width: '150px' }}>No</th>
+                                            <th style={{ width: '150px' }}>barcode
+                                            </th>
                                             <th style={{ width: '150px' }}>Account Name</th>
                                             <th style={{ width: '150px' }}>Amount</th>
+                                            <th style={{ width: '150px' }}>Lr no</th>
                                             <th style={{ width: '150px' }}>Created By</th>
-                                            <th style={{ width: '150px' }}>Action</th>
+                                            {/* <th style={{ width: '150px' }}>Action</th> */}
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr role="row" className="odd" >
-                                            <td >
-                                                ----
-                                            </td>
-                                            <td >
-                                                ----
-                                            </td>
-                                            <td >
-                                                ----
-                                            </td>
-                                            <td >
-                                                ----
-                                            </td>
-                                            <td >
-                                                ----
-                                            </td>
-                                            <td >
-                                                ----
-                                            </td>
-                                            <td >
-                                                <button className="btn btn-sm btn-success ms-2" onClick={pdfGenerateDefault}>Print PDF</button>
-                                            </td>
-                                        </tr>
+                                        {data && data?.map((item, i) => {
+                                            return <tr role="row" className="odd" >
+                                                <td>{i + 1}</td>
+                                                <td>{item?.date}</td>
+                                                <td>{item?.barcode
+                                                }</td>
+                                                <td> --</td>
+                                                <td>{item?.product_amount}</td>
+                                                <td>{item?.lr_no}</td>
+                                                <td>{item?.createdBy?.name}</td>
+                                                {/* <td>{item?.createdBy?.name}</td> */}
+                                                {/* <td>
+                                                    <button className="btn btn-sm btn-success ms-2" onClick={() => { pdfGenerateDefault(item) }}>Print PDF</button>
+                                                    <div className="d-flex">
+                                                        <Link to={`/purchaseorder/edit/${item?._id}`} className="btn btn-primary shadow btn-xs sharp me-1">
+                                                            <i className="fa fa-pencil" />
+                                                        </Link>
+                                                        <Popconfirm
+                                                            title="Delete !"
+                                                            description="Are you sure to delete?"
+                                                            onConfirm={() => confirm(item?._id)}
+                                                            onCancel={cancel}
+                                                            okText="Yes"
+                                                            cancelText="No"
+                                                        >
+                                                            <Link to="#" className="btn btn-danger shadow btn-xs sharp">
+                                                                <i className="fa fa-trash" />
+                                                            </Link>
+                                                        </Popconfirm>
+                                                    </div>
+                                                </td> */}
+                                            </tr>
+                                        })}
                                     </tbody>
                                 </table>
                                 {pdf && <div className="pdfcs">
                                     <div className="loader-overlay">
                                         <PDFViewer style={{ width: '100%', height: '100vh' }}>
-                                            <PdfBanks title='Purchase From Order'/>
+                                            <PdfBanks title='Purchase From Order' />
                                         </PDFViewer>
                                     </div>
 

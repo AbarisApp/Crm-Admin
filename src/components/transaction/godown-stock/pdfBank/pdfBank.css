@@ -1,0 +1,50 @@
+.containers {
+    width: 80%;
+    margin: 20px auto;
+    border: 1px solid #000;
+    padding: 20px;
+    font-size: 14px;
+}
+
+.header,
+.footer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.header .title {
+    font-weight: bold;
+    font-size: 18px;
+    text-align: center;
+}
+
+.content {
+    margin: 20px 0;
+}
+
+.content p {
+    margin: 5px 0;
+}
+
+.note {
+    margin-top: 20px;
+}
+
+.signature {
+    text-align: right;
+    font-style: italic;
+}
+
+.bank-details,
+.amount-section {
+    display: flex;
+    justify-content: space-between;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.underline {
+    text-decoration: underline;
+}

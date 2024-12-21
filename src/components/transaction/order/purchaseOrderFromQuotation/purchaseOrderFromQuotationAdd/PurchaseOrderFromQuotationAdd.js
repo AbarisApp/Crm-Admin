@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Breadcrumbs from "../../../../../common/breadcrumb/Breadcrumbs";
-import { getAccAddProjectByPage, getAllAccountData, getAllLocationsData, getAllPickupPointsData, getAllProductsData, getAllTaxTypeData, getAllTransportersData, getAttTaxTypeData, getbyIdPurchase, getPickupByPage, getTaxtype, postPurchase, updatePurchase } from "../../../../../api/login/Login";
+import { getAccAddProjectByPage, getAllAccountData, getAllLocationsData, getAllPickupPointsData, getAllProductsData, getAllTaxTypeData, getAllTransportersData, getAttTaxTypeData, getbyIdpostPurchFromQuat, getbyIdPurchase, getPickupByPage, getTaxtype, postPurchase, postPurchFromQuat, updatepostPurchFromQuat, updatePurchase } from "../../../../../api/login/Login";
 import { toast, ToastContainer } from "react-toastify";
 import Loadar from "../../../../../common/loader/Loader";
 import { useParams } from "react-router-dom";
@@ -11,7 +11,7 @@ const PurchaseOrderFromQuotationAdd = () => {
         id: "1",
         title_1: "Transaction",
         title_2: 'Order',
-        title_3: `Add Purchase Order`,
+        title_3: `Add Purchase Order From Quotation`,
         path_2: ``
     };
 
@@ -33,7 +33,7 @@ const PurchaseOrderFromQuotationAdd = () => {
     const parem = useParams()
     const getEditData = async () => {
         try {
-            const res = await getbyIdPurchase(parem.id)
+            const res = await getbyIdpostPurchFromQuat(parem.id)
             console.log(res);
             setFormData({
                 date: res.data?.date,
@@ -209,6 +209,22 @@ const PurchaseOrderFromQuotationAdd = () => {
                     onChange={(e) => handleChange(index, 'sku', e.target.value)}
                 />
             </td>
+            <td>
+                <input
+                    type="number"
+                    // disabled
+                    value={row.size_of_case}
+                    onChange={(e) => handleChange(index, 'size_of_case', e.target.value)}
+                />
+            </td>
+            <td>
+                <input
+                    type="number"
+                    // disabled
+                    value={row.case_qty}
+                    onChange={(e) => handleChange(index, 'case_qty', e.target.value)}
+                />
+            </td>
             {/* <td>
                 <input
                     type="number"
@@ -369,6 +385,8 @@ const PurchaseOrderFromQuotationAdd = () => {
             return {
                 product_id: item.product_id,
                 variant_id: item.variant_id,
+                size_of_case: item.size_of_case,
+                case_qty: item.case_qty,
                 sku: item.sku,
                 tax: item.tax,
                 location: item.location,
@@ -395,7 +413,7 @@ const PurchaseOrderFromQuotationAdd = () => {
         // console.log("obj----", obj)
 
         try {
-            const res = await postPurchase(obj)
+            const res = await postPurchFromQuat(obj)
             if (res?.statusCode == '200') {
                 setLoad(false)
                 toastSuccessMessage(" Added successfully");
@@ -413,6 +431,8 @@ const PurchaseOrderFromQuotationAdd = () => {
             return {
                 product_id: item.product_id,
                 variant_id: item.variant_id,
+                size_of_case: item.size_of_case,
+                case_qty: item.case_qty,
                 sku: item.sku,
                 tax: item.tax,
                 location: item.location,
@@ -439,7 +459,7 @@ const PurchaseOrderFromQuotationAdd = () => {
         // console.log("obj----", obj)
 
         try {
-            const res = await updatePurchase(obj, parem.id)
+            const res = await updatepostPurchFromQuat(obj, parem.id)
             if (res?.statusCode == '200') {
                 setLoad(false)
                 toastSuccessMessage(" Update successfully");
@@ -559,6 +579,8 @@ const PurchaseOrderFromQuotationAdd = () => {
                                                 <th>Item</th>
                                                 <th>Variants</th>
                                                 <th>SKU</th>
+                                                <th>Size of case</th>
+                                                <th>Case Qty</th>
                                                 <th>Tax %</th>
                                                 <th>Location</th>
                                                 <th>Quantity2</th>
