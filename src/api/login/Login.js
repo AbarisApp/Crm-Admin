@@ -5723,6 +5723,29 @@ export const updateaccount_invoice = (id, data) => {
 };
 
 
+export const addTRCRM_tr_follow_up = (data) => {
+  return axiosInstance.post(`${baseUrl}TRCRM_tr_follow_up/addType`, data);
+};
+export const getTRCRM_tr_follow_up = (value) => {
+  return axiosInstance.get(`${baseUrl}TRCRM_tr_follow_up/user?id=${value?.lead_id}&page=${value?.page}&count=${value?.count}&start_date=${value?.start_date}&end_date=${value?.end_date}`);
+};
+export const deletTRCRM_tr_follow_up = (id) => {
+  return axiosInstance.delete(`${baseUrl}TRCRM_tr_follow_up/delete_type/${id}`);
+};
+export const getByIdTRCRM_tr_follow_up = (id) => {
+  return axiosInstance.get(`${baseUrl}TRCRM_tr_follow_up/${id}`);
+};
+export const updateTRCRM_tr_follow_up = (id, data) => {
+  return axiosInstance.put(`${baseUrl}TRCRM_tr_follow_up/update_type/${id}`, data);
+};
+
+
+export const getTRCRM_call_status_master = (id) => {
+  return axiosInstance.get(`${baseUrl}TRCRM_call_status_master/admin`);
+};
+export const getTRCRM_tr_time_master = (id) => {
+  return axiosInstance.get(`${baseUrl}TRCRM_tr_time_master/admin`);
+};
 export const getAcc_email_setup = (id) => {
   return axiosInstance.get(`${baseUrl}acc_email_setup/admin`);
 };
