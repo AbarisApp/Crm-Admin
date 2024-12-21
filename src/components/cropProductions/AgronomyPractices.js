@@ -11,7 +11,7 @@ const AgronomyPractices = () => {
                 <label htmlFor="fromDate" className="form-label">
                   From Date
                 </label>
-                <CustomInputField type={"date"} id="fromDate" />
+                <input type="date" className="form-control" aria-describedby="emailHelp" />
               </div>
             </div>
     

@@ -125,8 +125,8 @@ const AccountLedger = ({ title }) => {
                   <td>{ledger.AccLedgerGroupId?.name}</td>
                   <td>{ledger.opening_balance}</td>
                   <td>{ledger.opening_balance_type}</td>
-                  <td>0</td>
-                  <td>Cr</td>
+                  <td>{ledger.balance}</td>
+                  <td>{ledger.balance_type}</td>
                   <td>
                     <button className="btn btn-sm btn-primary ms-2">Ledger Report</button>
                     <button

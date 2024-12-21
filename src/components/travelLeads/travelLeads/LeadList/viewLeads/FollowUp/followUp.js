@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { Pagination } from "react-bootstrap";
+
 import FollowUpAdd from "./followUpAdd/FollowUpAdd";
-import { useParams } from "react-router-dom";
-import { getByIdTRCRM_tr_lead } from "../../../../../../api/login/Login";
+import { Link, useParams } from "react-router-dom";
+import { deletTRCRM_tr_follow_up, getByIdTRCRM_tr_lead, getTRCRM_tr_follow_up } from "../../../../../../api/login/Login";
 import FollowUpUpdate from "./followUpAdd/followUpUpdate/FollowUpUpdate";
 import { FaReply } from "react-icons/fa";
+import { message, Pagination, Popconfirm } from "antd";
 
 
 function FollowUp() {
@@ -48,6 +49,7 @@ function FollowUp() {
     const [totalCount, setTotalCount] = useState(null)
     const [data, setData] = useState(null)
     const [allData, setAllData] = useState(null)
+    const [updateId, setUpdateId] = useState(null)
     const [filterInitial, setFilterInitial] = useState({
         user_id: '',
         count: '',
@@ -69,11 +71,13 @@ function FollowUp() {
     const getTransitionReport = async (input) => {
         // console.log('iojijip');
         setLoading(true)
-        const clone = { ...filterInitial, count: count, page: input, user_id: window.localStorage.getItem('userIdToken') }
+        const clone = { ...filterInitial, count: count, page: input, lead_id: params?.id, user_id: window.localStorage.getItem('userIdToken') }
         try {
-            // const res = await getTRCRM_tr_traveller(clone)
-            // setTotalCount(res?.totalCount)
-            // setData(res?.data)
+            const res = await getTRCRM_tr_follow_up(clone)
+            if (res?.data) {
+                setTotalCount(res?.totalCount)
+                setData(res?.data)
+            }
         } catch (error) {
 
         }
@@ -86,27 +90,29 @@ function FollowUp() {
         getTransitionReport(e - 1)
     };
 
-    // const deleteBlockAdd = async (id) => {
-    //     setLoading(true)
-    //     try {
-    //         await deleteTRCRM_tr_traveller(id)
-    //         // let backList = totalCount % 11 === 0 ? page - 1 : page
-    //         getTransitionReport(0)
-    //     } catch (error) {
-    //         // toastSuccessMessage(error.message)
-    //     }
-    //     setLoading(false)
-    // }
+    const deleteBlockAdd = async (id) => {
+        setLoading(true)
+        try {
+            await deletTRCRM_tr_follow_up(id)
+            // let backList = totalCount % 11 === 0 ? page - 1 : page
+            getTransitionReport(0)
+        } catch (error) {
+            // toastSuccessMessage(error.message)
+        }
+        setLoading(false)
+    }
 
-    // const confirm = (id) => {
-    //     console.log(id);
-    //     deleteBlockAdd(id)
-    //     message.success('Delete Successfull!');
+    const confirm = (id) => {
+        // console.log(id);
+        deleteBlockAdd(id)
+        message.success('Delete Successfull!');
 
-    // };
+    };
 
-    const modalShowButton = () => {
+    const modalShowButton = (id) => {
+        setUpdateId(id)
         setModalShow(true)
+
     }
 
     useEffect(() => {
@@ -187,6 +193,9 @@ function FollowUp() {
                                                     <th scope="col">S.no</th>
                                                     <th scope="col">Date</th>
                                                     <th scope="col text-center">Time</th>
+                                                    <th scope="col text-center">Last Call</th>
+                                                    <th scope="col text-center">Note</th>
+                                                    <th scope="col text-center">title</th>
                                                     <th scope="col text-center">Action</th>
                                                 </tr>
                                             </thead>
@@ -194,18 +203,33 @@ function FollowUp() {
                                                 {/* {data && data?.map((item, i) => {
                                                     // console.log(item);
                                                     return */}
-                                                <tr className="odd" >
-                                                    <td valign="top" className="dataTables_empty">
-                                                        {/* {(i + 1) + (page * count)} */}
-                                                    </td>
-                                                    <td valign="top" className="dataTables_empty"></td>
-                                                    <td valign="top" className="dataTables_empty"></td>
 
-                                                    <td valign="top" className="dataTables_empty">
-                                                        <FaReply style={{ width: '20px', height: '20px' }} onClick={modalShowButton} />
-                                                    </td>
-                                                </tr>
-                                                {/* })} */}
+                                                {data && data?.map((item, i) => {
+                                                    return <tr className="odd" key={item?._id}>
+                                                        <td valign="top" className="dataTables_empty">{(i + 1) + (page * count)}</td>
+                                                        <td valign="top" className="dataTables_empty">{item?.date}</td>
+                                                        <td valign="top" className="dataTables_empty">{item?.time?.time}</td>
+                                                        <td scope="col text-center">{item?.call_status?.name}</td>
+                                                        <td scope="col text-center">{item?.notes}</td>
+                                                        <td scope="col text-center">{item?.title}</td>
+                                                        <td valign="top" className="dataTables_empty">
+                                                            <FaReply style={{ width: '20px', height: '20px' }} onClick={() => modalShowButton(item?._id)} />
+                                                            <Popconfirm
+                                                                title="Delete Follow Up!"
+                                                                description="Are you sure to Follow Up"
+                                                                onConfirm={() => confirm(item?._id)}
+                                                                // onCancel={cancel}
+                                                                okText="Yes"
+                                                                cancelText="No"
+                                                            >
+                                                                <Link to="#" className="btn btn-danger shadow btn-xs sharp">
+                                                                    <i className="fa fa-trash" />
+                                                                </Link>
+                                                            </Popconfirm>
+                                                        </td>
+
+                                                    </tr>
+                                                })}
                                             </tbody>
                                         </table>
                                     </div>
@@ -235,6 +259,8 @@ function FollowUp() {
             <FollowUpUpdate
                 show={modalShow}
                 onHide={() => setModalShow(false)}
+                updateId={updateId}
+                getTransitionReport={getTransitionReport}
             />
 
         </>

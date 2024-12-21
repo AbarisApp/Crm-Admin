@@ -1153,6 +1153,22 @@ import GrowDownPage from "./pages/transaction/growDown/index.js";
 import GrowMoreAdd from "./components/transaction/godown-stock/purchageOrderAdd/GrowMoreAdd.js";
 // adil
 
+import ManageCustomer from "./pages/manageCustomer";
+import AddManageCustomer from "./components/customerInside/manageCustomerInside/addManageCustomer/AddManageCustomer";
+import ProductStock from "./pages/manageStock";
+import DealarStock from "./pages/manageStock/DealarStock";
+import Tracking from "./pages/trackerPagesList/Tracking";
+import LiveFeed from "./pages/trackerPagesList";
+import TrackParties from "./pages/trackerPagesList/TrackParties";
+import RrackingReport from "./pages/trackerPagesList/RrackingReport";
+import GpsFlag from "./pages/trackerPagesList/GpsFlag";
+import CropMaster from "./pages/cropProductionPage";
+import Production from "./pages/cropProductionPage/Production";
+import NewProductionList from "./components/cropProductions/productionInformation/newProductionList/NewProductionList";
+import CropHealthCodes from "./pages/cropProductionPage/CropHealthCodes";
+import AgronomyVisit from "./pages/cropProductionPage/AgronomyVisit";
+import AddAgronomyInformation from "./components/cropProductions/agronomyVisitInfomation/addAgronomyInformation/AddAgronomyInformation";
+
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -3385,6 +3401,24 @@ function App() {
               <Route path="fullLoad/add" element={<FullLoadAddPage />} />
               {/* Moin routes end */}
 
+              {/* meraj */}
+              <Route path="crop-master" element={<CropMaster />} />
+              <Route path="production" element={<Production />} />
+              <Route path="new-production-list" element={<NewProductionList />} />
+              <Route path="crop-health-codes" element={<CropHealthCodes />} />
+              <Route path="agronomy-visit" element={<AgronomyVisit />} />
+              <Route path="add-agronomy-information" element={<AddAgronomyInformation />} />
+              <Route path="manage-customer" element={<ManageCustomer />} />
+              <Route path="add-manage-customer" element={<AddManageCustomer />} />
+              <Route path="product-stock" element={<ProductStock />} />
+              <Route path="dealar-stock" element={<DealarStock />} />
+              <Route path="live-feed" element={<LiveFeed />} />
+              <Route path="tracking" element={<Tracking />} />
+              <Route path="track-parties" element={<TrackParties />} />
+              <Route path="tracking-report" element={<RrackingReport />} />
+              <Route path="gps-flag" element={<GpsFlag />} />
+
+              {/* meraj */}
 
             </Route>
           </>
