@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { PDFViewer } from "@react-pdf/renderer";
 import { useEffect, useState } from "react";
 import Loadar from "../../../../common/loader/Loader";
-import { deletePurchaseQuoatationById, getAllPurchseQuoationData } from "../../../../api/login/Login";
+import { deletePurchaseQuotation,  getPurchaseQuotationData } from "../../../../api/login/Login";
 import Breadcrumbs from "../../../../common/breadcrumb/Breadcrumbs";
 import { message, Pagination, Popconfirm } from "antd";
 import PurchaseQuotationPdf from "./purchaseQuotationPdf/PurchaseQuotationPdf";
@@ -39,7 +39,7 @@ const PurchaseQuatation = () => {
     const getFloorMasters = async (page) => {
         setLoading(true)
         try {
-            const res = await getAllPurchseQuoationData(page, count)
+            const res = await getPurchaseQuotationData(page, count)
             setTotalCount(res?.totalCount)
             setData(res?.data)
             setPage(page)
@@ -70,7 +70,7 @@ const PurchaseQuatation = () => {
     const deleteBlockAdd = async (id) => {
         setLoading(true)
         try {
-            await deletePurchaseQuoatationById(id)
+            await deletePurchaseQuotation(id)
             let backList = totalCount % 11 === 0 ? page - 1 : page
             getFloorMasters(backList)
             // toastSuccessMessage("Deleted")
