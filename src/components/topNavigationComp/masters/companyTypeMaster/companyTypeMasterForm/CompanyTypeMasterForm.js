@@ -6,18 +6,20 @@ import { toast } from 'react-toastify';
 import Breadcrumbs from '../../../../../common/breadcrumb/Breadcrumbs';
 import CustomInputField from '../../../../../common/CustomInputField';
 import { addCompanyType, getDefaultDashboard, getupdateCompanyTypeId, updateCompanyType } from '../../../../../api/login/Login';
+import TagsInput from 'react-tagsinput';
 function CompanyTypeMasterForm() {
     const breadCrumbsTitle = {
         title_1: "master",
         title_2: "Company Type  Master",
     }
+    const [tags, setTags] = useState([]);
     const [initialValues, setInitialValues] = useState({
         name: "",
         field_two: "",
         field_one: "",
         default_dashboard: "",
         isActive: "",
-        // default_user_type:""
+        default_user_type: ""
     });
     const [state, setState] = useState(null)
 
@@ -54,14 +56,16 @@ function CompanyTypeMasterForm() {
         });
     };
     const submitForm = async (values) => {
-        
+
         try {
             if (!params?.id) {
                 try {
-                    const res = await addCompanyType(values);
+                    const res = await addCompanyType({ ...values, default_user_type: tags });
                     if (res?.statusCode == "200") {
                         toastSuccessMessage(" Company Type Successfully");
-                        navigate(`/company-type-master`)
+                        setTimeout(() => {
+                            navigate(`/company-type-master`)
+                        }, 1000);
                     }
                     blankBtn()
                 } catch (error) {
@@ -70,12 +74,14 @@ function CompanyTypeMasterForm() {
 
             } else {
                 try {
-                    const res = await updateCompanyType(params.id, values);
+                    const res = await updateCompanyType(params.id, { ...values, default_user_type: tags });
 
                     if (res?.statusCode == "200") {
                         toastSuccessMessage("Company Type Successfully");
                         blankBtn()
-                        navigate(`/company-type-master`)
+                        setTimeout(() => {
+                            navigate(`/company-type-master`)
+                        }, 1000);
                     }
                     if (res?.statusCode == "403") {
                         toastSuccessMessage("Company Type Successfully");
@@ -112,7 +118,8 @@ function CompanyTypeMasterForm() {
             try {
                 if (params?.id) {
                     const response = await getupdateCompanyTypeId(params.id);
-                    setInitialValues({ ...response?.data, field_one: response.data?.field_one ? response.data?.field_one : response.data?.course, field_two: response.data?.field_two ? response.data?.field_two : response.data?.stream});
+                    setInitialValues({ ...response?.data, field_one: response.data?.field_one ? response.data?.field_one : response.data?.course, field_two: response.data?.field_two ? response.data?.field_two : response.data?.stream });
+                    setTags(response.data?.default_user_type)
 
                 } else {
                     setInitialValues({
@@ -127,7 +134,10 @@ function CompanyTypeMasterForm() {
 
         fetchCurrency();
     }, [params?.id]);
+    const handleTagsChange = (newTags) => {
+        setTags(newTags);
 
+    };
     return (
         <>
             <Breadcrumbs breadCrumbsTitle={breadCrumbsTitle} />
@@ -136,7 +146,7 @@ function CompanyTypeMasterForm() {
                     <div className="card-body p-0">
                         <div className="table-responsive active-projects style-1">
                             <div className="tbl-caption tbl-caption-2">
-                                <h4 className="heading mb-0">
+                                <h4 className="heading mb-0 p-2">
                                     {params?.id ? "UPDATE" : "ADD"}
                                     &nbsp;
                                     Company Type
@@ -225,6 +235,10 @@ function CompanyTypeMasterForm() {
                                                     {errors.isActive && touched.default_dashboard && (
                                                         <div className="error">{errors.default_dashboard}</div>
                                                     )}
+                                                </div>
+                                                <div className="col-xl-6 mb-3">
+                                                    <label htmlFor="fromDate">Default User Type</label>
+                                                    <TagsInput value={tags} onChange={handleTagsChange} />
                                                 </div>
                                                 <div className="col-xl-6 mb-3">
                                                     <select

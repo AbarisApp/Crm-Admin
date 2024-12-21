@@ -6824,3 +6824,230 @@ export const getLeadDashbord = () => {
 
 
 // ======Agro Featured reports =======
+
+
+
+
+
+
+
+export const postPurchaseChallans = (data) => {
+  return axiosInstance.post(`/challan/purchase_from_order/addType`, data, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
+export const getAllPurchaseChallanData = (page, count) => {
+  return axiosInstance.get(
+    `${baseUrl}challan/purchase_from_order/user?page=${page}&count=${count}`
+  );
+};
+
+export const getbyIdPurchaseChallan = (id) => {
+  return axiosInstance.get(
+    `${baseUrl}challan/purchase_from_order/${id}`
+  );
+};
+
+export const updatePurchaseChallans = (data, id) => {
+  return axiosInstance.put(`/challan/purchase_from_order/update_type/${id}`, data, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
+
+export const deleteChallans = (id) => {
+  return axiosInstance.delete(
+    `${baseUrl}challan/purchase_from_order/delete_type/${id}`,
+    {
+      headers: {
+        "Content-Type": "application/json; charset=UTF-8",
+        Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+      },
+    });
+};
+
+
+
+// 
+export const postOrderFrQuat = (data) => {
+  return axiosInstance.post(`order/order_from_quotation/addType`, data, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
+export const getAllOrderFrQuatData = (page, count) => {
+  return axiosInstance.get(
+    `${baseUrl}/order/order_from_quotation/user?page=${page}&count=${count}`
+  );
+};
+
+export const getbyIdOrderFrQuat = (id) => {
+  return axiosInstance.get(
+    `${baseUrl}order/order_from_quotation/${id}`
+  );
+};
+
+export const updateOrderFrQuats = (data, id) => {
+  return axiosInstance.put(`/order/order_from_quotation/update_type/${id}`, data, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
+
+export const deleteOrderFrQuat = (id) => {
+  return axiosInstance.delete(
+    `${baseUrl}order/order_from_quotation/delete_type/${id}`,
+    {
+      headers: {
+        "Content-Type": "application/json; charset=UTF-8",
+        Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+      },
+    });
+};
+
+
+
+
+// 
+export const postPurchFromQuat = (data) => {
+  return axiosInstance.post(`/order/purchase_from_quotation/addType`, data, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
+export const getpostPurchFromQuatData = (page, count) => {
+  return axiosInstance.get(
+    `order/purchase_from_quotation/user?page=${page}&count=${count}`
+  );
+};
+
+export const getbyIdpostPurchFromQuat = (id) => {
+  return axiosInstance.get(
+    `api/order/purchase_from_quotation/${id}`
+  );
+};
+
+export const updatepostPurchFromQuat = (data, id) => {
+  return axiosInstance.put(`/order/purchase_from_quotation/update_type/${id}`, data, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
+
+export const deletepostPurchFromQuat = (id) => {
+  return axiosInstance.delete(
+    `order/purchase_from_quotation/delete_type/${id}`,
+    {
+      headers: {
+        "Content-Type": "application/json; charset=UTF-8",
+        Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+      },
+    });
+};
+
+
+// 
+export const postSaleFromOrder = (data) => {
+  return axiosInstance.post(`/challan/sale_from_order/addType`, data, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
+export const getSaleFromOrderData = (page, count) => {
+  return axiosInstance.get(
+    `/challan/sale_from_order/user?page=${page}&count=${count}`
+  );
+};
+
+export const getSaleFromOrderById = (id) => {
+  return axiosInstance.get(
+    `/challan/sale_from_order/${id}`
+  );
+};
+
+export const updateSaleFromOrder = (data, id) => {
+  return axiosInstance.put(`/challan/sale_from_order/update_type/${id}`, data, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
+export const deleteSaleFromOrder = (id) => {
+  return axiosInstance.delete(
+    `/challan/sale_from_order/delete_type/${id}`,
+    {
+      headers: {
+        "Content-Type": "application/json; charset=UTF-8",
+        Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+      },
+    }
+  );
+};
+
+
+// 
+export const postPurchaseQuotation = (data) => {
+  return axiosInstance.post(`/quotation/purchaseQuotation/addType`, data, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
+export const getPurchaseQuotationData = (page, count) => {
+  return axiosInstance.get(
+    `/quotation/purchaseQuotation/user?page=${page}&count=${count}`
+  );
+};
+
+export const getPurchaseQuotationById = (id) => {
+  return axiosInstance.get(
+    `/quotation/purchaseQuotation/${id}`
+  );
+};
+
+export const updatePurchaseQuotation = (data, id) => {
+  return axiosInstance.put(`/quotation/purchaseQuotation/update_type/${id}`, data, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
+export const deletePurchaseQuotation = (id) => {
+  return axiosInstance.delete(
+    `/quotation/purchaseQuotation/delete_type/${id}`,
+    {
+      headers: {
+        "Content-Type": "application/json; charset=UTF-8",
+        Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+      },
+    }
+  );
+};

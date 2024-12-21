@@ -171,9 +171,11 @@ function CompanyFormMaster() {
             position: "top-right",
         });
     };
+    const [load, setLoad] = useState(false)
     const submitForm = async (values) => {
-        console.log(values);
-
+        // console.log(values);
+        // console.log(formValues);
+        setLoad(true)
         const clone = {
             ...values,
             logo: formValues.logo,
@@ -191,10 +193,12 @@ function CompanyFormMaster() {
             login_font_color: formValues.login_font_color
         }
 
-
+        setTimeout(() => {
+            setLoad(false)
+        }, 1000);
         // return console.log(clone);
-        
-       
+
+
 
         try {
             if (!params?.id) {
@@ -202,7 +206,10 @@ function CompanyFormMaster() {
                     const res = await addCompany(clone);
                     if (res?.statusCode == "200") {
                         toastSuccessMessage(" Company Successfully");
-                        navigate(`/company-master`)
+
+                        setTimeout(() => {
+                            navigate(`/company-master`)
+                        }, 1000);
                     }
                     blankBtn()
                 } catch (error) {
@@ -216,7 +223,10 @@ function CompanyFormMaster() {
                     if (res?.statusCode == "200") {
                         toastSuccessMessage("Company Successfully");
                         blankBtn()
-                        navigate(`/company-master`)
+
+                        setTimeout(() => {
+                            navigate(`/company-master`)
+                        }, 1000);
                     }
                     if (res?.statusCode == "403") {
                         toastSuccessMessage("Company Successfully");
@@ -402,7 +412,7 @@ function CompanyFormMaster() {
     const handleFileChange = async (e) => {
         settLoader(true)
         const { name, files } = e.target;
-        const clone = {...initialValues ,...formValues, [name]: files[0] };
+        const clone = { ...initialValues, ...formValues, [name]: files[0] };
         if (files && files[0]) {
             for (const key in clone) {
                 if (clone[key].size) {
@@ -437,7 +447,7 @@ function CompanyFormMaster() {
                     <div className="card-body p-0">
                         <div className="table-responsive active-projects style-1">
                             <div className="tbl-caption tbl-caption-2">
-                                <h4 className="heading mb-0">
+                                <h4 className="heading mb-0 p-2">
                                     {params?.id ? "UPDATE" : "ADD"}
                                     &nbsp;
                                     Company
@@ -821,7 +831,7 @@ function CompanyFormMaster() {
                                                     <Accordion.Item eventKey="0">
                                                         <Accordion.Header>Company Info</Accordion.Header>
                                                         <Accordion.Body>
-                                                            <CompanyDetail handleFileChange={handleFileChange} formValues={formValues} setFormValues={setFormValues} />
+                                                            <CompanyDetail handleFileChange={handleFileChange} formValues={formValues} setFormValues={setFormValues} initialValues={initialValues} />
                                                         </Accordion.Body>
                                                     </Accordion.Item>
 

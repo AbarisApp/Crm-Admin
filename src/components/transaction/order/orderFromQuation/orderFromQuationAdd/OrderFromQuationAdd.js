@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Breadcrumbs from "../../../../../common/breadcrumb/Breadcrumbs";
-import { getAccAddProjectByPage, getAllAccountData, getAllLocationsData, getAllPickupPointsData, getAllProductsData, getAllTaxTypeData, getAllTransportersData, getAttTaxTypeData, getbyIdPurchase, getPickupByPage, getTaxtype, postPurchase, updatePurchase } from "../../../../../api/login/Login";
+import { getAccAddProjectByPage, getAllAccountData, getAllProductsData, getAllTaxTypeData, getAllTransportersData, getbyIdOrderFrQuat, getPickupByPage, postOrderFrQuat, updateOrderFrQuats} from "../../../../../api/login/Login";
 import { toast, ToastContainer } from "react-toastify";
 import Loadar from "../../../../../common/loader/Loader";
 import { useParams } from "react-router-dom";
@@ -32,7 +32,7 @@ const OrderFromQuationAdd = () => {
     const parem = useParams()
     const getEditData = async () => {
         try {
-            const res = await getbyIdPurchase(parem.id)
+            const res = await getbyIdOrderFrQuat(parem.id)
             console.log(res);
             setFormData({
                 date: res.data?.date,
@@ -208,6 +208,22 @@ const OrderFromQuationAdd = () => {
                     onChange={(e) => handleChange(index, 'sku', e.target.value)}
                 />
             </td>
+            <td>
+                <input
+                    type="number"
+                    // disabled
+                    value={row.size_of_case}
+                    onChange={(e) => handleChange(index, 'size_of_case', e.target.value)}
+                />
+            </td>
+            <td>
+                <input
+                    type="number"
+                    // disabled
+                    value={row.case_qty}
+                    onChange={(e) => handleChange(index, 'case_qty', e.target.value)}
+                />
+            </td>
             {/* <td>
                 <input
                     type="number"
@@ -368,6 +384,8 @@ const OrderFromQuationAdd = () => {
             return {
                 product_id: item.product_id,
                 variant_id: item.variant_id,
+                size_of_case: item.size_of_case,
+                case_qty: item.case_qty,
                 sku: item.sku,
                 tax: item.tax,
                 location: item.location,
@@ -394,7 +412,7 @@ const OrderFromQuationAdd = () => {
         // console.log("obj----", obj)
 
         try {
-            const res = await postPurchase(obj)
+            const res = await postOrderFrQuat(obj)
             if (res?.statusCode == '200') {
                 setLoad(false)
                 toastSuccessMessage(" Added successfully");
@@ -412,6 +430,8 @@ const OrderFromQuationAdd = () => {
             return {
                 product_id: item.product_id,
                 variant_id: item.variant_id,
+                size_of_case: item.size_of_case,
+                case_qty: item.case_qty,
                 sku: item.sku,
                 tax: item.tax,
                 location: item.location,
@@ -438,7 +458,7 @@ const OrderFromQuationAdd = () => {
         // console.log("obj----", obj)
 
         try {
-            const res = await updatePurchase(obj, parem.id)
+            const res = await updateOrderFrQuats(obj, parem.id)
             if (res?.statusCode == '200') {
                 setLoad(false)
                 toastSuccessMessage(" Update successfully");
@@ -448,8 +468,6 @@ const OrderFromQuationAdd = () => {
         }
         setLoad(false)
     };
-
-
 
     return (
         <>
@@ -506,8 +524,23 @@ const OrderFromQuationAdd = () => {
                                     </div>
 
                                     <div className="col-md-3 mb-3">
+                                        <label htmlFor="taxType">Tax Type </label>
+                                        <select
+                                            className="form-control"
+                                            name="tax_type"
+                                            value={formData.tax_type}
+                                            onChange={handleInputChange}
+                                        >
+                                            <option value="">Select Tax Type</option>
+                                            {allTaxes && allTaxes?.map((item, i) => {
+                                                return <option value={item?._id}>{item?.name}</option>
+                                            })}
+                                        </select>
+                                    </div>
+
+                                    <div className="col-md-3 mb-3">
                                         <label htmlFor="taxType">Transporter</label>
-                                        {/* <select
+                                        <select
                                             className="form-control"
                                             name="transporter"
                                             value={formData.transporter}
@@ -517,26 +550,21 @@ const OrderFromQuationAdd = () => {
                                             {allTransports && allTransports?.map((item, i) => {
                                                 return <option value={item?._id}>{item?.name}</option>
                                             })}
-                                        </select> */}
-                                          <input
-                                            type="text"
-                                            className="form-control"
-                                            // name="order_no"
-                                            // value={formData.order_no}
-                                            // onChange={handleInputChange}
-                                            // placeholder="Enter Order No"
-                                        />
+                                        </select>
                                     </div>
                                     <div className="col-md-3 mb-3">
-                                        <label htmlFor="taxType">Delivery Destination :</label>
-                                        <input
-                                            type="text"
+                                        <label htmlFor="taxType">Project</label>
+                                        <select
                                             className="form-control"
-                                            // name="order_no"
-                                            // value={formData.order_no}
-                                            // onChange={handleInputChange}
-                                            // placeholder="Enter Order No"
-                                        />
+                                            name="prj_id"
+                                            value={formData.prj_id}
+                                            onChange={handleInputChange}
+                                        >
+                                            <option value="">Select Project</option>
+                                            {peoject && peoject?.map((item, i) => {
+                                                return <option value={item?._id}>{item?.project_name}</option>
+                                            })}
+                                        </select>
                                     </div>
                                 </div>
 
@@ -548,6 +576,8 @@ const OrderFromQuationAdd = () => {
                                                 <th>Item</th>
                                                 <th>Variants</th>
                                                 <th>SKU</th>
+                                                <th>Size of case</th>
+                                                <th>Case Qty</th>
                                                 <th>Tax %</th>
                                                 <th>Location</th>
                                                 <th>Quantity2</th>

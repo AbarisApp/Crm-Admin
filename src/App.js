@@ -1137,6 +1137,10 @@ import ProductOrderSummery from "./components/Empoyee/Order/product-order-summer
 import PendingOrderSummery from "./components/Empoyee/Order/pending-order-summery.js";
 import DispatchOrderSummery from "./components/Empoyee/Order/dispatch-order-summery.js";
 import PartyOrderSummery from "./components/Empoyee/Order/party-order-summery.js";
+import AllPayablePage from "./pages/payble/index.js";
+import MonthView from "./components/travelCrmReports/payble/allCustomerList/MonthView.js";
+import LRRegisterPage from "./pages/transaction/LRregister/purchageOrder/index.js";
+import LRAdd from "./components/transaction/LRregister/purchageOrderAdd/LRAdd.js";
 import LrListPage from "./pages/lrListPage/index.js";
 import LrAddPage from "./pages/lrAddPage/index.js";
 import MemoEntryListPage from "./pages/memoEntryListPage/index.js";
@@ -1145,6 +1149,8 @@ import DeliveryOfLrListPage from "./pages/deliveryOfLrListPage/index.js";
 import DeliveryOfLrAdPage from "./pages/deliveryOfLrAddPage/index.js";
 import FullLoadListPage from "./pages/fullLoadListPage/index.js";
 import FullLoadAddPage from "./pages/fullLoadAddPage/index.js";
+import GrowDownPage from "./pages/transaction/growDown/index.js";
+import GrowMoreAdd from "./components/transaction/godown-stock/purchageOrderAdd/GrowMoreAdd.js";
 // adil
 
 import ManageCustomer from "./pages/manageCustomer";
@@ -2378,6 +2384,7 @@ function App() {
               <Route path="dnentrywithstock/add" element={<DNEntrywithStockAdd />} />
               <Route path="quotation/list" element={<QuatationPage />} />
               <Route path="quotation/add" element={<QuatationAdd />} />
+              <Route path="quotation/add/:id" element={<QuatationAdd />} />
               <Route path="purchasequotation/list" element={<PurchaseQuatationPage />} />
               <Route path="purchasequotation/add" element={<PurchaseQuatationAdd />} />
               <Route path="purchasequotation/edit/:id" element={<PurchaseQuatationAdd />} />
@@ -2389,8 +2396,10 @@ function App() {
               <Route path="purchaseorder/edit/:id" element={<PurchageOrderAdd />} />
               <Route path="salesorderfrm/list" element={<OrderFromQuationPage />} />
               <Route path="salesorderfrm/Add" element={<OrderFromQuationAdd />} />
+              <Route path="salesorderfrm/edit/:id" element={<OrderFromQuationAdd />} />
               <Route path="purchaseorderfrm/list" element={<PurchaseOrderFromQuotationPage />} />
               <Route path="purchaseorderfrm/add" element={<PurchaseOrderFromQuotationAdd />} />
+              <Route path="purchaseorderfrm/edit/:id" element={<PurchaseOrderFromQuotationAdd />} />
               <Route path="saleschallan/list" element={<SalesChallanPage />} />
               <Route path="saleschallan/add" element={<SalesChallanAdd />} />
               <Route path="saleschallan/edit/:id" element={<SalesChallanAdd />} />
@@ -2402,6 +2411,7 @@ function App() {
               <Route path="saleschallanfrm/edit/:id" element={<SalesFromOrderAdd />} />
               <Route path="purchasechallanfrm/list" element={<PurchangefromChalanPage />} />
               <Route path="purchasechallanfrm/add" element={<PurchangefromChalanAdd />} />
+              <Route path="purchasechallanfrm/edit/:id" element={<PurchangefromChalanAdd />} />
               <Route path="challanreturn/list" element={<ChallanReturnPage />} />
               <Route path="challanreturn/add" element={<ChallanReturnAdd />} />
               <Route path="challanreturn/edit/:id" element={<ChallanReturnAdd />} />
@@ -3365,6 +3375,20 @@ function App() {
               <Route path="dispatachorder" element={<DispatchOrderSummery />} />
               {/* adil */}
 
+              {/* junaid */}
+
+              <Route path="payable-master" element={<AllPayablePage />} />
+              <Route path="payable-month-view/:id" element={<MonthView />} /> 
+
+              <Route path="L-r-register" element={<LRRegisterPage />} />
+              <Route path="L-r-register/Add" element={<LRAdd />} />
+              <Route path="L-r-register/edit/:id" element={<LRAdd />} />
+
+
+              
+              <Route path="godown-stock-master" element={<GrowDownPage />} />
+              <Route path="godown-stock-master/Add" element={<GrowMoreAdd />} />
+              <Route path="godown-stock-master/edit/:id" element={<GrowMoreAdd />} />
 
               {/* Moin routes start*/}
               <Route path="lr/list" element={<LrListPage />} />
