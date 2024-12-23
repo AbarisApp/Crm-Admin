@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import InvoicePartyClientSelectedSearch from './invoicePartyClientSelectedSearch/InvoicePartyClientSelectedSearch';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { addAccount_invoice, addTravelRoomType, cityMainGett, getByIdaccount_invoice, getTravelAllCountry, masterget, posttravelInvoice, updateaccount_invoice, updatetravelInvoice } from '../../../api/login/Login';
+import { addAccount_invoice, addTravelRoomType, cityMainGett, getByIdaccount_invoice, getrcrm_hotel_master, getRoom_category, getTravelAllCountry, getTravelAllMealType, masterget, posttravelInvoice, updateaccount_invoice, updatetravelInvoice } from '../../../api/login/Login';
 import { toast, ToastContainer } from 'react-toastify';
 import InvoiceFormModal from './invoiceFormModal/InvoiceFormModal';
 import { Select } from 'antd';
@@ -43,39 +43,40 @@ function InvoiceForm() {
                 remarks: '',
                 booking_date: '',
 
-                final_amt: '',
+                final_amt: '0',
                 is_tax: false,
-                purchase_amt: '',
-                fee_amt: '',
-                oc: '',
-                discount: '',
-                taxable: '',
-                tax: '',
-                cgst: '',
-                sgst: '',
-                igst: '',
-                xt: '',
-                tcs: '',
-                total_sale: '',
-                tax_type: '',
+                purchase_amt: '0',
+                fee_amt: '0.00',
+                oc: '0.00',
+                discount: '0.00',
+                taxable: '0.00',
+                tax: '18',
+                cgst: '0.00',
+                sgst: '0.00',
+                igst: '0.00',
+                xt: '0',
+                tcs: '0',
+                total_sale: '0.00',
+                tax_type: '18% GST on Fee',
                 supplier_party: '',
                 invoice_no: '',
                 invoice_date: '',
-                supplier_rent: '',
-                supplier_discount: '',
-                supplier_taxable: '',
-                supplier_tax: '',
-                supplier_cgst: '',
-                supplier_sgst: '',
-                supplier_igst: '',
-                supplier_xt: '',
+                supplier_rent: '0.00',
+                supplier_discount: '0',
+                supplier_sc: '0',
+                supplier_taxable: '0',
+                supplier_tax: '18',
+                supplier_cgst: '0.00',
+                supplier_sgst: '0.00',
+                supplier_igst: '0.00',
+                supplier_xt: '0.00',
                 supplier_tcs: '',
-                commission: '',
-                tds: '',
-                tds_percent: '',
-                sale_purchase: '',
-                tax_purchase: '',
-                net_purchase: '',
+                commission: '0',
+                tds: '0.00',
+                tds_percent: '0',
+                sale_purchase: '0.00',
+                tax_purchase: '0.00',
+                net_purchase: '0.00',
                 paid_by: '',
                 round_off: false,
             },
@@ -98,75 +99,133 @@ function InvoiceForm() {
         }));
     };
 
+    // console.log(initialValues);
+
 
     const handleInputChangeModel = (index, field, value) => {
         const newInvoices = [...initialValues.invoices];
-        newInvoices[index][field] = value;
-
         const invoice = newInvoices[index];
-        const final_amt = parseFloat(invoice.final_amt || 0);
-        const feeMarkup = parseFloat(invoice.fee_amt || 0); // Fee/Markup
-        const otherCharges = parseFloat(invoice.oc || 0); // Other Charges
-        const discount = parseFloat(invoice.discount || 0); // Discount
-        const taxPercent = parseFloat(invoice.tax || 0); // Tax Percentage (default: 18%)
-
-        // Calculate taxable amount
-        const taxableAmount = final_amt + feeMarkup + otherCharges - discount;
-
-        let igstAmount = 0;
-        let cgstAmount = 0;
-        let sgstAmount = 0;
-        let totalSaleAmount = 0;
-
-        // Apply logic based on selected tax type
-        switch (invoice.tax_type) {
-            case "18% GST on Fee":
-                igstAmount = (taxableAmount * 18) / 100; // 18% IGST
-                cgstAmount = igstAmount / 2; // 50% CGST
-                sgstAmount = igstAmount / 2; // 50% SGST
-                totalSaleAmount = taxableAmount + igstAmount;
-                break;
-
-            case "No ITC 5%":
-                igstAmount = (taxableAmount * 5) / 100; // 5% IGST
-                totalSaleAmount = taxableAmount + igstAmount;
-                break;
-
-            case "18% On Bill Amount":
-                totalSaleAmount = (taxableAmount * 118) / 100; // Total = 118% of taxable
-                igstAmount = totalSaleAmount - taxableAmount; // 18% IGST
-                cgstAmount = igstAmount / 2;
-                sgstAmount = igstAmount / 2;
-                break;
-
-            case "Manual":
-                totalSaleAmount = parseFloat(invoice.final_amt || taxableAmount); // Use manual input
-                igstAmount = cgstAmount = sgstAmount = 0; // Reset tax components
-                break;
-
-            default:
-                igstAmount = (taxableAmount * taxPercent) / 100; // Default tax
-                cgstAmount = igstAmount / 2;
-                sgstAmount = igstAmount / 2;
-                totalSaleAmount = taxableAmount + igstAmount;
-                break;
+        invoice[field] = value;
+        if (field === 'tax_type') {
+            // Automatically update the tax based on the selected tax_type
+            switch (value) {
+                case '18% GST on Fee':
+                case '18% On Bill Amount':
+                    invoice.tax = 18; // Set tax to 18%
+                    break;
+                case 'No ITC 5%':
+                    invoice.tax = 5; // Set tax to 5%
+                    break;
+                case 'Manual':
+                    invoice.tax = 18; // Default tax for manual selection
+                    break;
+                default:
+                    invoice.tax = 0; // Default fallback
+            }
         }
 
-        // Update invoice object
-        invoice.taxable = taxableAmount;
-        invoice.igst = igstAmount;
-        invoice.cgst = cgstAmount;
-        invoice.sgst = sgstAmount;
-        invoice.total_sale = totalSaleAmount;
+        // Update calculated fields if final_amt or is_tax changes
+        if (field === 'final_amt' || field === 'is_tax' || field === 'tax_type') {
+            const { final_amt, is_tax, tax_type, tax } = invoice;
 
-        // If not manual, update final amount to match total sale
-        if (invoice.tax_type !== "Manual") {
-            invoice.final_amt = totalSaleAmount;
+            let fee_amt = 0;
+            let taxable = 0;
+            let taxPercent = parseFloat(tax) / 100;
+
+            if (tax_type === '18% GST on Fee') {
+                fee_amt = taxable = is_tax ? 0 : parseFloat(final_amt);
+            } else if (tax_type === 'No ITC 5%') {
+                if (is_tax) {
+                    // Exclusive of tax calculation
+                    fee_amt = (parseFloat(final_amt) / (1 + 0.05)).toFixed(2); // Base amount before adding tax
+                    taxable = parseFloat(fee_amt); // Taxable amount is the base amount (exclusive of tax)
+                } else {
+                    // Normal calculation
+                    fee_amt = parseFloat(final_amt).toFixed(2); // Directly use the final amount as fee
+                    taxable = (fee_amt * (1 + 0.05)).toFixed(2); // Taxable includes tax
+                }
+            } else if (tax_type === '18% On Bill Amount') {
+                // if (is_tax) {
+                //     taxable = parseFloat(final_amt);
+                //     fee_amt = (taxable / (1 + taxPercent)).toFixed(2);
+                // } else {
+                //     fee_amt = parseFloat(final_amt).toFixed(2);
+                //     taxable = (fee_amt * (1 + taxPercent)).toFixed(2);
+                // }
+                if (is_tax) {
+                    // Calculate fee_amt and taxable as exclusive of tax
+                    fee_amt = (parseFloat(final_amt) / (1 + taxPercent)).toFixed(2); // Base amount before adding tax
+                    taxable = parseFloat(fee_amt); // Taxable amount is the same as the base
+                } else {
+                    // Exclusive of tax when not "is_tax"
+                    fee_amt = (parseFloat(final_amt) / (1 + taxPercent)).toFixed(2); // Base amount before adding tax
+                    taxable = fee_amt; // Taxable is same as base amount
+                }
+            }
+            // Update calculated values
+            invoice.fee_amt = fee_amt;
+            invoice.taxable = taxable;
+            invoice.cgst = (taxable * (taxPercent / 2)).toFixed(2);
+            invoice.sgst = (taxable * (taxPercent / 2)).toFixed(2);
+            invoice.igst = is_tax ? (taxable * taxPercent).toFixed(2) : 0;
+            invoice.total_sale = (parseFloat(taxable) + parseFloat(invoice.cgst) + parseFloat(invoice.sgst)).toFixed(2);
         }
 
-        // Save updated invoices
         setinitialValues({ ...initialValues, invoices: newInvoices });
     };
+
+
+    // const calculateValues = (taxType, isTax) => {
+    //     const finalAmount = parseFloat(values.final_amt);
+    //     const taxRate = parseFloat(values.tax) / 100;
+    //     let feeMarkup = 0;
+    //     let taxable = 0;
+    //     let totalSale = 0;
+
+    //     switch (taxType) {
+    //         case "18% GST on Fee":
+    //             if (isTax) {
+    //                 feeMarkup = finalAmount;
+    //                 taxable = finalAmount;
+    //             } else {
+    //                 feeMarkup = 0;
+    //                 taxable = 0;
+    //             }
+    //             break;
+
+    //         case "No ITC 5%":
+    //             if (isTax) {
+    //                 feeMarkup = finalAmount / (1 + 0.05);
+    //                 taxable = feeMarkup;
+    //             } else {
+    //                 feeMarkup = finalAmount;
+    //                 taxable = finalAmount;
+    //             }
+    //             break;
+
+    //         case "18% On Bill Amount":
+    //             if (isTax) {
+    //                 feeMarkup = finalAmount / (1 + taxRate);
+    //                 taxable = feeMarkup;
+    //             } else {
+    //                 feeMarkup = finalAmount;
+    //                 taxable = finalAmount;
+    //             }
+    //             break;
+
+    //         default:
+    //             break;
+    //     }
+
+    //     totalSale = taxable + taxable * taxRate;
+
+    //     setValues((prevValues) => ({
+    //         ...prevValues,
+    //         fee_amt: feeMarkup.toFixed(2),
+    //         taxable: taxable.toFixed(2),
+    //         total_sale: totalSale.toFixed(2),
+    //     }));
+    // };
 
     const addInvoice = () => {
         setinitialValues({
@@ -210,6 +269,7 @@ function InvoiceForm() {
                     invoice_date: '',
                     supplier_rent: '',
                     supplier_discount: '',
+                    supplier_sc: '0',
                     supplier_taxable: '',
                     supplier_tax: '',
                     supplier_cgst: '',
@@ -224,6 +284,7 @@ function InvoiceForm() {
                     tax_purchase: '',
                     net_purchase: '',
                     paid_by: '',
+                    supplier_sac: '',
                     round_off: false,
                 },
             ],
@@ -236,26 +297,48 @@ function InvoiceForm() {
     };
 
     const [hotelSundry, setHotelSundry] = useState(null)
+
+    const [partyCreator, setPartyCreater] = useState(null)
     const [country, setCountry] = useState(null)
     const [city, setCity] = useState(null)
+    const [mealPlan, setMealPlan] = useState(null)
+    const [roomCategory, setRoomCategory] = useState(null)
+
+    // console.log(city);
+
     const [roomType, setroomType] = useState(null)
+    const [Hotel, setHotel] = useState(null)
     // console.log(hotelSundry);
 
     const masterData = async () => {
         const dataPassApi = {
             sundry: 'Sundry',
+            bankSundryCreditors: 'Sundry Debtors',
+            blank: ''
+        }
+
+        const dataPassApi2 = {
+            sundry: 'Sundry',
             bankSundryCreditors: 'Sundry Creditors',
             blank: ''
         }
         try {
-            const res1 = await masterget(dataPassApi?.blank, dataPassApi?.bankSundryCreditors)
+            const res1 = await masterget(dataPassApi?.bankSundryCreditors, dataPassApi?.blank)
             setHotelSundry(res1?.data)
+            const partyName = await masterget(dataPassApi2?.bankSundryCreditors, dataPassApi2?.blank)
+            setPartyCreater(partyName?.data)
             const res2 = await getTravelAllCountry()
             setCountry(res2?.data)
             const res3 = await cityMainGett()
             setCity(res3?.data);
             const res4 = await addTravelRoomType()
             setroomType(res4?.data)
+            const hotelRes = await getrcrm_hotel_master()
+            setHotel(hotelRes?.data)
+            const mealRes = await getTravelAllMealType()
+            setMealPlan(mealRes?.data)
+            const roomCatRes = await getRoom_category()
+            setRoomCategory(roomCatRes?.data)
 
             // const res = await masterget()
 
@@ -299,7 +382,7 @@ function InvoiceForm() {
                 const res = await addAccount_invoice(clone)
                 // console.log(res);
                 if (res?.error == false) {
-                    toastSuccessMessage(res?.message)
+                    toastSuccessMessage('Add Invoices Successfull')
                     // setLoader(false)
                     setTimeout(() => {
                         navigate(`/billings-invoice/${params?.id}`)
@@ -311,7 +394,7 @@ function InvoiceForm() {
                 const res = await updateaccount_invoice(params?.updateId, clone)
                 // console.log(res);
                 if (res?.error == false) {
-                    toastSuccessMessage(res?.message)
+                    toastSuccessMessage('Update Invoices Successfull')
                     // setLoader(false)
                     setTimeout(() => {
                         navigate(`/billings-invoice/${params?.id}`)
@@ -535,14 +618,37 @@ function InvoiceForm() {
                                 {/* Place of Supply */}
                                 <div className="col-md-4">
                                     <label className="form-label">Place of Supply</label>
-                                    <input
+                                    {/* <input
                                         type="text"
                                         className="form-control"
                                         name="place_of_supply"
                                         value={initialValues.place_of_supply}
                                         onChange={handleInputChange}
                                         placeholder="Enter Place of Supply"
-                                    />
+                                    /> */}
+
+                                    <Select
+                                        showSearch
+                                        style={{ width: "100%" }}
+                                        placeholder="Select Supply"
+                                        optionFilterProp="Place of Supply"
+                                        getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                                        value={initialValues.place_of_supply}
+                                        onChange={(value) =>
+                                            handleInputChange({
+                                                target: {
+                                                    name: "place_of_supply",
+                                                    value,
+                                                },
+                                            })
+                                        }
+                                    >
+                                        {city && city?.map((loc) => (
+                                            <Option key={loc._id} value={loc._id}>
+                                                {loc.name}
+                                            </Option>
+                                        ))}
+                                    </Select>
                                 </div>
                             </div>
 
@@ -758,7 +864,7 @@ function InvoiceForm() {
                                         <button className="btn btn-primary me-2" type="button" onClick={add}>
                                             <i className="bi bi-person-plus"></i> Add
                                         </button>
-                                        <Link to="/billings-invoice" role="button" className="btn btn-outline-danger">
+                                        <Link to={`/billings-invoice/${params?.id}`} role="button" className="btn btn-outline-danger">
                                             <i className="bi bi-x"></i> Close
                                         </Link>
                                     </div>
@@ -781,6 +887,10 @@ function InvoiceForm() {
                 ModalAllFildData={ModalAllFildData}
                 city={city}
                 roomType={roomType}
+                partyCreator={partyCreator}
+                Hotel={Hotel}
+                mealPlan={mealPlan}
+                roomCategory={roomCategory}
             />
 
             <InvoicePartyClientSelectedSearch

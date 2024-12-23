@@ -17,6 +17,12 @@ const VoucherHotalList = () => {
     const params = useParams()
 
     const [modalShow, setModalShow] = useState(false);
+    const [modalidData, setModalIddata] = useState(null)
+    const modelOpen = (id) => {
+        setModalIddata(id)
+        setModalShow(true)
+
+    }
 
     const getCurrentDate = () => {
         const today = new Date();
@@ -151,7 +157,7 @@ const VoucherHotalList = () => {
                                         <Link to={`#`} className="btn btn-primary shadow btn-xs sharp me-1">
                                             <TiTick style={{ marginBottom: '8px' }} />
                                         </Link>
-                                        <button type="button" className="btn btn-primary shadow btn-xs sharp me-1" onClick={() => setModalShow(true)}>
+                                        <button type="button" className="btn btn-primary shadow btn-xs sharp me-1" onClick={() => modelOpen(item?._id)}>
                                             <CiMail style={{ marginBottom: '8px' }} />
                                         </button>
                                         {/* <Link to={`#`} className="btn btn-primary shadow btn-xs sharp me-1">
@@ -200,6 +206,7 @@ const VoucherHotalList = () => {
             <SendMailModal
                 show={modalShow}
                 onHide={() => setModalShow(false)}
+                modalidData={modalidData}
             />
         </>
     )

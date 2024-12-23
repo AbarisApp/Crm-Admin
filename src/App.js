@@ -1168,6 +1168,8 @@ import NewProductionList from "./components/cropProductions/productionInformatio
 import CropHealthCodes from "./pages/cropProductionPage/CropHealthCodes";
 import AgronomyVisit from "./pages/cropProductionPage/AgronomyVisit";
 import AddAgronomyInformation from "./components/cropProductions/agronomyVisitInfomation/addAgronomyInformation/AddAgronomyInformation";
+import RoomCategoryPage from "./pages/travelCrmMaster/roomCategory/RoomCategory.js";
+import RoomCategoryAdd from "./components/travelCrmMaster/roomCategory/roomCategoryAdd/RoomCategoryAdd.js";
 
 
 function App() {
@@ -3050,6 +3052,9 @@ function App() {
               <Route path="room-type-master" element={<RoomTypePage />} />
               <Route path="room-type-master-add" element={<RoomTypeAdd />} />
               <Route path="room-type-master-update/:id" element={<RoomTypeAdd />} />
+              <Route path="travel-room-category" element={<RoomCategoryPage />} />
+              <Route path="travel-room-category-add" element={<RoomCategoryAdd />} />
+              <Route path="travel-room-category-update/:id" element={<RoomCategoryAdd />} />
               <Route path="travel-service" element={<ServiceeMasterrPage />} />
               <Route path="travel-servicee-add" element={<ServiceMasterAdd />} />
               <Route path="travel-servicee-update/:id" element={<ServiceMasterAdd />} />
@@ -3378,14 +3383,14 @@ function App() {
               {/* junaid */}
 
               <Route path="payable-master" element={<AllPayablePage />} />
-              <Route path="payable-month-view/:id" element={<MonthView />} /> 
+              <Route path="payable-month-view/:id" element={<MonthView />} />
 
               <Route path="L-r-register" element={<LRRegisterPage />} />
               <Route path="L-r-register/Add" element={<LRAdd />} />
               <Route path="L-r-register/edit/:id" element={<LRAdd />} />
 
 
-              
+
               <Route path="godown-stock-master" element={<GrowDownPage />} />
               <Route path="godown-stock-master/Add" element={<GrowMoreAdd />} />
               <Route path="godown-stock-master/edit/:id" element={<GrowMoreAdd />} />

@@ -10,9 +10,10 @@ const InvoiceFormModal = ({ ...props }) => {
     return (
         <Modal
             {...props}
-            size="lg"
+            size="xl"
             aria-labelledby="contained-modal-title-vcenter"
             centered
+            className="dialog-modal"
         >
             {/* <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
@@ -88,9 +89,9 @@ const InvoiceFormModal = ({ ...props }) => {
                                                     value={invoice.hotel}
                                                     onChange={(value) => props?.handleInputChangeModel(index, 'hotel', value)}
                                                 >
-                                                    {props?.hotelSundry?.voucher?.map((loc) => (
+                                                    {props?.Hotel?.map((loc) => (
                                                         <Option key={loc._id} value={loc._id}>
-                                                            {loc.name}
+                                                            {loc.hotel_name}
                                                         </Option>
                                                     ))}
                                                 </Select>
@@ -161,24 +162,9 @@ const InvoiceFormModal = ({ ...props }) => {
                                                 <select className="form-control" aria-label="Default select example" value={invoice.room_category} onChange={(e) =>
                                                     props?.handleInputChangeModel(index, 'room_category', e.target.value)}>
                                                     <option selected>Open this select Room Category</option>
-                                                    <option value={'Single'}>Single</option>
-                                                    <option value={'Deluxe Creek View Room'}>Deluxe Creek View Room</option>
-                                                    <option value={'Deluxe'}>Deluxe</option>
-                                                    <option value={'luxury'}>luxury</option>
-                                                    <option value={'Executive'}>Executive</option>
-                                                    <option value={'Suite'}>Suite</option>
-                                                    <option value={'Super Deluxe'}>Super Deluxe</option>
-                                                    <option value={'Premium View Room'}>Premium View Room</option>
-                                                    <option value={'Junior Suite'}>Junior Suite</option>
-                                                    <option value={'SINGLE ROOM STANDARD WITHOUT SHARED BATHROOM'}>SINGLE ROOM STANDARD WITHOUT SHARED BATHROOM</option>
-                                                    <option value={'STANDARD'}>STANDARD</option>
-                                                    <option value={'Superior Room'}>Superior Room</option>
-                                                    <option value={'Arabian Premium Room'}>Arabian Premium Room</option>
-                                                    <option value={'Mahua Bagh Jacuzzi Cottage'}>Mahua Bagh Jacuzzi Cottage</option>
-                                                    <option value={'Luxury Room'}>Luxury Room</option>
-                                                    <option value={'Cottage'}>Cottage</option>
-                                                    <option value={'Tent'}>Tent</option>
-                                                    <option value={'Villa'}>Villa</option>
+                                                    {props?.roomCategory && props?.roomCategory?.map((item) => {
+                                                        return <option value={item?._id} key={item?._id}>{item?.category_name}</option>
+                                                    })}
                                                 </select>
                                             </div>
                                             <div class="col-md-3 mb-3">
@@ -186,16 +172,9 @@ const InvoiceFormModal = ({ ...props }) => {
                                                 <select className="form-control" aria-label="Default select example" value={invoice.meal_plan} onChange={(e) =>
                                                     props?.handleInputChangeModel(index, 'meal_plan', e.target.value)}>
                                                     <option selected>Open this select Meal Plan</option>
-                                                    <option value={'With Breakfast'}>With Breakfast</option>
-                                                    <option value={'No Meals'}>No Meals</option>
-                                                    <option value={'MAPAI (Break fast & Dinner) '}>MAPAI (Break fast & Dinner) </option>
-                                                    <option value={'No Meals1'}>No Meals1</option>
-                                                    <option value={'with  Lunch'}>with  Lunch</option>
-                                                    <option value={'with tea and snack'}>with tea and snack</option>
-                                                    <option value={'CP (Breakfast)'}>CP (Breakfast)</option>
-                                                    <option value={'MAP (Breakfast & Dinner)'}>MAP (Breakfast & Dinner)</option>
-                                                    <option value={'AP (Breakfast, Lunch & Dinner)'}>AP (Breakfast, Lunch & Dinner)</option>
-                                                    <option value={'EP (No Meals)'}>EP (No Meals)</option>
+                                                    {props?.mealPlan && props?.mealPlan?.map((item) => {
+                                                        return <option value={item?._id} key={item?._id}>{item?.meal_name}</option>
+                                                    })}
                                                 </select>
                                             </div>
                                         </div>
@@ -205,7 +184,7 @@ const InvoiceFormModal = ({ ...props }) => {
                                                 <textarea class="form-control" rows="2" placeholder="Add Remarks" value={invoice.remarks} onChange={(e) =>
                                                     props?.handleInputChangeModel(index, 'remarks', e.target.value)}></textarea>
                                             </div>
-                                            <div class="col-8 mb-3">
+                                            <div class="col-4 mb-3">
                                                 <label class="form-label">Booking Date</label>
                                                 <input type="date" class="form-control" value={invoice.booking_date} onChange={(e) =>
                                                     props?.handleInputChangeModel(index, 'booking_date', e.target.value)} />
@@ -281,7 +260,7 @@ const InvoiceFormModal = ({ ...props }) => {
                                                         props?.handleInputChangeModel(index, 'tcs', e.target.value)} />
                                                 </div>
 
-                                                <div class="col-md-4 mb-3">
+                                                <div class="col-md-3 mb-3">
                                                     <label class="form-label">Total Sale</label>
                                                     <input type="number" class="form-control" placeholder="TCS" value={invoice.total_sale} onChange={(e) =>
                                                         props?.handleInputChangeModel(index, 'total_sale', e.target.value)} />
@@ -377,7 +356,7 @@ const InvoiceFormModal = ({ ...props }) => {
                                                         value={invoice.supplier_party}
                                                         onChange={(value) => props?.handleInputChangeModel(index, 'supplier_party', value)}
                                                     >
-                                                        {props?.hotelSundry?.voucher?.map((loc) => (
+                                                        {props?.partyCreator?.voucher?.map((loc) => (
                                                             <Option key={loc._id} value={loc._id}>
                                                                 {loc.name}
                                                             </Option>
@@ -489,10 +468,11 @@ const InvoiceFormModal = ({ ...props }) => {
                                                 <div class="col-md-2 mb-3">
 
                                                 </div>
-                                                <div class="col-md-2 mb-3">
+                                                {/* <div class="col-md-2 mb-3">
                                                     <label class="form-label">SAC</label>
-                                                    <input type="number" class="form-control" placeholder="SAC" />
-                                                </div>
+                                                    <input type="number" class="form-control" placeholder="SAC" value={invoice.supplier_sac} onChange={(e) =>
+                                                        props?.handleInputChangeModel(index, 'supplier_sac', e.target.value)} />
+                                                </div> */}
                                                 <div class="col-md-2 mb-3">
                                                     <div className="form-check">
                                                         <input className="form-check-input" type="checkbox" checked={invoice.is_tax} onChange={(e) => props?.handleInputChangeModel(index, 'is_tax', e.target.checked)} />

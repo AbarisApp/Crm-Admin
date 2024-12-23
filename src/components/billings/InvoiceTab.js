@@ -29,7 +29,6 @@ function InvoiceTab() {
   const [totalCount, setTotalCount] = useState(null)
   const [data, setData] = useState(null)
   // console.log(data);
-
   const [allData, setAllData] = useState(null)
   const [filterInitial, setFilterInitial] = useState({
     user_id: '',
@@ -52,7 +51,7 @@ function InvoiceTab() {
   const getTransitionReport = async (input) => {
     // console.log('iojijip');
     setLoading(true)
-    const clone = { ...filterInitial, count: count, page: input, user_id: window.localStorage.getItem('userIdToken') }
+    const clone = { ...filterInitial, count: count, paramsid: params?.id, page: input, user_id: window.localStorage.getItem('userIdToken') }
     try {
       const res = await getaccount_invoice(clone)
       setTotalCount(res?.totalCount)
@@ -64,7 +63,6 @@ function InvoiceTab() {
   }
   const onChangeVal = (e) => {
     // console.log(e - 1);
-
     setPage(e - 1)
     getTransitionReport(e - 1)
   };

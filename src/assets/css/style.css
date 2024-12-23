@@ -57218,3 +57218,8 @@ h3 {
   padding: 5px;
 
 }
+
+
+.dialog-modal .modal-lg {
+  width: 1050px !important;
+}
