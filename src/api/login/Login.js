@@ -5659,6 +5659,10 @@ export const getTravelAllMealType = () => {
   return axiosInstance.get(`${baseUrl}TRCRM_meal_type_master/admin`);
 };
 
+export const getRoom_category = () => {
+  return axiosInstance.get(`${baseUrl}trcrm/room_category/admin`);
+};
+
 export const getTRCRM_cost_label_master = () => {
   return axiosInstance.get(`${baseUrl}TRCRM_cost_label_master/admin`);
 };
@@ -5709,7 +5713,7 @@ export const addAccount_invoice = (data) => {
   return axiosInstance.post(`${baseUrl}account_invoice/addType`, data);
 };
 export const getaccount_invoice = (value) => {
-  return axiosInstance.get(`${baseUrl}account_invoice/page?page=${value?.page}&count=${value?.count}&start_date=${value?.start_date}&end_date=${value?.end_date}`);
+  return axiosInstance.get(`${baseUrl}account_invoice/page?page=${value?.page}&count=${value?.count}&id=${value?.paramsid}&start_date=${value?.start_date}&end_date=${value?.end_date}`);
 };
 
 export const deleteaccount_invoice = (id) => {
@@ -5720,6 +5724,24 @@ export const getByIdaccount_invoice = (id) => {
 };
 export const updateaccount_invoice = (id, data) => {
   return axiosInstance.put(`${baseUrl}account_invoice/update_type/${id}`, data);
+};
+
+
+export const addtrcrmRoom_category = (data) => {
+  return axiosInstance.post(`${baseUrl}trcrm/room_category/addType`, data);
+};
+
+export const getatrcrm = (value) => {
+  return axiosInstance.get(`${baseUrl}trcrm/room_category/user?page=${value?.page}&count=${value?.count}&start_date=${value?.start_date}&end_date=${value?.end_date}`);
+};
+export const deletetrcrm = (id) => {
+  return axiosInstance.delete(`${baseUrl}trcrm/room_category/delete_type/${id}`);
+};
+export const getByIdtrcrm = (id) => {
+  return axiosInstance.get(`${baseUrl}trcrm/room_category/${id}`);
+};
+export const updatetrcrm = (id, data) => {
+  return axiosInstance.put(`${baseUrl}trcrm/room_category/update_type/${id}`, data);
 };
 
 
