@@ -1,9 +1,10 @@
 import { Empty, Pagination } from 'antd'
 import React from 'react'
 import { Table } from 'react-bootstrap'
+import { FaEye } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 
-function BusBookingList({ onChangeVal }) {
+function BusBookingList({ data, onChangeVal, totalCount }) {
     return (
         <section className="ListDistributer exppdf">
             <div className="row m-4">
@@ -20,11 +21,9 @@ function BusBookingList({ onChangeVal }) {
                                     </div>
                                 </div>
                                 <div id="empoloyees-tblwrapper_wrapper" className="dataTables_wrapper no-footer">
-                                <table id="table-to-xls" className="table dataTable no-footer" role="grid" aria-describedby="empoloyees-tblwrapper_info">
+                                    <table id="table-to-xls" className="table dataTable no-footer" role="grid" aria-describedby="empoloyees-tblwrapper_info">
                                         <thead>
-
                                             <tr role='row'>
-
                                                 <th> Ref. No.	</th>
                                                 <th>Origin City	</th>
                                                 <th>Destination City	</th>
@@ -40,51 +39,48 @@ function BusBookingList({ onChangeVal }) {
                                                 <th >Assign User	</th>
                                                 <th >Created</th>
                                                 <th >Summary</th>
-                                                
+                                                <th >Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {/* {aepsData?.data?.map((item, i) => {
+                                            {data && data?.map((item, i) => {
+                                                return <tr role="row" className="odd" key={i} style={{ cursor: "pointer" }}>
+                                                    <td>--</td>
+                                                    <td>{item?.source_name}</td>
+                                                    <td>{item?.destination_name}</td>
+                                                    <td>{item?.departure_time}</td>
 
-                                                    return <tr role="row" className="odd" key={i} style={{ cursor: "pointer" }} onClick={() => { ChangeRouts(item._id) }}>
-                                                        <td>{new Date(item?.createdAt).getDate() + "/" + Number(new Date(item?.createdAt).getMonth() + 1) + "/" + new Date(item?.createdAt).getFullYear() + " , " + new Date(item?.createdAt).getHours() + ":" + new Date(item?.createdAt).getMinutes()}</td>
-                                                        <td>{item?.refer_id}</td>
-                                                        <td>{item?.mobile}</td>
-                                                        <td>{item?.shop_name ? item?.shop_name : item?.name}</td>
-
-                                                        <td>{item?.refer_code}</td>
-                                                        <td>{item?.subject}</td>
-                                                        <td>{item?.department_id}</td>
-                                                        <td>{item?.priority}</td>
-                                                        <td><span className="badge badge-success text-light border-0 w-100" style={{ backgroundColor: `${item?.status === "pending" ? 'blue' : '#bc3922ab'}`, fontSize: `${item?.status === "success" ? '0.8rem' : ''}` }}>{item?.status == "success" ? 'Success' : 'Pending'}</span></td>
-                                                        <td>{item?.lastReply}</td>
-
-                                                        <td className='text-center'>
-
-                                                            <Link className='btn btn-warning color2' to={`/disputes/view/${item._id}`}>Reply</Link>
-                                                        </td>
-                                                    </tr>
-                                                })} */}
-
-                                            <tr>
-                                                <td colSpan={14}>
-                                                    <Empty />
-                                                </td>
-                                            </tr>
-
+                                                    <td>{item?.ticket_no}</td>
+                                                    <td>--</td>
+                                                    <td>-</td>
+                                                    <td>{item?.totalAmount}</td>
+                                                    <td><span className="badge badge-success text-light border-0 w-100" style={{ backgroundColor: `${item?.status === "2" ? 'blue' : '#bc3922ab'}`, fontSize: `${item?.status === "2" ? '0.8rem' : ''}` }}>{item?.status == "2" ? 'Success' : 'Pending'}</span></td>
+                                                    <td>--</td>
+                                                    <td>--</td>
+                                                    <td>{item?.source_name}</td>
+                                                    <td>--</td>
+                                                    <td>{item?.createdAt}</td>
+                                                    <td>--</td>
+                                                    <td>
+                                                        <Link to={`${`/bus-booking-deatils/${item?.ticket_no}`}`}>
+                                                            <FaEye />
+                                                        </Link>
+                                                    </td>
+                                                </tr>
+                                            })}
                                         </tbody>
                                     </table>
 
                                     <div className="dataTables_info" id="empoloyees-tblwrapper_info" role="status" aria-live="polite">
-                                        Total {""} entries
+                                        Total {totalCount} entries
                                     </div>
                                     <div className="dataTables_paginate paging_simple_numbers" id="empoloyees-tblwrapper_paginate">
                                         <Pagination
-                                        /* showSizeChanger
-                                        onShowSizeChange={''} */
+                                            /* showSizeChanger
+                                            onShowSizeChange={''} */
 
-                                        // defaultCurrent={1}
-                                        // onChange={onChangeVal}
+                                            defaultCurrent={1}
+                                            onChange={onChangeVal}
                                         // total={aepsData?.totalCount}
                                         />
                                     </div>

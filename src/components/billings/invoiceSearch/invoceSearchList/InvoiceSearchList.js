@@ -27,10 +27,10 @@ function InvoiceSearchList({ params, totalCount, page, onChangeVal, data, count,
 
     const getByIdData = async (id) => {
         try {
-            const res = await getByIdaccount_invoice(id); // Fetch the invoice data
+            const res = await getByIdaccount_invoice(id);
             if (res?.data) {
-                setPdfData(res.data); // Set fetched data in state
-                openPdfInNewTab(res.data); // Open the PDF in a new tab
+                setPdfData(res.data);
+                openPdfInNewTab(res.data);
             }
         } catch (error) {
             console.error("Error fetching invoice data:", error);

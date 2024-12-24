@@ -1,7 +1,7 @@
 import { Pagination, Popconfirm } from "antd"
 import { BsTicketPerforatedFill } from "react-icons/bs"
 import { CiMail } from "react-icons/ci"
-import { FaEye } from "react-icons/fa"
+import { FaEye, FaRegFilePdf } from "react-icons/fa"
 import { TiDownload, TiTick } from "react-icons/ti"
 import { Link, useParams } from "react-router-dom"
 import SendMailModal from "./sendMailModal/SendMailModal"
@@ -10,7 +10,9 @@ import { PDFDownloadLink } from "@react-pdf/renderer"
 import { Button } from "react-bootstrap"
 import { VoucherAfterPayment } from "../../../../common/voucherAfterPaymentPdf/voucherAfterPaymentPdf/VoucherAfterPaymentPdf"
 import { toast } from "react-toastify"
-import { deleteHotelVoucher, getHotelVoucher } from "../../../../api/login/Login"
+import { deleteHotelVoucher, getByIdhotelVoucher, getHotelVoucher } from "../../../../api/login/Login"
+import VoucherHotalPdf from "./voucherHotalPdf/VoucherHotalPdf"
+import { pdf } from "@react-pdf/renderer";
 
 
 const VoucherHotalList = () => {
@@ -109,6 +111,32 @@ const VoucherHotalList = () => {
         getTransitionReport(0)
     }, [])
 
+
+
+    const getByIdData = async (id) => {
+        try {
+            const res = await getByIdhotelVoucher(id);
+            if (res?.data) {
+                // setPdfData(res.data);
+                openPdfInNewTab(res.data);
+            }
+        } catch (error) {
+            console.error("Error fetching invoice data:", error);
+        }
+    };
+
+    const openPdfInNewTab = async (data) => {
+        const blob = await pdf(<VoucherHotalPdf pdfData={data} />).toBlob();
+        const url = URL.createObjectURL(blob);
+        window.open(url, "_blank");
+    };
+
+    const pdfGenerateDefault = (item) => {
+        if (item?._id) {
+            getByIdData(item._id);
+        }
+    };
+
     return (
         <>
             <div id="banner-tblwrapper_wrapper" className="dataTables_wrapper no-footer">
@@ -163,11 +191,15 @@ const VoucherHotalList = () => {
                                         {/* <Link to={`#`} className="btn btn-primary shadow btn-xs sharp me-1">
                                         <TiDownload style={{ marginBottom: '8px' }} />
                                     </Link> */}
-                                        <Button variant="" className="btn-sm py-1 px-2 bg-primary">
+                                        {/* <Button variant="" className="btn-sm py-1 px-2 bg-primary">
                                             <PDFDownloadLink style={{ color: 'white', textDecoration: 'none' }} document={<VoucherAfterPayment abc={'Downloaded pdf'} />} fileName="invoice.pdf">
                                                 {({ loading }) => (loading ? 'Loading document...' : 'VOUCHER AFTER PAYMENT')}
                                             </PDFDownloadLink>
-                                        </Button>
+                                        </Button> */}
+
+                                        <button type="button" className="btn-sm py-1 px-2 bg-primary" onClick={() => pdfGenerateDefault(item)}>
+                                            <FaRegFilePdf />
+                                        </button>
                                         <Link to={`/travel-Vouchers-Add/${params?.id}/${item?._id}`} className="btn btn-primary shadow btn-xs sharp me-1">
                                             <i className="fa fa-pencil" />
                                         </Link>

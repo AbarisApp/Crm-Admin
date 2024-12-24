@@ -5551,7 +5551,7 @@ export const addhotelVoucher = (data) => {
 }
 
 export const getHotelVoucher = (value) => {
-  return axiosInstance.get(`${baseUrl}hotelVoucher/user?page=${value?.page}&count=${value?.count}&start_date=${value?.start_date}&end_date=${value?.end_date}`);
+  return axiosInstance.get(`${baseUrl}hotelVoucher/user?page=${value?.page}&count=${value?.count}&start_date=${''}&end_date=${''}`);
 };
 export const deleteHotelVoucher = (id) => {
   return axiosInstance.delete(`${baseUrl}hotelVoucher/delete_type/${id}`);
@@ -5570,7 +5570,7 @@ export const addServiceVoucher = (data) => {
 }
 
 export const getServiceVoucher = (value) => {
-  return axiosInstance.get(`${baseUrl}serviceVoucher/user?page=${value?.page}&count=${value?.count}&start_date=${value?.start_date}&end_date=${value?.end_date}`);
+  return axiosInstance.get(`${baseUrl}serviceVoucher/user?page=${value?.page}&count=${value?.count}&start_date=${''}&end_date=${''}`);
 };
 export const deletesServiceVoucher = (id) => {
   return axiosInstance.delete(`${baseUrl}serviceVoucher/delete_type/${id}`);
@@ -5586,7 +5586,7 @@ export const addflightVoucher = (data) => {
   return axiosInstance.post(`${baseUrl}flightVoucher/addType`, data);
 }
 export const getflightVoucher = (value) => {
-  return axiosInstance.get(`${baseUrl}flightVoucher/user?page=${value?.page}&count=${value?.count}&start_date=${value?.start_date}&end_date=${value?.end_date}`);
+  return axiosInstance.get(`${baseUrl}flightVoucher/user?page=${value?.page}&count=${value?.count}&start_date=${''}&end_date=${''}`);
 };
 export const deletesflightVoucher = (id) => {
   return axiosInstance.delete(`${baseUrl}flightVoucher/delete_type/${id}`);
@@ -5779,6 +5779,14 @@ export const Updatelead_email = (data) => {
 };
 
 // jilani
+
+export const getBusList = (value) => {
+  return axiosInstance.get(`${extraBaseUrl}busservice_txn/admin?page=${value?.page}&count=${value?.count}&start_date=${value?.start_date}&end_date=${value?.end_date}&txn_id=`)
+}
+
+export const getIdBusList = (id) => {
+  return axiosInstance.get(`${extraBaseUrl}busservice_txn/admin/detail?ticket_no=${id}`)
+}
 
 
 

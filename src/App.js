@@ -1170,6 +1170,7 @@ import AgronomyVisit from "./pages/cropProductionPage/AgronomyVisit";
 import AddAgronomyInformation from "./components/cropProductions/agronomyVisitInfomation/addAgronomyInformation/AddAgronomyInformation";
 import RoomCategoryPage from "./pages/travelCrmMaster/roomCategory/RoomCategory.js";
 import RoomCategoryAdd from "./components/travelCrmMaster/roomCategory/roomCategoryAdd/RoomCategoryAdd.js";
+import BusBookingDetails from "./components/busComp/busBooking/busBookingList/busBookingDetails/BusBookingDetails.js";
 
 
 function App() {
@@ -2462,6 +2463,7 @@ function App() {
               <Route path="bus-markup" element={<BusMarkup />} />
               <Route path="bus-amendments" element={<BusAmendments />} />
               <Route path="bus-booking-list" element={<BusBooking />} />
+              <Route path="bus-booking-deatils/:id" element={<BusBookingDetails />} />
               <Route path="bus-cancellation-request" element={<BusCancel />} />
               <Route path="bus-refund" element={<BusRefunds />} />
               <Route path="bus-group-request" element={<BusGroupRequest />} />
