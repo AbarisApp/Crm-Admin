@@ -111,7 +111,7 @@ function AddBrand({ getData }) {
                 });
             }
             getData()
-            toastSuccessMessage(params?.uid ? "Updated successfully" : "Added successfully");
+            alert(params?.uid ? "Updated successfully" : "Added successfully");
             // alert('brand  Request Send Successfully')
         } catch (error) {
             // alert('brand  Request Send Fail !')

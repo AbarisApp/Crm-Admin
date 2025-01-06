@@ -1,25 +1,67 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaPencilAlt } from "react-icons/fa"; // Importing the edit icon
-
-function LeadInformation() {
+import Select from 'react-select';
+import { getAllAssign, leadenquiryStatusMasterList, leadSourseMasterList, updateLead } from "../../api/login/Login";
+import { useParams } from "react-router-dom";
+import Loadar from "../../common/loader/Loader";
+function LeadInformation({ data }) {
+  const [assignedTo, setAssignedTo] = useState([]);
+  const [allData, setallData] = useState({
+    assignData: [],
+    leadSource: [],
+    leadStatus: [],
+  });
   const [formData, setFormData] = useState({
-    name: "Receptionist",
+    name: data?.name,
     assignedTo: "Rsoft",
-    mobilePhone: "+91 8851746286",
-    altPhone: "+91",
-    email: "abarisapps@gmail.com",
+    mobilePhone: data?.mobile,
+    email: data?.email,
     secondaryEmail: "",
-    leadSource: "Offline",
+    leadSource: data?.lead_source,
     leadMedium: "",
-    leadStatus: "New Lead",
+    leadStatus: data?.lead_status,
     leadSubStatus: "",
     followUpOn: "29-07-2024 03:19:44 PM",
     reEngagement: "Spoken",
     address: "",
     cpName: "",
   });
+  useEffect(() => {
+    setAssignedTo(data?.assignTo?.map((item)=>{return {...item ,value: item?.name , label: item?.name}}))
+    setFormData({
+      name: data?.name,
+      assignedTo: "Rsoft",
+      mobilePhone: data?.mobile,
+      email: data?.email,
+      secondaryEmail: "",
+      leadSource: data?.lead_source,
+      leadMedium: "",
+      leadStatus: data?.lead_status,
+      leadSubStatus: "",
+      followUpOn: "29-07-2024 03:19:44 PM",
+      reEngagement: "Spoken",
+      address: "",
+      cpName: "",
+    })
+  }, [data])
+  const parems = useParams()
+  const getSelectionData = async () => {
+    const assign = await getAllAssign()
+    const leadsource = await leadSourseMasterList(0, 100)
+    const leadstatus = await leadenquiryStatusMasterList(0, 100)
+    const assigndata = assign.data.map((item) => {
+      return { ...item, value: item.name, label: item.name }
+    })
+    setallData({
+      assignData: assigndata,
+      leadSource: leadsource.data,
+      leadStatus: leadstatus.data
+    })
+  }
+  useEffect(() => {
+    getSelectionData()
+  }, [])
 
-  // State to manage individual edit mode for each input field
   const [isEditMode, setIsEditMode] = useState({
     name: false,
     assignedTo: false,
@@ -36,7 +78,10 @@ function LeadInformation() {
     address: false,
     cpName: false,
   });
-
+  const chnageHandleAssignedTo = (selectedOptions) => {
+    console.log(selectedOptions);
+    setAssignedTo(selectedOptions);
+  };
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -46,14 +91,23 @@ function LeadInformation() {
     setIsEditMode((prev) => ({ ...prev, [field]: !prev[field] }));
   };
 
-  const handleSubmit = (e) => {
+  const [load , setLoad] = useState(false)
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Form data submitted:", formData);
+    setLoad(true)
+    // console.log("Form data submitted:", formData);
+    try {
+      const update = await updateLead(parems?.id, {...formData , assignTo: assignedTo ,lead_source: formData.leadSource , lead_status: formData.leadStatus})
+    } catch (error) {
+
+    }
+    setLoad(false)
     setIsEditMode(Object.keys(isEditMode).reduce((acc, field) => ({ ...acc, [field]: false }), {}));
   };
 
   return (
     <div className="container mt-4">
+    {load && <Loadar/>}
       <div className="row">
         <div className="col-12">
           <div className="card p-3">
@@ -87,19 +141,20 @@ function LeadInformation() {
                   <strong>Assigned To:</strong>
                 </label>
                 <div className="input-container" style={{ position: "relative" }}>
-                  <input
-                    type="text"
-                    className="form-control"
-                    name="assignedTo"
-                    value={formData.assignedTo}
-                    onChange={handleInputChange}
-                    disabled={!isEditMode.assignedTo}
-                    style={{ paddingRight: "30px" }}
+                  <Select
+                    name="affiliate"
+                    isMulti
+                    value={assignedTo}
+                    onChange={chnageHandleAssignedTo}
+                    options={allData.assignData}
+                    closeMenuOnSelect={false}
+                    className="basic-multi-select"
+                  // disabled={!isEditMode.assignedTo}
                   />
-                  <FaPencilAlt
+                  {/* <FaPencilAlt
                     onClick={() => toggleEditMode("assignedTo")}
                     style={editIconStyle(isEditMode.assignedTo)}
-                  />
+                  /> */}
                 </div>
               </div>
 
@@ -126,7 +181,7 @@ function LeadInformation() {
               </div>
 
               {/* AltPhone Field */}
-              <div className="mb-2">
+              {/* <div className="mb-2">
                 <label>
                   <strong>Alternate Phone:</strong>
                 </label>
@@ -145,7 +200,7 @@ function LeadInformation() {
                     style={editIconStyle(isEditMode.altPhone)}
                   />
                 </div>
-              </div>
+              </div> */}
 
               {/* Email Field */}
               <div className="mb-2">
@@ -197,15 +252,22 @@ function LeadInformation() {
                   <strong>Lead Source:</strong>
                 </label>
                 <div className="input-container" style={{ position: "relative" }}>
-                  <input
-                    type="text"
-                    className="form-control"
+                  <select
+                    id="leadSource"
                     name="leadSource"
+                    className="form-select"
                     value={formData.leadSource}
-                    onChange={handleInputChange}
                     disabled={!isEditMode.leadSource}
-                    style={{ paddingRight: "30px" }}
-                  />
+                    onChange={handleInputChange}
+                  >
+                    <option value="" style={{ backgroundColor: "#235c0a", color: "white" }}>Select Lead Source</option>
+                    {allData?.leadSource?.map((item, index) => (
+                      <option key={index} value={item?._id}>
+                        {item?.name}
+                      </option>
+                    ))}
+                  </select>
+
                   <FaPencilAlt
                     onClick={() => toggleEditMode("leadSource")}
                     style={editIconStyle(isEditMode.leadSource)}
@@ -219,15 +281,22 @@ function LeadInformation() {
                   <strong>Lead Status:</strong>
                 </label>
                 <div className="input-container" style={{ position: "relative" }}>
-                  <input
-                    type="text"
-                    className="form-control"
+                  <select
+                    id="leadStatus"
                     name="leadStatus"
+                    className="form-select"
                     value={formData.leadStatus}
-                    onChange={handleInputChange}
                     disabled={!isEditMode.leadStatus}
-                    style={{ paddingRight: "30px" }}
-                  />
+                    onChange={handleInputChange}
+                  >
+                    <option value="" style={{ backgroundColor: "#235c0a", color: "white" }}>Select Lead Status</option>
+                    {allData?.leadStatus?.map((item, index) => (
+                      <option key={index} value={item?._id}>
+                        {item?.name}
+                      </option>
+                    ))}
+                  </select>
+
                   <FaPencilAlt
                     onClick={() => toggleEditMode("leadStatus")}
                     style={editIconStyle(isEditMode.leadStatus)}

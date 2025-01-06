@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { deleteAccLedgerById, getAccLedgerByPage } from "../../../api/login/Login";
+import { deleteAccLedgerById, getAccLedgerByPage, getLeadDetail } from "../../../api/login/Login";
 import { Pagination } from "antd";
 import Loadar from "../../../common/loader/Loader";
 import { PDFViewer } from "@react-pdf/renderer";
@@ -81,10 +81,12 @@ const QuotationList = ({ title }) => {
     const pdfGenerateDefault = () => {
         setPdf(!pdf)
     }
+
     return (
         <div style={{ width: "1000px" }}>
             {loading && <Loadar />}
             <h4>{title}</h4>
+            
             <div className="container mt-4 card">
                 <div className="d-flex justify-content-between align-items-center mb-3">
                     <Link className="btn btn-primary" to={`/customer-view/${paremss.id}/add-quotation`} >

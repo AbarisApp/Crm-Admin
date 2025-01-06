@@ -2,6 +2,7 @@ import { Alert } from "antd";
 import { useEffect, useState } from "react";
 import Select from 'react-select';
 import { Link } from "react-router-dom";
+import { getStreamListSelect } from "../../../api/login/Login";
 
 function CollageDataFilter({ submitForm, initialValues, params, getReailerDistIdAgainst }) {
     const todayDate = () => {
@@ -80,8 +81,28 @@ function CollageDataFilter({ submitForm, initialValues, params, getReailerDistId
         });
         getReailerDistIdAgainst(0);
     };
+    const [selectedStreamState, setselectedStreamState] = useState([]);
+    const [streamState, SetStreamState] = useState();
+    const getStreamDataForSelect = async () => {
+        try {
+            const response = await getStreamListSelect();
+            SetStreamState(response?.data.map(item => ({
+                value: item?._id,
+                label: item?.name,
+            })));
+        } catch (error) {
+            alert(error.message);
+        }
+    };
 
-
+    const streamsHandler = (selectedOptions) => {
+        setselectedStreamState(selectedOptions);
+        const ids = selectedOptions.map((itemn) => itemn.value)
+        // courseTypeDataForSelect(ids)
+    };
+    useEffect(() => {
+        getStreamDataForSelect()
+    }, [])
     return (
         <>
             <div className="row m-4">
@@ -213,9 +234,9 @@ function CollageDataFilter({ submitForm, initialValues, params, getReailerDistId
                                         <Select
                                             name="stream_id"
                                             isMulti
-                                            value={"selectedStreamState"}
-                                            onChange={"streamsHandler"}
-                                            options={"streamState"}
+                                            value={selectedStreamState}
+                                            onChange={streamsHandler}
+                                            options={streamState}
                                             className="basic-multi-select"
                                             classNamePrefix="select"
                                             placeholder="Select Streams"
@@ -232,8 +253,8 @@ function CollageDataFilter({ submitForm, initialValues, params, getReailerDistId
                                             name="stream_id"
                                             isMulti
                                             value={"selectedStreamState"}
-                                            onChange={"streamsHandler"}
-                                            options={"streamState"}
+                                            onChange={() => { }}
+                                            options={[{ value: '1', label: 'Course 1' }, { value: '2', label: 'Course 2' }]}
                                             className="basic-multi-select"
                                             classNamePrefix="select"
                                             placeholder="Select Course"
@@ -260,11 +281,11 @@ function CollageDataFilter({ submitForm, initialValues, params, getReailerDistId
                                         </button>
 
                                     </div>
-                                    
+
                                 </form>
 
 
-                                
+
                             </div>
                         </div>
                     </div>

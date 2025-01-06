@@ -1,14 +1,30 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, Outlet, useParams } from 'react-router-dom';
 import { FaUser, FaAddressBook, FaHandshake, FaStickyNote, FaFileContract, FaFileInvoiceDollar, FaMoneyBillWave, FaProjectDiagram, FaTasks, FaTicketAlt, FaFile, FaLock, FaBell, FaMapMarkedAlt } from 'react-icons/fa';
 import { Container, Row, Col } from 'react-bootstrap';
+import { getLeadDetail } from '../../../api/login/Login';
 
 function MainCustomerView() {
     const params = useParams();
-
+    const [dataUser, setDataUser] = useState([])
+    const getData = async () => {
+        const res = await getLeadDetail(params.id)
+        setDataUser(res.data)
+    }
+    useEffect(() => {
+        getData()
+    }, [])
     return (
         <Container fluid className="px-3">
             <h5 className="card m-2">Hello Test Admin. You are added as admin to this customer.</h5>
+            <div className="table-responsive active-projects style-1">
+
+                <div className="tbl-caption tbl-caption-2 d-block p-2" style={{ marginTop: "15px" }}>
+                    <h5 className="heading">Name : {dataUser?.name}</h5>
+                    <h5 className="heading">Mobile  : {dataUser?.mobile}</h5>
+                    <h5 className="heading">Email : {dataUser?.email}</h5>
+                </div>
+            </div>
             <Row>
                 {/* Sidebar */}
                 <Col md={3} lg={2} className="card p-0 main-sidebar-cs d-none d-md-block">
