@@ -3,7 +3,7 @@ import React from 'react'
 import { Table } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 
-function BusAmendmentsList({ onChangeVal }) {
+function BusAmendmentsList({ getTransitionReport, confirm, page, count, data, totalCount, onChangeVal }) {
     return (
         <section className="ListDistributer exppdf">
             <div className="row m-4">
@@ -25,7 +25,7 @@ function BusAmendmentsList({ onChangeVal }) {
                                         <thead>
 
                                             <tr role='row'>
-
+                                                <th>S.No	</th>
                                                 <th> Markup For	</th>
                                                 <th>Agent Class	</th>
                                                 <th >Value</th>
@@ -39,48 +39,61 @@ function BusAmendmentsList({ onChangeVal }) {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {/* {aepsData?.data?.map((item, i) => {
+                                            {data && data?.map((item, i) => {
+                                                return <tr role="row" key={item?._id}>
+                                                    <td valign="top" className="dataTables_empty">{(i + 1) + (page * count)}</td>
+                                                    <td valign="top" className="dataTables_empty" >{item?.booking_Ref_Number}</td>
+                                                    <td valign="top" className="dataTables_empty" >{item?.amendment_Id}</td>
+                                                    <td valign="top" className="dataTables_empty" >{item?.amendment_Type}</td>
+                                                    <td valign="top" className="dataTables_empty" >{item?.amendment_Status}</td>
+                                                    <td valign="top" className="dataTables_empty" >{item?.generated_On}</td>
+                                                    <td valign="top" className="dataTables_empty" >{item?.generate_By}</td>
+                                                    <td valign="top" className="dataTables_empty" >{item?.journey_Type}</td>
+                                                    <td valign="top" className="dataTables_empty" >{item?.travel_Sector}</td>
+                                                    <td valign="top" className="dataTables_empty" >{item?.travel_Date}</td>
+                                                    <td valign="top" className="dataTables_empty" >{item?.fly_Type}</td>
+                                                    <td valign="top" className="dataTables_empty" >{item?.airline}</td>
+                                                    <td valign="top" className="dataTables_empty" >{item?.airline_Pnr}</td>
+                                                    <td valign="top" className="dataTables_empty" >{item?.GDS_PNR}</td>
+                                                    <td valign="top" className="dataTables_empty" >{item?.ticket_No}</td>
+                                                    <td valign="top" className="dataTables_empty" >{item?.fare_Rule}</td>
 
-                                                    return <tr role="row" className="odd" key={i} style={{ cursor: "pointer" }} onClick={() => { ChangeRouts(item._id) }}>
-                                                        <td>{new Date(item?.createdAt).getDate() + "/" + Number(new Date(item?.createdAt).getMonth() + 1) + "/" + new Date(item?.createdAt).getFullYear() + " , " + new Date(item?.createdAt).getHours() + ":" + new Date(item?.createdAt).getMinutes()}</td>
-                                                        <td>{item?.refer_id}</td>
-                                                        <td>{item?.mobile}</td>
-                                                        <td>{item?.shop_name ? item?.shop_name : item?.name}</td>
-
-                                                        <td>{item?.refer_code}</td>
-                                                        <td>{item?.subject}</td>
-                                                        <td>{item?.department_id}</td>
-                                                        <td>{item?.priority}</td>
-                                                        <td><span className="badge badge-success text-light border-0 w-100" style={{ backgroundColor: `${item?.status === "pending" ? 'blue' : '#bc3922ab'}`, fontSize: `${item?.status === "success" ? '0.8rem' : ''}` }}>{item?.status == "success" ? 'Success' : 'Pending'}</span></td>
-                                                        <td>{item?.lastReply}</td>
-
-                                                        <td className='text-center'>
-
-                                                            <Link className='btn btn-warning color2' to={`/disputes/view/${item._id}`}>Reply</Link>
-                                                        </td>
-                                                    </tr>
-                                                })} */}
-
-                                            <tr>
-                                                <td colSpan={10}>
-                                                    <Empty />
-                                                </td>
-                                            </tr>
+                                                    <td valign="top" className="dataTables_empty" >{item?.txn_Status}</td>
+                                                    <td valign="top" className="dataTables_empty" >{item?.booking_Status}</td>
+                                                    <td valign="top" className="dataTables_empty" >{item?.voucher}</td>
+                                                    {/* <td>
+                                                                                                   <div className="d-flex">
+                                                                                                       <button className="btn btn-primary shadow btn-xs sharp me-1" type='button' onClick={() => modalOpen(item?._id)}>
+                                                                                                           <i className="fa fa-pencil" />
+                                                                                                       </button>
+                                                                                                       <Popconfirm
+                                                                                                           title="Delete Flight Markup!"
+                                                                                                           description="Are you sure to delete?"
+                                                                                                           onConfirm={() => confirm(item?._id)}
+                                                                                                           // onCancel={cancel}
+                                                                                                           okText="Yes"
+                                                                                                           cancelText="No"
+                                                                                                       >
+                                                                                                           <Link to="#" className="btn btn-danger shadow btn-xs sharp">
+                                                                                                               <i className="fa fa-trash" />
+                                                                                                           </Link>
+                                                                                                       </Popconfirm>
+                                                                                                   </div>
+                                                                                               </td> */}
+                                                </tr>
+                                            })}
 
                                         </tbody>
                                     </table>
 
                                     <div className="dataTables_info" id="empoloyees-tblwrapper_info" role="status" aria-live="polite">
-                                        Total {""} entries
+                                        Total {totalCount} entries
                                     </div>
                                     <div className="dataTables_paginate paging_simple_numbers" id="empoloyees-tblwrapper_paginate">
                                         <Pagination
-                                        /* showSizeChanger
-                                        onShowSizeChange={''} */
-
-                                        // defaultCurrent={1}
-                                        // onChange={onChangeVal}
-                                        // total={aepsData?.totalCount}
+                                            defaultCurrent={1}
+                                            onChange={onChangeVal}
+                                            total={totalCount}
                                         />
                                     </div>
                                 </div>

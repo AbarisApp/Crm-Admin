@@ -3,7 +3,7 @@ import React from 'react'
 import { Table } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 
-function HotelAmbdList({ onChangeVal }) {
+function HotelAmbdList({ getTransitionReport, confirm, page, count, data, totalCount, onChangeVal }) {
     return (
         <section className="ListDistributer exppdf">
             <div className="row m-4">
@@ -23,9 +23,7 @@ function HotelAmbdList({ onChangeVal }) {
                                 <div id="empoloyees-tblwrapper_wrapper" className="dataTables_wrapper no-footer">
                                     <table id="table-to-xls" className="table dataTable no-footer" role="grid" aria-describedby="empoloyees-tblwrapper_info">
                                         <thead>
-
                                             <tr role='row'>
-
                                                 <th> Booking Reference Number</th>
                                                 <th>Amendment Id</th>
                                                 <th>Amendment Type</th>
@@ -41,52 +39,59 @@ function HotelAmbdList({ onChangeVal }) {
                                                 <th >Created</th>
                                                 <th >Summary
                                                 </th>
-                                                
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {/* {aepsData?.data?.map((item, i) => {
-
-                                                    return <tr role="row" className="odd" key={i} style={{ cursor: "pointer" }} onClick={() => { ChangeRouts(item._id) }}>
-                                                        <td>{new Date(item?.createdAt).getDate() + "/" + Number(new Date(item?.createdAt).getMonth() + 1) + "/" + new Date(item?.createdAt).getFullYear() + " , " + new Date(item?.createdAt).getHours() + ":" + new Date(item?.createdAt).getMinutes()}</td>
-                                                        <td>{item?.refer_id}</td>
-                                                        <td>{item?.mobile}</td>
-                                                        <td>{item?.shop_name ? item?.shop_name : item?.name}</td>
-
-                                                        <td>{item?.refer_code}</td>
-                                                        <td>{item?.subject}</td>
-                                                        <td>{item?.department_id}</td>
-                                                        <td>{item?.priority}</td>
-                                                        <td><span className="badge badge-success text-light border-0 w-100" style={{ backgroundColor: `${item?.status === "pending" ? 'blue' : '#bc3922ab'}`, fontSize: `${item?.status === "success" ? '0.8rem' : ''}` }}>{item?.status == "success" ? 'Success' : 'Pending'}</span></td>
-                                                        <td>{item?.lastReply}</td>
-
-                                                        <td className='text-center'>
-
-                                                            <Link className='btn btn-warning color2' to={`/disputes/view/${item._id}`}>Reply</Link>
-                                                        </td>
-                                                    </tr>
-                                                })} */}
-
-                                            <tr>
-                                                <td colSpan={14}>
-                                                    <Empty />
-                                                </td>
-                                            </tr>
+                                            {data && data?.map((item, i) => {
+                                                return <tr role="row" key={item?._id}>
+                                                    <td valign="top" className="dataTables_empty">{(i + 1) + (page * count)}</td>
+                                                    <td valign="top" className="dataTables_empty" >{item?.booking_reference_number}</td>
+                                                    <td valign="top" className="dataTables_empty" >{item?.amendment_Id}</td>
+                                                    <td valign="top" className="dataTables_empty" >{item?.amendment_Type}</td>
+                                                    <td valign="top" className="dataTables_empty" >{item?.amendment_Status}</td>
+                                                    <td valign="top" className="dataTables_empty" >{item?.hotel_name}</td>
+                                                    <td valign="top" className="dataTables_empty" >{item?.traveller_name}</td>
+                                                    <td valign="top" className="dataTables_empty" >{item?.checkin_date}</td>
+                                                    <td valign="top" className="dataTables_empty" >{item?.checkout_date}</td>
+                                                    <td valign="top" className="dataTables_empty" >{item?.city}</td>
+                                                    <td valign="top" className="dataTables_empty" >{item?.booking_status}</td>
+                                                    <td valign="top" className="dataTables_empty" >{item?.remark}</td>
+                                                    <td valign="top" className="dataTables_empty" >{item?.generate_by}</td>
+                                                    <td valign="top" className="dataTables_empty" >{item?.created}</td>
+                                                    <td valign="top" className="dataTables_empty" >{item?.summary}</td>
+                                                    {/* <td>
+                                                        <div className="d-flex">
+                                                            <button className="btn btn-primary shadow btn-xs sharp me-1" type='button' onClick={() => modalOpen(item?._id)}>
+                                                                <i className="fa fa-pencil" />
+                                                            </button>
+                                                            <Popconfirm
+                                                                title="Delete Flight Markup!"
+                                                                description="Are you sure to delete?"
+                                                                onConfirm={() => confirm(item?._id)}
+                                                                // onCancel={cancel}
+                                                                okText="Yes"
+                                                                cancelText="No"
+                                                            >
+                                                                <Link to="#" className="btn btn-danger shadow btn-xs sharp">
+                                                                    <i className="fa fa-trash" />
+                                                                </Link>
+                                                            </Popconfirm>
+                                                        </div>
+                                                    </td> */}
+                                                </tr>
+                                            })}
 
                                         </tbody>
                                     </table>
 
                                     <div className="dataTables_info" id="empoloyees-tblwrapper_info" role="status" aria-live="polite">
-                                        Total {""} entries
+                                        Total {totalCount} entries
                                     </div>
                                     <div className="dataTables_paginate paging_simple_numbers" id="empoloyees-tblwrapper_paginate">
                                         <Pagination
-                                        /* showSizeChanger
-                                        onShowSizeChange={''} */
-
-                                        // defaultCurrent={1}
-                                        // onChange={onChangeVal}
-                                        // total={aepsData?.totalCount}
+                                            defaultCurrent={1}
+                                            onChange={onChangeVal}
+                                            total={totalCount}
                                         />
                                     </div>
                                 </div>

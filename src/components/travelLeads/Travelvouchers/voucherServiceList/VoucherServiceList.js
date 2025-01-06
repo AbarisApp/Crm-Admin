@@ -4,7 +4,10 @@ import { CiMail } from "react-icons/ci"
 import { TiDownload, TiTick } from "react-icons/ti"
 import { Link, useParams } from "react-router-dom"
 import { toast } from "react-toastify"
-import { deletesServiceVoucher, getServiceVoucher } from "../../../../api/login/Login"
+import { deletesServiceVoucher, getByIdServiceVoucher, getServiceVoucher } from "../../../../api/login/Login"
+import VoucherServicePdf from "./voucherServicePdf/VoucherServicePdf"
+import { pdf } from "@react-pdf/renderer"
+import { FaRegFilePdf } from "react-icons/fa"
 
 
 const VoucherServiceList = () => {
@@ -91,6 +94,30 @@ const VoucherServiceList = () => {
         }
     }
 
+    const getByIdData = async (id) => {
+        try {
+            const res = await getByIdServiceVoucher(id);
+            if (res?.data) {
+                // setPdfData(res.data);
+                openPdfInNewTab(res.data);
+            }
+        } catch (error) {
+            console.error("Error fetching invoice data:", error);
+        }
+    };
+
+    const openPdfInNewTab = async (data) => {
+        const blob = await pdf(<VoucherServicePdf pdfData={data} />).toBlob();
+        const url = URL.createObjectURL(blob);
+        window.open(url, "_blank");
+    };
+
+    const pdfGenerateDefault = (item) => {
+        if (item?._id) {
+            getByIdData(item._id);
+        }
+    };
+
     useEffect(() => {
         getCurrentDate()
     }, [])
@@ -147,9 +174,9 @@ const VoucherServiceList = () => {
                                         <Link to={`#`} className="btn btn-primary shadow btn-xs sharp me-1">
                                             <TiTick style={{ marginBottom: '8px' }} />
                                         </Link>
-                                        <Link to={`#`} className="btn btn-primary shadow btn-xs sharp me-1">
-                                            <TiDownload style={{ marginBottom: '8px' }} />
-                                        </Link>
+                                        <button type="button" className="btn-sm py-1 px-2 bg-primary" onClick={() => pdfGenerateDefault(item)}>
+                                            <FaRegFilePdf />
+                                        </button>
                                         <Link to={`/travel-service-Add/${params?.id}/${item?._id}`} className="btn btn-primary shadow btn-xs sharp me-1">
                                             <i className="fa fa-pencil" />
                                         </Link>

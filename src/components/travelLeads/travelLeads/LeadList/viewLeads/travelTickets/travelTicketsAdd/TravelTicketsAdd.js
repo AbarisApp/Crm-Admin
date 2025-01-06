@@ -4,14 +4,15 @@ import JoditEditor from 'jodit-react';
 import { ToastContainer, toast } from "react-toastify";
 import { IoMdCloseCircle } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
-import { department, dmtDisputePriority, relatedService, clodinaryImage, sendTicketCreate, getNameUser } from "../../../../../../../api/login/Login";
+import { department, dmtDisputePriority, relatedService, clodinaryImage, sendTicketCreate, getNameUser, usersList } from "../../../../../../../api/login/Login";
 
-const TravelTicketsAdd = () => {
+const TravelTicketsAdd = ({ getDmtTxnData, cancelForm }) => {
 
     const [departData, setDepartData] = useState(null);
     const [priotyData, setPriotyData] = useState(null);
     const [relateData, setRelateData] = useState(null);
     const [selectedFiles, setSelectedFiles] = useState([]);
+    const [userData, setUserData] = useState(null)
     const [content, setContent] = useState('');
     const editor = useRef(null);
 
@@ -22,7 +23,8 @@ const TravelTicketsAdd = () => {
         // phone: '',
         contact_no: '',
         subject: '',
-        service_id: '',
+        // service_id: '',
+        userid: '',
         priority: '',
         description: '',
         attachments: []
@@ -49,6 +51,8 @@ const TravelTicketsAdd = () => {
         try {
             const res = await dmtDisputePriority();
             setPriotyData(res?.data);
+            const resUser = await usersList()
+            setUserData(resUser?.data)
         } catch (error) {
             console.error(error);
         }
@@ -122,8 +126,8 @@ const TravelTicketsAdd = () => {
         const formData = {
             ...initialData,
             description: content,
-            userid: objUser?._id,
-            user_id: window.localStorage.getItem('userIdToken'),
+            // userid: objUser?._id,
+            // user_id: window.localStorage.getItem('userIdToken'),
             attachments: arr
         };
         try {
@@ -131,7 +135,8 @@ const TravelTicketsAdd = () => {
             if (res.statusCode == 200) {
                 toastSuccessMessage();
                 setTimeout(() => {
-                    navigate('/disputes/welcome')
+                    cancelForm()
+                    getDmtTxnData(0)
                 }, 1000);
 
             } else {
@@ -277,6 +282,15 @@ const TravelTicketsAdd = () => {
                                     </select>
                                 </div>
                                 <div className="form-group col-md-4">
+                                    <label>User <span style={{ color: 'red' }}>*</span></label>
+                                    <select className="form-select" name="userid" onChange={handleChange}>
+                                        <option selected>Select User</option>
+                                        {userData && userData.map(item => (
+                                            <option key={item._id} value={item._id}>{item.name}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                {/* <div className="form-group col-md-4">
                                     <label>Related Service <span style={{ color: 'red' }}>*</span></label>
                                     <select className="form-select" name="service_id" onChange={handleChange}>
                                         <option selected>Select Type</option>
@@ -284,7 +298,7 @@ const TravelTicketsAdd = () => {
                                             <option key={item._id} value={item._id}>{item.service_name}</option>
                                         ))}
                                     </select>
-                                </div>
+                                </div> */}
                                 <div className="form-group col-md-4">
                                     <label>Priority <span style={{ color: 'red' }}>*</span></label>
                                     <select className="form-select" name="priority" onChange={handleChange}>
@@ -323,6 +337,7 @@ const TravelTicketsAdd = () => {
                                     </div>
                                 </div>
                                 <div className="form-group col-md-12" style={{ textAlign: "end" }}>
+                                    <button type="button" style={{ margin: "20px 0" }} className="btn btn-primary mr-3" onClick={cancelForm}>Cancle</button>
                                     <button type="button" style={{ margin: "20px 0" }} className="btn btn-primary mr-3" onClick={submitData}>Submit</button>
                                 </div>
                             </div>

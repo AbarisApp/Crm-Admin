@@ -12,13 +12,13 @@ import Loadar from '../../common/loader/Loader';
 import { toast, ToastContainer } from 'react-toastify';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
-function AddCategory() {
+function AddCategory({ getCategory }) {
     const [val, setVal] = useState([]);
     const [value, setValue] = useState(0);
     const [data, setData] = useState([]);
 
     const getLang = async () => {
-        const res = await languageList(); 
+        const res = await languageList();
         setData(res.data);
 
         const mapped = res.data.map((item) => ({
@@ -47,7 +47,7 @@ function AddCategory() {
         setValue(newValue);
     };
 
-    const handleInputChange = (index,field, value) => {
+    const handleInputChange = (index, field, value) => {
         setVal((prev) =>
             prev.map((item, i) =>
                 i === index ? { ...item, [field]: value } : item
@@ -78,7 +78,7 @@ function AddCategory() {
             console.error('Image upload failed', error);
         }
     };
-    
+
     const toastSuccessMessage = (message) => {
         toast.success(`${message}`, {
             position: "top-right",
@@ -98,7 +98,7 @@ function AddCategory() {
                         Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
                     },
                 });
-                navigate('/product_category')
+                // navigate('/product_category')
             } else {
                 await axios.post(`${baseproductUrl}category/add_category`, { list: val }, {
                     headers: {
@@ -106,7 +106,10 @@ function AddCategory() {
                         Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
                     },
                 });
+
             }
+
+            getCategory()
             // getData()
             toastSuccessMessage(params?.uid ? "Updated successfully" : "Added successfully");
             // alert('brand  Request Send Successfully')
@@ -159,7 +162,7 @@ function AddCategory() {
                                                             <select
                                                                 className="form-select form-control"
                                                                 value={item.parent_id}
-                                                                onChange={(e) => handleInputChange(i,"parent_id", e.target.value)}
+                                                                onChange={(e) => handleInputChange(i, "parent_id", e.target.value)}
                                                             >
                                                                 <option value="">Select Parent Category</option>
                                                                 <option value={'null'}>Null</option>
@@ -174,7 +177,7 @@ function AddCategory() {
                                                                 className="form-control"
                                                                 placeholder="Enter Ordering Number"
                                                                 value={item.order_level}
-                                                                onChange={(e) => handleInputChange(i,"order_level", e.target.value)}
+                                                                onChange={(e) => handleInputChange(i, "order_level", e.target.value)}
                                                             />
                                                             <small>Higher number has high priority</small>
                                                         </div>
@@ -184,7 +187,7 @@ function AddCategory() {
                                                             <select
                                                                 className="form-select form-control"
                                                                 value={item.type}
-                                                                onChange={(e) => handleInputChange(i,"type", e.target.value)}
+                                                                onChange={(e) => handleInputChange(i, "type", e.target.value)}
                                                             >
                                                                 <option value="">Select Type</option>
                                                                 <option value="Physical">Physical</option>
@@ -196,7 +199,7 @@ function AddCategory() {
                                                             <label>Description</label>
                                                             <ReactQuill
                                                                 value={item.description}
-                                                                onChange={(value) => handleInputChange(i,"description", value)}
+                                                                onChange={(value) => handleInputChange(i, "description", value)}
                                                                 placeholder="Start typing..."
                                                             />
                                                         </div>
@@ -232,7 +235,7 @@ function AddCategory() {
                                                                 className="form-control"
                                                                 placeholder="Enter Video Link"
                                                                 value={item.video_link}
-                                                                onChange={(e) => handleInputChange(i,"video_link", e.target.value)}
+                                                                onChange={(e) => handleInputChange(i, "video_link", e.target.value)}
                                                             />
                                                         </div>
 
@@ -243,7 +246,7 @@ function AddCategory() {
                                                                 className="form-control"
                                                                 placeholder="Enter Meta Title"
                                                                 value={item.meta_title}
-                                                                onChange={(e) => handleInputChange(i,"meta_title", e.target.value)}
+                                                                onChange={(e) => handleInputChange(i, "meta_title", e.target.value)}
                                                             />
                                                         </div>
 
@@ -253,7 +256,7 @@ function AddCategory() {
                                                                 className="form-control"
                                                                 placeholder="Enter Meta Description"
                                                                 value={item.meta_description}
-                                                                onChange={(e) => handleInputChange(i,"meta_description", e.target.value)}
+                                                                onChange={(e) => handleInputChange(i, "meta_description", e.target.value)}
                                                                 rows="4"
                                                             ></textarea>
                                                         </div>
@@ -264,7 +267,7 @@ function AddCategory() {
                                                                 className="form-control"
                                                                 placeholder="Enter Meta Keywords"
                                                                 value={item.meta_keyword}
-                                                                onChange={(e) => handleInputChange(i,"meta_keyword", e.target.value)}
+                                                                onChange={(e) => handleInputChange(i, "meta_keyword", e.target.value)}
                                                                 rows="4"
                                                             ></textarea>
                                                         </div>
@@ -276,7 +279,7 @@ function AddCategory() {
                                                                 className="form-control"
                                                                 placeholder="Enter Slug"
                                                                 value={item.slug}
-                                                                onChange={(e) => handleInputChange(i,"slug", e.target.value)}
+                                                                onChange={(e) => handleInputChange(i, "slug", e.target.value)}
                                                             />
                                                         </div>
 
@@ -287,7 +290,7 @@ function AddCategory() {
                                                                 className="form-control"
                                                                 placeholder="Enter Commission Rate"
                                                                 value={item.commision_rate}
-                                                                onChange={(e) => handleInputChange(i,"commision_rate", e.target.value)}
+                                                                onChange={(e) => handleInputChange(i, "commision_rate", e.target.value)}
                                                             />
                                                         </div>
 
@@ -298,7 +301,7 @@ function AddCategory() {
                                                                 className="form-control"
                                                                 placeholder="Enter Level"
                                                                 value={item.level}
-                                                                onChange={(e) => handleInputChange(i,"level", e.target.value)}
+                                                                onChange={(e) => handleInputChange(i, "level", e.target.value)}
                                                             />
                                                         </div>
 
@@ -307,7 +310,7 @@ function AddCategory() {
                                                             <select
                                                                 className="form-select form-control"
                                                                 value={item.top}
-                                                                onChange={(e) => handleInputChange(i,"top", e.target.value)}
+                                                                onChange={(e) => handleInputChange(i, "top", e.target.value)}
                                                             >
                                                                 <option value={false}>No</option>
                                                                 <option value={true}>Yes</option>
@@ -319,7 +322,7 @@ function AddCategory() {
                                                             <select
                                                                 className="form-select form-control"
                                                                 value={item.featured}
-                                                                onChange={(e) => handleInputChange(i,"featured", e.target.value)}
+                                                                onChange={(e) => handleInputChange(i, "featured", e.target.value)}
                                                             >
                                                                 <option value={false}>No</option>
                                                                 <option value={true}>Yes</option>

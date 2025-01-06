@@ -23,7 +23,7 @@ function AddIndustry({ getData }) {
         setData(res.data);
 
         const mapped = res.data.map((item) => ({
-        name: "", language_id: item._id, parent_id: null, lable: item.name, order_level: "", type: "", banner: "", meta_title: "", meta_description: '', commision_rate: "", level: "", top: false, featured: false, meta_keyword: "", slug: "", description: ''
+            name: "", language_id: item._id, parent_id: null, lable: item.name, order_level: "", type: "", banner: "", meta_title: "", meta_description: '', commision_rate: "", level: "", top: false, featured: false, meta_keyword: "", slug: "", description: ''
         }));
         if (params?.uid) {
             getDataId()
@@ -67,7 +67,7 @@ function AddIndustry({ getData }) {
                 setLoad(false)
                 setVal((prev) =>
                     prev.map((item, i) =>
-                        i === index ? { ...item,  [field]: imageUrl } : item
+                        i === index ? { ...item, [field]: imageUrl } : item
                     )
                 );
             }, 1000);
@@ -93,7 +93,7 @@ function AddIndustry({ getData }) {
                         Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
                     },
                 });
-                navigate('/product_brand')
+                // navigate('/product_brand')
             } else {
                 await axios.post(`${baseproductUrl}industry/add_category`, { list: val }, {
                     headers: {

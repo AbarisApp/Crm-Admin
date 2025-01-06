@@ -124,7 +124,7 @@ function InvoiceForm() {
             }
         }
 
-        // Update calculated fields if final_amt or is_tax changes
+
         if (field === 'final_amt' || field === 'is_tax' || field === 'tax_type') {
             const { final_amt, is_tax, tax_type, tax } = invoice;
 
@@ -136,33 +136,27 @@ function InvoiceForm() {
                 fee_amt = taxable = is_tax ? 0 : parseFloat(final_amt);
             } else if (tax_type === 'No ITC 5%') {
                 if (is_tax) {
-                    // Exclusive of tax calculation
-                    fee_amt = (parseFloat(final_amt) / (1 + 0.05)).toFixed(2); // Base amount before adding tax
-                    taxable = parseFloat(fee_amt); // Taxable amount is the base amount (exclusive of tax)
+
+                    fee_amt = (parseFloat(final_amt) / (1 + 0.05)).toFixed(2);
+                    taxable = parseFloat(fee_amt);
                 } else {
-                    // Normal calculation
-                    fee_amt = parseFloat(final_amt).toFixed(2); // Directly use the final amount as fee
-                    taxable = (fee_amt * (1 + 0.05)).toFixed(2); // Taxable includes tax
+
+                    fee_amt = parseFloat(final_amt).toFixed(2);
+                    taxable = (fee_amt * (1 + 0.05)).toFixed(2);
                 }
             } else if (tax_type === '18% On Bill Amount') {
-                // if (is_tax) {
-                //     taxable = parseFloat(final_amt);
-                //     fee_amt = (taxable / (1 + taxPercent)).toFixed(2);
-                // } else {
-                //     fee_amt = parseFloat(final_amt).toFixed(2);
-                //     taxable = (fee_amt * (1 + taxPercent)).toFixed(2);
-                // }
+
                 if (is_tax) {
-                    // Calculate fee_amt and taxable as exclusive of tax
-                    fee_amt = (parseFloat(final_amt) / (1 + taxPercent)).toFixed(2); // Base amount before adding tax
-                    taxable = parseFloat(fee_amt); // Taxable amount is the same as the base
+
+                    fee_amt = (parseFloat(final_amt) / (1 + taxPercent)).toFixed(2);
+                    taxable = parseFloat(fee_amt);
                 } else {
-                    // Exclusive of tax when not "is_tax"
-                    fee_amt = (parseFloat(final_amt) / (1 + taxPercent)).toFixed(2); // Base amount before adding tax
-                    taxable = fee_amt; // Taxable is same as base amount
+
+                    fee_amt = (parseFloat(final_amt) / (1 + taxPercent)).toFixed(2);
+                    taxable = fee_amt;
                 }
             }
-            // Update calculated values
+
             invoice.fee_amt = fee_amt;
             invoice.taxable = taxable;
             invoice.cgst = (taxable * (taxPercent / 2)).toFixed(2);

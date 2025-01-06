@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Pagination, Popconfirm, message } from "antd";
 import Breadcrumbs from "../../common/breadcrumb/Breadcrumbs";
-import { deleteBlog, getBlogList } from "../../api/login/Login"; 
+import { deleteBlog, getBlogList } from "../../api/login/Login";
 import Loadar from "../../common/loader/Loader";
 import { baseUrlImage } from "../../baseUrl";
 
@@ -106,10 +106,10 @@ function BlogList() {
                                                     <td>{item?.meta_title}</td>
                                                     <td>{item?.description}</td>
                                                     <td>
-                                                        <img style={{width:"100px"}} src={`${baseUrlImage}${item?.attachment}`} alt="Meta" />
+                                                        <img style={{ width: "100px" }} src={`${baseUrlImage}${item?.attachment}`} alt="Meta" />
                                                     </td>
                                                     <td>
-                                                        <img style={{width:"100px"}} src={`${baseUrlImage}${item?.meta_image}`} alt="Meta" />
+                                                        <img style={{ width: "100px" }} src={`${baseUrlImage}${item?.meta_image}`} alt="Meta" />
                                                     </td>
                                                     <td>
                                                         <div className="d-flex">

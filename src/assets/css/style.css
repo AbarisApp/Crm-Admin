@@ -57224,3 +57224,38 @@ h3 {
 .dialog-modal .modal-lg {
   width: 1050px !important;
 }
+
+.class-bar canvas {
+  width: 1160px !important;
+  height: 400px !important;
+}
+
+.class-Doughnut canvas {
+  height: 305px !important;
+  text-align: center;
+  width: 662px;
+  margin: auto;
+}
+
+.class-Bar-first canvas {
+  height: 305px !important;
+}
+
+.average-grapg {
+  padding: 10px;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+}
+
+.chart-chart {
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+}
+
+.average-grapg h4,
+p {
+  text-align: center;
+}
+
+.box-fill-average-1 {
+  background: gray;
+  height: 200px;
+}

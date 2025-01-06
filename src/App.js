@@ -1170,6 +1170,15 @@ import AgronomyVisit from "./pages/cropProductionPage/AgronomyVisit";
 import AddAgronomyInformation from "./components/cropProductions/agronomyVisitInfomation/addAgronomyInformation/AddAgronomyInformation";
 import RoomCategoryPage from "./pages/travelCrmMaster/roomCategory/RoomCategory.js";
 import RoomCategoryAdd from "./components/travelCrmMaster/roomCategory/roomCategoryAdd/RoomCategoryAdd.js";
+import BusBookingDetails from "./components/busComp/busBooking/busBookingList/busBookingDetails/BusBookingDetails.js";
+import ZomatoDashboardPage from "./pages/zomatoDashboard/index.js";
+import ResturentDasboardPage from "./pages/resturentDasbord/index.js";
+import ResurentDashboardRatingPage from "./pages/resturantDashBoardRating/index.js";
+import HotelBookingDetails from "./components/hotelComp/hotelBooking/hotelBookingList/hotelBookingDetails/HotelBookingDetails.js";
+import AgentMasterPage from "./pages/travelCrmMaster/agentMaster/index.js";
+import AgentMasterAdd from "./components/travelCrmMaster/agentMaster/agentMasterAdd/AgentMasterAdd.js";
+import FareTypePage from "./pages/travelCrmMaster/fareType/index.js";
+import FareTypeAdd from "./components/travelCrmMaster/fareType/fareTypeAdd/FareTypeAdd.js";
 
 
 function App() {
@@ -2453,6 +2462,7 @@ function App() {
               <Route path="hotels-markup" element={<HotelMarkup />} />
               <Route path="hotel-discounts" element={<HotelDiscount />} />
               <Route path="hotel-booking-list" element={<HotelBooking />} />
+              <Route path="hotel-booking-deatils/:id" element={<HotelBookingDetails />} />
               <Route path="hotel-group-request" element={<HotelGroupRequest />} />
               <Route path="my-booking-hotel-calender" element={<HotelBCalender />} />
               <Route path="hotel-cancellations-request" element={<HotelCancel />} />
@@ -2462,6 +2472,7 @@ function App() {
               <Route path="bus-markup" element={<BusMarkup />} />
               <Route path="bus-amendments" element={<BusAmendments />} />
               <Route path="bus-booking-list" element={<BusBooking />} />
+              <Route path="bus-booking-deatils/:id" element={<BusBookingDetails />} />
               <Route path="bus-cancellation-request" element={<BusCancel />} />
               <Route path="bus-refund" element={<BusRefunds />} />
               <Route path="bus-group-request" element={<BusGroupRequest />} />
@@ -3029,6 +3040,7 @@ function App() {
               <Route path="travel-package-list" element={<TravelPackageListPage />} />
               <Route path="travel-package/edit/:id" element={<TravelPackageEditPage />} />
               <Route path="travel-package/create" element={<TravelPackageAddPage />} />
+              <Route path="travel-package/update/:id" element={<TravelPackageAddPage />} />
               <Route path="travel-master-package" element={<MasterPackageListPage />} />
               <Route path="travel-master-package/detail/:id" element={<MasterPackageDetailPage />} />
               {/* <Route path="travel-quote-list" element={<TravelQuoteListPage />} /> */}
@@ -3058,6 +3070,13 @@ function App() {
               <Route path="travel-service" element={<ServiceeMasterrPage />} />
               <Route path="travel-servicee-add" element={<ServiceMasterAdd />} />
               <Route path="travel-servicee-update/:id" element={<ServiceMasterAdd />} />
+
+              <Route path="travel-fare-type" element={<FareTypePage />} />
+              <Route path="travel-fare-type-add" element={<FareTypeAdd />} />
+              <Route path="travel-fare-type-update/:id" element={<FareTypeAdd />} />
+              <Route path="travel-agent" element={<AgentMasterPage />} />
+              <Route path="travel-agent-add" element={<AgentMasterAdd />} />
+              <Route path="travel-agent-update/:id" element={<AgentMasterAdd />} />
               <Route path="travel-passport" element={<TravelPasswordPage />} />
               <Route path="travel-passport-add" element={<TravelPassportAdd />} />
               <Route path="travel-passport-update/:id" element={<TravelPassportAdd />} />
@@ -3087,6 +3106,11 @@ function App() {
               <Route path="travel-trip-type-add" element={<TripTypeAdd />} />
               <Route path="travel-trip-type-update/:id" element={<TripTypeAdd />} />
 
+
+
+              <Route path="zomato-Dasboard" element={<ZomatoDashboardPage />} />
+              <Route path="restaurant-Dasboard" element={<ResturentDasboardPage />} />
+              <Route path="restaurant-Dasboard-rating" element={<ResurentDashboardRatingPage />} />
 
               <Route path="travel-leads" element={<TravelLeadPage />} />
               <Route path="travel-leads-add" element={<AddLeadForm />} />

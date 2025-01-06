@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
 import TravelTicketsAdd from "./travelTicketsAdd/TravelTicketsAdd"
 import { Pagination } from "antd";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { DisputeData } from "../../../../../../api/login/Login";
 
 
 const TravelTickets = () => {
     const [addShow, setAddShow] = useState(false);
     const [actionType, setActionType] = useState("add");
     const [editData, setEditData] = useState(null);
+    const prarms = useParams()
+
 
     const [mainListcom, setMainListCom] = useState(true)
     const funAddShow = () => {
@@ -61,9 +64,9 @@ const TravelTickets = () => {
     const submitForm = async (values) => {
         console.log(values);
         try {
-            //   const res = await DisputeData({ page:page, count, user_id: token , ...values });
-            //   setAepsData(res?.data);
-            //   setLoading(false)
+            // const res = await DisputeData({ page: page, count, user_id: token, ...values });
+            // setAepsData(res?.data);
+            // setLoading(false)
         } catch (error) {
 
         }
@@ -71,9 +74,9 @@ const TravelTickets = () => {
     const getDmtTxnData = async (num) => {
         setLoading(true)
         try {
-            //   const res = await DisputeData({ page: num ? num : page, count, user_id: token });
-            //   setAepsData(res?.data);
-            //   setLoading(false)
+            const res = await DisputeData({ page: num ? num : page, count, userid: prarms?.id, user_id: token });
+            setAepsData(res?.data);
+            setLoading(false)
         } catch (error) {
 
         }
@@ -110,7 +113,7 @@ const TravelTickets = () => {
                     actionType={actionType}
                     editData={editData}
                     cancelForm={cancelForm}
-                // getTransitionReport={getTransitionReport}
+                    getDmtTxnData={getDmtTxnData}
                 />
             )}
 
@@ -171,8 +174,8 @@ const TravelTickets = () => {
                                         Status				</th>
                                     <th className="sorting text-center" tabIndex={0} aria-controls="empoloyees-tblwrapper" rowSpan={1} colSpan={1} aria-label="Contact Number: activate to sort column ascending" style={{ width: '161.675px' }}>
                                         Last Reply By				</th>
-                                    <th className="sorting text-center" tabIndex={0} aria-controls="empoloyees-tblwrapper" rowSpan={1} colSpan={1} aria-label="Contact Number: activate to sort column ascending" style={{ width: '161.675px' }}>
-                                        Action				</th>
+                                    {/* <th className="sorting text-center" tabIndex={0} aria-controls="empoloyees-tblwrapper" rowSpan={1} colSpan={1} aria-label="Contact Number: activate to sort column ascending" style={{ width: '161.675px' }}>
+                                        Action				</th> */}
                                 </tr>
                             </thead>
                             <tbody>
@@ -193,10 +196,10 @@ const TravelTickets = () => {
                                         <td><span className="badge badge-success text-light border-0 w-100" style={{ backgroundColor: `${item?.status === "pending" ? 'blue' : '#bc3922ab'}`, fontSize: `${item?.status === "success" ? '0.8rem' : ''}` }}>{item?.status == "success" ? 'Success' : 'Pending'}</span></td>
                                         <td>{item?.lastReply}</td>
 
-                                        <td className='text-center'>
+                                        {/* <td className='text-center'>
 
                                             <Link className='btn btn-warning color2' to={`/disputes/view/${item._id}`}>Reply</Link>
-                                        </td>
+                                        </td> */}
                                     </tr>
                                 })}
 
