@@ -62,6 +62,8 @@ function CollagesFormData() {
         meta_description: "",
         meta_image: "",
         course_type: "",
+        is_top_college: '',
+        is_featured: '',
         courses: [{ course_id: "", fee: null }]
     });
 
@@ -101,68 +103,68 @@ function CollagesFormData() {
     // --------------------------------------------------------------------------------
 
     const validate = (values) => {
-        let errors = {};
+        // let errors = {};
 
-        if (!values.name) {
-            errors.name = "College Name is required";
-        }
-        if (!values.establish) {
-            errors.establish = "Establishment year is required";
-        } else if (!/^\d{4}$/.test(values.establish)) {
-            errors.establish = "Establishment year must be a valid 4-digit year";
-        }
-        if (!values.college_type_id) {
-            errors.college_type_id = "College Type is required";
-        }
-        if (!values.affiliate) {
-            errors.affiliate = "At least one affiliation is required";
-        }
-        if (!values.approvedBy) {
-            errors.approvedBy = "At least one approval is required";
-        }
-        if (!values.location) {
-            errors.location = "Location is required";
-        }
-        if (!values.overview) {
-            errors.overview = "Overview is required";
-        }
-        if (!values.facilities) {
-            errors.facilities = "At least one facility is required";
-        }
-        if (!values.eligibilityCriteria) {
-            errors.eligibilityCriteria = "Eligibility criteria is required";
-        }
-        if (!values.video_link) {
-            errors.video_link = "Video link is required";
-        } else if (!/^https?:\/\/[^\s]+$/.test(values.video_link)) {
-            errors.video_link = "Video link must be a valid URL";
-        }
-        if (!values.placement_desc) {
-            errors.placement_desc = "Placement description is required";
-        }
-        if (!values.placement_company_name) {
-            errors.placement_company_name = "Placement company name is required";
-        }
-        if (!values.Other) {
-            errors.Other = "Other information is required";
-        }
-        if (!values.country) {
-            errors.country = "Country is required";
-        }
-        if (!values.state) {
-            errors.state = "State is required";
-        }
-        if (!values.city) {
-            errors.city = "City is required";
-        }
-        if (!values.stream_id) {
-            errors.stream_id = "At least one stream is required";
-        }
-        if (!values.meta_description) {
-            errors.meta_description = "Meta description is required";
-        }
+        // if (!values.name) {
+        //     errors.name = "College Name is required";
+        // }
+        // if (!values.establish) {
+        //     errors.establish = "Establishment year is required";
+        // } else if (!/^\d{4}$/.test(values.establish)) {
+        //     errors.establish = "Establishment year must be a valid 4-digit year";
+        // }
+        // if (!values.college_type_id) {
+        //     errors.college_type_id = "College Type is required";
+        // }
+        // if (!values.affiliate) {
+        //     errors.affiliate = "At least one affiliation is required";
+        // }
+        // if (!values.approvedBy) {
+        //     errors.approvedBy = "At least one approval is required";
+        // }
+        // if (!values.location) {
+        //     errors.location = "Location is required";
+        // }
+        // if (!values.overview) {
+        //     errors.overview = "Overview is required";
+        // }
+        // if (!values.facilities) {
+        //     errors.facilities = "At least one facility is required";
+        // }
+        // if (!values.eligibilityCriteria) {
+        //     errors.eligibilityCriteria = "Eligibility criteria is required";
+        // }
+        // if (!values.video_link) {
+        //     errors.video_link = "Video link is required";
+        // } else if (!/^https?:\/\/[^\s]+$/.test(values.video_link)) {
+        //     errors.video_link = "Video link must be a valid URL";
+        // }
+        // if (!values.placement_desc) {
+        //     errors.placement_desc = "Placement description is required";
+        // }
+        // if (!values.placement_company_name) {
+        //     errors.placement_company_name = "Placement company name is required";
+        // }
+        // if (!values.Other) {
+        //     errors.Other = "Other information is required";
+        // }
+        // if (!values.country) {
+        //     errors.country = "Country is required";
+        // }
+        // if (!values.state) {
+        //     errors.state = "State is required";
+        // }
+        // if (!values.city) {
+        //     errors.city = "City is required";
+        // }
+        // if (!values.stream_id) {
+        //     errors.stream_id = "At least one stream is required";
+        // }
+        // if (!values.meta_description) {
+        //     errors.meta_description = "Meta description is required";
+        // }
 
-        return errors;
+        // return errors;
     };
 
 
@@ -966,6 +968,44 @@ function CollagesFormData() {
                                                             />
                                                         </div>
                                                         <div className="col-xl-6 mb-3">
+                                                            <select
+                                                                id="is_top_college"
+                                                                name="is_top_college"
+                                                                className="form-select"
+                                                                value={values.is_top_college}
+                                                                onChange={(e) => {
+                                                                    handleChange(e);
+                                                                }}
+                                                            >
+                                                                <option value="" >Is Top Collage</option>
+                                                                <option value={true}>
+                                                                    Yes
+                                                                </option>
+                                                                <option value={false}>
+                                                                    No
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                        <div className="col-xl-6 mb-3">
+                                                            <select
+                                                                id="is_featured"
+                                                                name="is_featured"
+                                                                className="form-select"
+                                                                value={values.is_featured}
+                                                                onChange={(e) => {
+                                                                    handleChange(e);
+                                                                }}
+                                                            >
+                                                                <option value="" >Is Featured</option>
+                                                                <option value={true}>
+                                                                    Yes
+                                                                </option>
+                                                                <option value={false}>
+                                                                    No
+                                                                </option>
+                                                            </select>
+                                                        </div>
+                                                        <div className="col-xl-6 mb-3">
                                                             <div className='row align-items-center'>
                                                                 <div className='col-xl-10'>
                                                                     <CustomInputField
@@ -984,7 +1024,7 @@ function CollagesFormData() {
                                                                                 <img
                                                                                     src={`${baseUrlImage}${metaImage}`} // Display the uploaded image
                                                                                     alt='meta_image'
-                                                                                    style={{ objectFit: 'cover' }}
+                                                                                    style={{ objectFit: 'cover',width:"100px" }}
                                                                                 />
                                                                             </picture>
                                                                         </div>
@@ -994,25 +1034,25 @@ function CollagesFormData() {
                                                                                 <img
                                                                                     src={`${baseUrlImage}${values.meta_image}`} // Display the existing meta image
                                                                                     alt='meta_image'
-                                                                                    style={{ objectFit: 'cover' }}
+                                                                                    style={{ objectFit: 'cover' ,width:"100px"}}
                                                                                 />
                                                                             </picture>
                                                                         </div>
                                                                     ) : (
                                                                         <div className='border p-2 rounded-circle'>
-                                                                            <img
+                                                                            {/* <img
                                                                                 id="avatar-image"
                                                                                 src="https://lh5.googleusercontent.com/proxy/t08n2HuxPfw8OpbutGWjekHAgxfPFv-pZZ5_-uTfhEGK8B5Lp-VN4VjrdxKtr8acgJA93S14m9NdELzjafFfy13b68pQ7zzDiAmn4Xg8LvsTw1jogn_7wStYeOx7ojx5h63Gliw"
                                                                                 alt="default_image"
                                                                                 style={{ objectFit: 'cover' }}
-                                                                            />
+                                                                            /> */}
                                                                         </div>
                                                                     )}
                                                                 </div>
                                                             </div>
 
                                                         </div>
-
+                                                       
                                                     </div>
                                                 </div>
                                                 <div className='col-12 '>
@@ -1115,12 +1155,12 @@ function CollagesFormData() {
                                                                         </div>
                                                                     ) : (
                                                                         <div className='border p-2 rounded-circle'>
-                                                                            <img
+                                                                            {/* <img
                                                                                 id="avatar-image"
                                                                                 src="https://lh5.googleusercontent.com/proxy/t08n2HuxPfw8OpbutGWjekHAgxfPFv-pZZ5_-uTfhEGK8B5Lp-VN4VjrdxKtr8acgJA93S14m9NdELzjafFfy13b68pQ7zzDiAmn4Xg8LvsTw1jogn_7wStYeOx7ojx5h63Gliw"
                                                                                 alt="default_image"
                                                                                 style={{ objectFit: 'cover' }}
-                                                                            />
+                                                                            /> */}
                                                                         </div>
                                                                     )}
                                                                 </div>

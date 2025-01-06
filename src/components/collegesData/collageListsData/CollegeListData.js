@@ -85,19 +85,20 @@ function CollegesInfoList({ data, totalCount, page, count, onChangeVal, confirm,
                                                         <td>{(i + 1) + (page * count)}</td>
                                                         <td>{item?.name}</td>
                                                         <td>{item?.establish}</td>
+                                                        <td>{item?.country?.name} , {item?.state?.name} , {item?.city?.name}</td>
+                                                        <td>{item?.stream_id?.map((item)=>{return <span>{item?.name}</span>})}</td>
                                                         <td>---</td>
-                                                        <td>---</td>
-                                                        <td>---</td>
-                                                        <td>---</td>
-                                                        <td>---</td>
-                                                        <td>---</td>
-                                                        <td>{item?.courses[0].fee}</td>
+                                                        <td>{item?.college_type_id?.name}</td>
+                                                        <td>{item?.approvedBy?.map((item)=>{return <span>{item?.name}</span>})}</td>
+                                                        <td>{item?.affiliate?.map((item)=>{return <span>{item?.name}</span>})}</td>
+                                                     
+                                                        <td>--</td>
                                                         <td>
                                                             <div className='image'>
                                                                 <img
                                                                     src={`${baseUrlImage}${item?.logo_img}`}
                                                                     alt='Logo'
-                                                                    style={{ objectFit: 'cover' }}
+                                                                    style={{ objectFit: 'cover',width:"100px" }}
                                                                 />
                                                             </div>
                                                         </td>
