@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import AddContact from "./AddContact";
 import { Link, useParams } from "react-router-dom";
-import { deleteLeadServiceReqById, getLeadServiceReq, getLeadServiceReqById } from "../../../api/login/Login";
+import { deleteLeadServiceReqById, getLeadDetail, getLeadServiceReq, getLeadServiceReqById } from "../../../api/login/Login";
 import { message, Popconfirm } from "antd";
 import { baseUrlImage } from "../../../baseUrl";
 import EditContact from "./EditContact";
@@ -116,10 +116,11 @@ const ServiceList = ({ title }) => {
 
 
     }
-
+   
     return (
         <>
             <h4>{title}</h4>
+           
             <div className="container mt-4 card" style={{ width: "1000px" }}>
                 <div className="d-flex justify-content-between align-items-center mb-3">
                     <button className="btn btn-primary" onClick={() => setModalShow(true)}>+ Service Request</button>

@@ -71,7 +71,7 @@ function AddColor({ getData }) {
                         Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
                     },
                 });
-                navigate('/product_attribute')
+                // navigate('/product_attribute')
             } else {
                 await axios.post(`${baseproductUrl}attribute/add_attributes`, { list: val }, {
                     headers: {
@@ -81,7 +81,7 @@ function AddColor({ getData }) {
                 });
             }
             getData()
-            toastSuccessMessage(params?.uid ? "Updated successfully" : "Added successfully");
+            alert(params?.uid ? "Updated successfully" : "Added successfully");
             // alert('brand  Request Send Successfully')
         } catch (error) {
             // alert('brand  Request Send Fail !')

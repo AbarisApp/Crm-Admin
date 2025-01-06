@@ -56,7 +56,7 @@ function LeadSourceMasterList({data,totalCount,page,count,onChangeVal,confirm,ca
                                                         {item?.slug}
                                                     </td>
                                                     <td>
-                                                        <span className="badge badge-success text-light border-0" style={{ backgroundColor: `${item?.is_active === true ? 'blue' : '#bc3922ab'}`, fontSize: `${item?.is_active === false ? '0.8rem' : ''}` }}>{item?.is_active == true ? 'Active' : 'In Active'}</span>
+                                                        <span className="badge badge-success text-light border-0" style={{ backgroundColor: `${item?.isActive === true ? 'blue' : '#bc3922ab'}`, fontSize: `${item?.isActive === false ? '0.8rem' : ''}` }}>{item?.isActive == true ? 'Active' : 'In Active'}</span>
                                                     </td>
                                                     <td>
                                                         <div className="d-flex">

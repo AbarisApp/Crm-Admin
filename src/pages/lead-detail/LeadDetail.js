@@ -27,6 +27,7 @@ function LeadDetail() {
     const getData =async () => {
        const res = await getLeadDetail(parems.id)
        setData(res.data)
+       console.log(res.data)
     }
     useEffect(()=>{
         getData()
@@ -37,7 +38,7 @@ function LeadDetail() {
             <div className="col-12">
                 <div className="card">
                     <div className="card-body p-0">
-                        <div className="table-responsive active-projects style-1">
+                        {/* <div className="table-responsive active-projects style-1">
                             <div className="tbl-caption tbl-caption-2">
                                 <h4 className="heading mb-0 p-2">Lead Detail</h4>
                             </div>
@@ -46,14 +47,14 @@ function LeadDetail() {
                                 <h5 className="heading">Mobile  : {data?.mobile}</h5>
                                 <h5 className="heading">Email : {data?.email}</h5>
                             </div>
-                        </div>
+                        </div> */}
                         <div className="row mt-4">
                             <div className="col-lg-4 col-md-12 mb-4">
                                 <Accordion defaultActiveKey="0" className="acorianDetail">
                                     <Accordion.Item eventKey="0">
                                         <Accordion.Header>Lead Information</Accordion.Header>
                                         <Accordion.Body style={{ padding: "0" }}>
-                                            <LeadInformation />
+                                            <LeadInformation data={data}/>
                                         </Accordion.Body>
                                     </Accordion.Item>
                                     <Accordion.Item eventKey="1">

@@ -466,6 +466,8 @@ function CollagesFormData() {
     }, []);
 
     const affiliatedHandler = (selectedOptions) => {
+        console.log(selectedOptions);
+        
         setSelectedState4(selectedOptions);
     };
 

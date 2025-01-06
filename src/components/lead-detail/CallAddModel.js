@@ -86,6 +86,7 @@ function CallAddModel(props) {
           const res =  await postCalls(formValues)
           if (res.statusCode == '200') {
             toastSuccessMessage()
+            props.getFloorMasters()
           } else {
             toastSuccessError()
           }

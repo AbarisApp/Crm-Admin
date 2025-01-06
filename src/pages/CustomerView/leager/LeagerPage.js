@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { deleteAccLedgerById, getAccLedgerByPage } from "../../../api/login/Login";
+import { deleteAccLedgerById, getAccLedgerByPage, getLeadDetail } from "../../../api/login/Login";
 import { Pagination } from "antd";
 import Loadar from "../../../common/loader/Loader";
 
@@ -74,11 +74,12 @@ const LeagerPage = ({ sty, title }) => {
         getFloorMasters(e - 1)
 
     };
-
+  
     return (
         <div style={{ width: sty && "1000px" }}>
             {loading && <Loadar />}
             <h4>{title}</h4>
+         
             <div className="container mt-4 card">
                 <div className="d-flex justify-content-between align-items-center mb-3">
                     <Link className="btn btn-primary" to={`/add-leager`} >
@@ -107,7 +108,7 @@ const LeagerPage = ({ sty, title }) => {
                                 <th scope="col">Email</th>
                                 <th scope="col">AC Name</th>
                                 <th scope="col">AC No</th>
-                             
+
                                 <th scope="col">City</th>
                                 <th scope="col">State</th>
                                 <th scope="col">GST No</th>
@@ -127,7 +128,7 @@ const LeagerPage = ({ sty, title }) => {
                                     <td>{ledger.Email}</td>
                                     <td>{ledger.AC_name}</td>
                                     <td>{ledger.AC_no}</td>
-                                    
+
                                     <td>{ledger.city}</td>
                                     <td>{ledger.state}</td>
                                     <td>{ledger?.GSTIN}</td>

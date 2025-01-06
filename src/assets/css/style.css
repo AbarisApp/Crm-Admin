@@ -56624,6 +56624,7 @@ input[type="number"]::-webkit-inner-spin-button {
   background-color: #f9f9f9;
   scrollbar-width: thin;
   scrollbar-color: #6c63ff #e6e6e6;
+  display: grid;
 }
 
 /* Message container */
@@ -56642,7 +56643,7 @@ input[type="number"]::-webkit-inner-spin-button {
 
 /* Message text styling */
 .message-text {
-  background-color: #e6e6e6;
+  /* background-color: #e6e6e6; */
   border-radius: 10px;
   padding: 10px;
   max-width: 75%;

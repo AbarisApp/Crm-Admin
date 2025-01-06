@@ -1733,14 +1733,14 @@ export const getTypes_Of_creditCardMasterId = (id) => {
 };
 // --------------------Sources Apis---------------------------
 export const leadSourseMasterList = (page, count) => {
-  return axiosInstance.get(`${baseUrl}source?page=${page}&count=${count}`);
+  return axiosInstance.get(`${baseUrl}call-source?page=${page}&count=${count}`);
 };
 
 export const addLeadSourseMaster = (data) => {
   return axiosInstance.post(`${baseUrl}source/addType`, data);
 };
 export const deleteLeadSourseMaster = (id) => {
-  return axiosInstance.delete(`${baseUrl}source/delete_type/${id}`);
+  return axiosInstance.delete(`${baseUrl}call-source/delete_type/${id}`);
 };
 export const updateLeadSourseMaster = (id, value) => {
   return axiosInstance.put(`${baseUrl}source/update_type/${id}`, value);
@@ -1766,6 +1766,9 @@ export const deleteLeadSubStatusMaster = (id) => {
 export const updateLeadSubStatusMaster = (id, value) => {
   return axiosInstance.put(`${baseUrl}subStatus/update_type/${id}`, value);
 };
+export const updateLead = (id, value) => {
+  return axiosInstance.put(`${baseUrl}user/updateuser/${id}`, value);
+};
 export const getUpdateLeadSubStatusId = (id) => {
   return axiosInstance.get(`${baseUrl}subStatus/${id}`);
 };
@@ -1778,16 +1781,25 @@ export const leadenquiryStatusMasterListAll = (page, count) => {
 };
 
 export const addenquiryStatusMaster = (data) => {
-  return axiosInstance.post(`${baseUrl}enquiryStatus/addstatus`, data);
+  return axiosInstance.post(`${baseUrl}enquiryStatus/addType`, data);
+};
+export const addenquirySourceMaster = (data) => {
+  return axiosInstance.post(`${baseUrl}call-source/addType`, data);
 };
 export const deleteenquiryStatusMaster = (id) => {
   return axiosInstance.delete(`${baseUrl}enquiryStatus/deletestatus/${id}`);
 };
 export const updateenquiryStatusMaster = (id, value) => {
-  return axiosInstance.put(`${baseUrl}enquiryStatus/updatstatus/${id}`, value);
+  return axiosInstance.put(`${baseUrl}enquiryStatus/update_Type/${id}`, value);
+};
+export const updateenquirySourceMaster = (id, value) => {
+  return axiosInstance.put(`${baseUrl}call-source/update_Type/${id}`, value);
 };
 export const getUpdateenquiryStatusId = (id) => {
   return axiosInstance.get(`${baseUrl}enquiryStatus/${id}`);
+};
+export const getUpdateenquirySorseId = (id) => {
+  return axiosInstance.get(`${baseUrl}call-source/${id}`);
 };
 // ____________________Facilities Crud Apis ___________________________________
 
