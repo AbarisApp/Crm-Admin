@@ -1,16 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
+import { addTRCRM_tr_follow_up, getTRCRM_call_status_master, getTRCRM_tr_time_master } from "../../../../../../../api/login/Login";
 
 
-const FollowUpAdd = ({ cancelForm }) => {
-
+const FollowUpAdd = ({ cancelForm, getTransitionReport }) => {
     const [initialValues, setInitialValues] = useState({
-        email: "",
-        password: "",
-        port_no: '',
-        service: '',
-        host: ''
+        trcrm_lead_id: "",
+        call_status: "",
+        notes: '',
+        title: '',
+        date: '',
+        time: ''
     });
     const params = useParams();
 
@@ -22,27 +23,49 @@ const FollowUpAdd = ({ cancelForm }) => {
         setInitialValues(clone)
     }
 
+    const [statusMaster, setStatusMaster] = useState(null)
+    const [timeMaster, setTimeMaster] = useState(null)
+    const getApiData = async () => {
+        try {
+            const res = await getTRCRM_call_status_master()
+            setStatusMaster(res?.data)
+            const re2 = await getTRCRM_tr_time_master()
+            setTimeMaster(re2?.data)
+            console.log(re2);
+
+        } catch (error) {
+
+        }
+    }
+
 
 
     const toastSuccessMessage = () => {
-        toast.success(`Email Setup Update Successfully`, {
+        toast.success(`add Successfully`, {
             position: "top-center",
         });
     };
 
 
     const AddCallFollowUp = async () => {
+        const clone = { ...initialValues, trcrm_lead_id: params?.id }
         try {
-            // const res = await UpdateAcc_email_setup(initialValues)
-            // // console.log(res);
-            // if (res?.error == false) {
-            //     toastSuccessMessage()
-            // }
+            const res = await addTRCRM_tr_follow_up(clone)
+            // console.log(res);
+            if (res?.error == false) {
+                toastSuccessMessage()
+                cancelForm()
+                getTransitionReport()
+            }
 
         } catch (error) {
 
         }
     }
+
+    useEffect(() => {
+        getApiData()
+    }, [])
 
 
     return (
@@ -57,10 +80,17 @@ const FollowUpAdd = ({ cancelForm }) => {
                         <div className="row">
                             <div className="col-xl-6 mb-3">
                                 <label for="exampleFormControlInput1" className="form-label">Call Status</label>
-                                <select class="form-select" aria-label="Default select example">
-                                    <option value="" selected>Select Status</option>
-                                    <option value="Answered">Answered</option>
-                                    <option value="Waiting">Waiting</option>
+                                <select className="form-select" aria-label="Default select example" name="call_status"
+                                    value={initialValues?.call_status || ""}
+                                    onChange={changeHandle} >
+                                    <option value="" disabled>
+                                        Select Status
+                                    </option>
+                                    {statusMaster && statusMaster?.map((item) => {
+                                        return <option value={item?._id} key={item?._id}>Answered</option>
+                                    })}
+
+                                    {/* <option value="Waiting">Waiting</option>
                                     <option value="Hangup">Hangup</option>
                                     <option value="Busy">Busy</option>
                                     <option value="Not Answered">Not Answered</option>
@@ -73,34 +103,37 @@ const FollowUpAdd = ({ cancelForm }) => {
                                     <option value="Internal Remark">Incoming Remark</option>
                                     <option value="New Reminder">New Reminder</option>
                                     <option value="Incoming Service Call">Incoming Service Call</option>
-                                    <option value="Outgoing Service Call">Outgoing Service Call</option>
+                                    <option value="Outgoing Service Call">Outgoing Service Call</option> */}
                                 </select>
                             </div>
                             <div className="col-xl-6 mb-3">
-                                <label for="exampleFormControlInput1" className="form-label"  >Time</label>
-                                <input type="password" className="form-control" name="password" value={initialValues?.password} placeholder="Enter Time" onChange={changeHandle} />
-                            </div>
-                            <div className="col-xl-6 mb-3">
                                 <label for="exampleFormControlInput1" className="form-label">Note</label>
-                                <input type="number" className="form-control" name="port_no" value={initialValues?.port_no} placeholder="Enter Note" onChange={changeHandle} />
+                                <input type="text" className="form-control" name="notes" value={initialValues?.notes} placeholder="Enter Note" onChange={changeHandle} />
                             </div>
                             <div className="col-xl-6 mb-3">
                                 <label for="exampleFormControlInput1" className="form-label">Title</label>
-                                <input type="text" className="form-control" name="service" value={initialValues?.service} placeholder="Enter Title" onChange={changeHandle} />
+                                <input type="text" className="form-control" name="title" value={initialValues?.title} placeholder="Enter Title" onChange={changeHandle} />
                             </div>
                             <div className="col-xl-6 mb-3">
                                 <label for="exampleFormControlInput1" className="form-label">Date</label>
-                                <input type="date" className="form-control" name="host" value={initialValues?.host} placeholder="Enter Host" onChange={changeHandle} />
+                                <input type="date" className="form-control" name="date" value={initialValues?.date} onChange={changeHandle} />
                             </div>
                             <div className="col-xl-6 mb-3">
                                 <label for="exampleFormControlInput1" className="form-label">Time</label>
-                                <input type="time" className="form-control" name="host" value={initialValues?.host} placeholder="Enter Host" onChange={changeHandle} />
+                                <select className="form-select" aria-label="Default select example" name="time"
+                                    value={initialValues?.time || ""}
+                                    onChange={changeHandle} >
+                                    <option value="" disabled>
+                                        Select Time
+                                    </option>
+                                    {timeMaster && timeMaster?.map((item) => {
+                                        return <option value={item?._id} key={item?._id}>{item?.time}</option>
+                                    })}
+                                </select>
                             </div>
-
                             <div className="col-x-12-4 mb-3 text-align-center">
                                 <button className="btn btn-primary" onClick={cancelForm}>Cancle</button>
-                                <button className="btn btn-primary " onClick={AddCallFollowUp}>Save</button>
-
+                                <button type="button" className="btn btn-primary " onClick={AddCallFollowUp}>Save</button>
                             </div>
 
                             <ToastContainer />
@@ -108,7 +141,7 @@ const FollowUpAdd = ({ cancelForm }) => {
                     </div>
                 </div>
             </div>
-        </div>
+        </div >
     )
 }
 

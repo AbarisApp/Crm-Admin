@@ -6,8 +6,8 @@ import DisputeReplyMess from './disputeReplyMess/DisputeReplyMess';
 import { Link, useNavigate } from 'react-router-dom';
 import Loadar from '../../../../common/loader/Loader';
 
-function DisputeLists({ onChangeVal, aepsData,loading }) {
-    const [modalShow, setModalShow] = useState(false);  
+function DisputeLists({ onChangeVal, aepsData, loading }) {
+    const [modalShow, setModalShow] = useState(false);
     const navigate = useNavigate()
     const ChangeRouts = (id) => {
         navigate(`/disputes/view/${id}`)

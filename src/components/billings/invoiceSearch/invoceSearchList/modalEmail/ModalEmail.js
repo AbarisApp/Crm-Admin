@@ -97,7 +97,6 @@ const ModalEmail = (props) => {
                                         <input
                                             type="text"
                                             className="form-control"
-
                                             placeholder="To"
                                             name="to" value={initialValues?.to} onChange={changeHandle}
                                         />

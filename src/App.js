@@ -1153,6 +1153,24 @@ import GrowDownPage from "./pages/transaction/growDown/index.js";
 import GrowMoreAdd from "./components/transaction/godown-stock/purchageOrderAdd/GrowMoreAdd.js";
 // adil
 
+import ManageCustomer from "./pages/manageCustomer";
+import AddManageCustomer from "./components/customerInside/manageCustomerInside/addManageCustomer/AddManageCustomer";
+import ProductStock from "./pages/manageStock";
+import DealarStock from "./pages/manageStock/DealarStock";
+import Tracking from "./pages/trackerPagesList/Tracking";
+import LiveFeed from "./pages/trackerPagesList";
+import TrackParties from "./pages/trackerPagesList/TrackParties";
+import RrackingReport from "./pages/trackerPagesList/RrackingReport";
+import GpsFlag from "./pages/trackerPagesList/GpsFlag";
+import CropMaster from "./pages/cropProductionPage";
+import Production from "./pages/cropProductionPage/Production";
+import NewProductionList from "./components/cropProductions/productionInformation/newProductionList/NewProductionList";
+import CropHealthCodes from "./pages/cropProductionPage/CropHealthCodes";
+import AgronomyVisit from "./pages/cropProductionPage/AgronomyVisit";
+import AddAgronomyInformation from "./components/cropProductions/agronomyVisitInfomation/addAgronomyInformation/AddAgronomyInformation";
+import RoomCategoryPage from "./pages/travelCrmMaster/roomCategory/RoomCategory.js";
+import RoomCategoryAdd from "./components/travelCrmMaster/roomCategory/roomCategoryAdd/RoomCategoryAdd.js";
+
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -3034,6 +3052,9 @@ function App() {
               <Route path="room-type-master" element={<RoomTypePage />} />
               <Route path="room-type-master-add" element={<RoomTypeAdd />} />
               <Route path="room-type-master-update/:id" element={<RoomTypeAdd />} />
+              <Route path="travel-room-category" element={<RoomCategoryPage />} />
+              <Route path="travel-room-category-add" element={<RoomCategoryAdd />} />
+              <Route path="travel-room-category-update/:id" element={<RoomCategoryAdd />} />
               <Route path="travel-service" element={<ServiceeMasterrPage />} />
               <Route path="travel-servicee-add" element={<ServiceMasterAdd />} />
               <Route path="travel-servicee-update/:id" element={<ServiceMasterAdd />} />
@@ -3362,14 +3383,14 @@ function App() {
               {/* junaid */}
 
               <Route path="payable-master" element={<AllPayablePage />} />
-              <Route path="payable-month-view/:id" element={<MonthView />} /> 
+              <Route path="payable-month-view/:id" element={<MonthView />} />
 
               <Route path="L-r-register" element={<LRRegisterPage />} />
               <Route path="L-r-register/Add" element={<LRAdd />} />
               <Route path="L-r-register/edit/:id" element={<LRAdd />} />
 
 
-              
+
               <Route path="godown-stock-master" element={<GrowDownPage />} />
               <Route path="godown-stock-master/Add" element={<GrowMoreAdd />} />
               <Route path="godown-stock-master/edit/:id" element={<GrowMoreAdd />} />
@@ -3385,6 +3406,24 @@ function App() {
               <Route path="fullLoad/add" element={<FullLoadAddPage />} />
               {/* Moin routes end */}
 
+              {/* meraj */}
+              <Route path="crop-master" element={<CropMaster />} />
+              <Route path="production" element={<Production />} />
+              <Route path="new-production-list" element={<NewProductionList />} />
+              <Route path="crop-health-codes" element={<CropHealthCodes />} />
+              <Route path="agronomy-visit" element={<AgronomyVisit />} />
+              <Route path="add-agronomy-information" element={<AddAgronomyInformation />} />
+              <Route path="manage-customer" element={<ManageCustomer />} />
+              <Route path="add-manage-customer" element={<AddManageCustomer />} />
+              <Route path="product-stock" element={<ProductStock />} />
+              <Route path="dealar-stock" element={<DealarStock />} />
+              <Route path="live-feed" element={<LiveFeed />} />
+              <Route path="tracking" element={<Tracking />} />
+              <Route path="track-parties" element={<TrackParties />} />
+              <Route path="tracking-report" element={<RrackingReport />} />
+              <Route path="gps-flag" element={<GpsFlag />} />
+
+              {/* meraj */}
 
             </Route>
           </>

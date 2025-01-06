@@ -40,7 +40,7 @@ function Dispute() {
   const submitForm = async (values) => {
     console.log(values);
     try {
-      const res = await DisputeData({ page:page, count, user_id: token , ...values });
+      const res = await DisputeData({ page: page, count, user_id: token, ...values });
       setAepsData(res?.data);
       setLoading(false)
     } catch (error) {
