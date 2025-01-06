@@ -12,7 +12,7 @@ const ServiceeMasterr = () => {
     const breadCrumbsTitle = {
         id: "1",
         title_1: "Travel CRM Master",
-        title_2: 'Travel Service Master',
+        title_2: 'Agent Master',
         path_2: ``
     };
     const params = useParams()

@@ -1,9 +1,18 @@
-import { Empty, Pagination } from 'antd'
-import React from 'react'
+import { Empty, Pagination, Popconfirm } from 'antd'
+import React, { useState } from 'react'
 import { Table } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
+import AddVisaMArkup from '../../../visaComp/visaMarkup/addVisaMarkUp/AddVisaMarkup'
+import AddHotelMarkup from '../addHotelMarkUp/AddHotelMarkup'
 
-function HotelMarkupList({ onChangeVal }) {
+function HotelMarkupList({ getTransitionReport, confirm, page, count, data, totalCount, onChangeVal }) {
+    const [modalShow, setModalShow] = useState(false);
+
+    const [selectedItemId, setSelectedItemId] = useState(null);
+    const modalOpen = (id) => {
+        setSelectedItemId(id || null);
+        setModalShow(true);
+    };
     return (
         <section className="ListDistributer exppdf">
             <div className="row m-4">
@@ -14,19 +23,17 @@ function HotelMarkupList({ onChangeVal }) {
                                 <div className="tbl-caption">
                                     <h4 className="heading mb-0"><b>Hotel Markup List
                                     </b></h4>
-                                    <div>
-                                        {/* <ExportPdf /> */}
-                                        {/* {curdmtexcelTtxn ? (<CSVLink className="btn btn-warning" data={curdmtexcelTtxn} >Export Excel <CiSaveDown1 className='fs-4 fw-bold text-white' />
-                                        </CSVLink>) : ""} */}
-                                    </div>
+                                    <button className="btn btn-secondary pd-x-20" type='button' onClick={() => modalOpen(null)}>
+                                        <i class="fas fa-plus"></i> Add Hotel Markup
+                                    </button>
                                 </div>
                                 <div id="empoloyees-tblwrapper_wrapper" className="dataTables_wrapper no-footer">
                                     <table id="table-to-xls" className="table dataTable no-footer" role="grid" aria-describedby="empoloyees-tblwrapper_info">
                                         <thead>
-
                                             <tr role='row'>
+                                                <th>S.No</th>
                                                 <th>Hotel Markup</th>
-                                                <th>Agent Class</th>
+                                                {/* <th>Agent Class</th> */}
                                                 <th>Value</th>
                                                 <th>Region Type</th>
                                                 <th>Hotel Markup Type</th>
@@ -39,48 +46,52 @@ function HotelMarkupList({ onChangeVal }) {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {/* {aepsData?.data?.map((item, i) => {
-
-                                                    return <tr role="row" className="odd" key={i} style={{ cursor: "pointer" }} onClick={() => { ChangeRouts(item._id) }}>
-                                                        <td>{new Date(item?.createdAt).getDate() + "/" + Number(new Date(item?.createdAt).getMonth() + 1) + "/" + new Date(item?.createdAt).getFullYear() + " , " + new Date(item?.createdAt).getHours() + ":" + new Date(item?.createdAt).getMinutes()}</td>
-                                                        <td>{item?.refer_id}</td>
-                                                        <td>{item?.mobile}</td>
-                                                        <td>{item?.shop_name ? item?.shop_name : item?.name}</td>
-
-                                                        <td>{item?.refer_code}</td>
-                                                        <td>{item?.subject}</td>
-                                                        <td>{item?.department_id}</td>
-                                                        <td>{item?.priority}</td>
-                                                        <td><span className="badge badge-success text-light border-0 w-100" style={{ backgroundColor: `${item?.status === "pending" ? 'blue' : '#bc3922ab'}`, fontSize: `${item?.status === "success" ? '0.8rem' : ''}` }}>{item?.status == "success" ? 'Success' : 'Pending'}</span></td>
-                                                        <td>{item?.lastReply}</td>
-
-                                                        <td className='text-center'>
-
-                                                            <Link className='btn btn-warning color2' to={`/disputes/view/${item._id}`}>Reply</Link>
-                                                        </td>
-                                                    </tr>
-                                                })} */}
-
-                                            <tr>
-                                                <td colSpan={12}>
-                                                    <Empty />
-                                                </td>
-                                            </tr>
+                                            {data && data?.map((item, i) => {
+                                                return <tr role="row" key={item?._id}>
+                                                    <td valign="top" className="dataTables_empty">{(i + 1) + (page * count)}</td>
+                                                    <td valign="top" className="dataTables_empty" >{item?.markup_for}</td>
+                                                    {/* <td valign="top" className="dataTables_empty" >--</td> */}
+                                                    <td valign="top" className="dataTables_empty" >{item?.commision}</td>
+                                                    <td valign="top" className="dataTables_empty" >{item?.region_type}</td>
+                                                    <td valign="top" className="dataTables_empty" >{item?.markup_type}</td>
+                                                    <td valign="top" className="dataTables_empty" >{item?.display_markup}</td>
+                                                    <td valign="top" className="dataTables_empty" >--</td>
+                                                    <td valign="top" className="dataTables_empty" >{item?.status == true ? "Active" : 'InActive'}</td>
+                                                    <td valign="top" className="dataTables_empty" >{item?.createdAt}</td>
+                                                    <td valign="top" className="dataTables_empty" >{item?.updatedAt}</td>
+                                                    <td>
+                                                        <div className="d-flex">
+                                                            <button className="btn btn-primary shadow btn-xs sharp me-1" type='button' onClick={() => modalOpen(item?._id)}>
+                                                                <i className="fa fa-pencil" />
+                                                            </button>
+                                                            <Popconfirm
+                                                                title="Delete Hotel Markup!"
+                                                                description="Are you sure to delete?"
+                                                                onConfirm={() => confirm(item?._id)}
+                                                                // onCancel={cancel}
+                                                                okText="Yes"
+                                                                cancelText="No"
+                                                            >
+                                                                <Link to="#" className="btn btn-danger shadow btn-xs sharp">
+                                                                    <i className="fa fa-trash" />
+                                                                </Link>
+                                                            </Popconfirm>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            })}
 
                                         </tbody>
                                     </table>
 
                                     <div className="dataTables_info" id="empoloyees-tblwrapper_info" role="status" aria-live="polite">
-                                        Total {""} entries
+                                        Total {totalCount} entries
                                     </div>
                                     <div className="dataTables_paginate paging_simple_numbers" id="empoloyees-tblwrapper_paginate">
                                         <Pagination
-                                        /* showSizeChanger
-                                        onShowSizeChange={''} */
-
-                                        // defaultCurrent={1}
-                                        // onChange={onChangeVal}
-                                        // total={aepsData?.totalCount}
+                                            defaultCurrent={1}
+                                            onChange={onChangeVal}
+                                            total={totalCount}
                                         />
                                     </div>
                                 </div>
@@ -89,7 +100,12 @@ function HotelMarkupList({ onChangeVal }) {
                     </div>
                 </div>
             </div >
-
+            <AddHotelMarkup
+                show={modalShow}
+                onHide={() => setModalShow(false)}
+                selectedItemId={selectedItemId}
+                getTransitionReport={getTransitionReport}
+            />
         </section>
 
     )

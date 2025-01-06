@@ -5,10 +5,12 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import TagsInput from 'react-tagsinput';
 import { baseUrl } from '../../baseUrl';
-import { addTravelPackage, getTravelAllCity, getTravelAllCountry, getTravelAllMealType, getTravelAllOthers, getTravelAllState, getTravelAllTags, getTravelPackageById, updateTravelPackage } from '../../api/login/Login';
+import { addTravelPackage, getBrandByPage, getcategoryAdmin, getindustryAdmin, getTravelAllCity, getTravelAllCountry, getTravelAllMealType, getTravelAllOthers, getTravelAllState, getTravelAllTags, getTravelPackageById, updateTravelPackage } from '../../api/login/Login';
 import { ToastContainer, toast } from "react-toastify";
 
 import { useNavigate, useParams } from 'react-router-dom';
+import { Select } from 'antd';
+const { Option } = Select;
 
 function TravelPackageAddComp() {
     const [loading, setLoading] = useState(false);
@@ -33,6 +35,12 @@ function TravelPackageAddComp() {
     const [inpVal, setInpVal] = useState({
         package: '',
         overview: '',
+        product_category: [],
+        product_industry: [],
+        theme: [],
+        tags: [],
+        meal_type: '',
+        other: []
     });
     const handleAllChange = (e) => {
         const inputName = e.target.name;
@@ -137,8 +145,8 @@ function TravelPackageAddComp() {
         });
     };
 
-    const toastSuccessMessage = () => {
-        toast.success("Package Added", {
+    const toastSuccessMessage = (str) => {
+        toast.success(`${str}`, {
             position: "top-center",
         });
     };
@@ -176,17 +184,30 @@ function TravelPackageAddComp() {
     const getAllOthersListData = async () => {
         try {
             const res = await getTravelAllOthers();
-            console.log('othersD----', res?.data);
+            // console.log('othersD----', res?.data);
             setAllOthersD(res?.data);
         } catch (error) {
 
         }
     };
+    const [categoryAdmin, setCategoryAdmin] = useState(null)
+    // console.log(categoryAdmin);
+    const [industryAdmin, setIndustryAdmin] = useState(null)
+    const [productAdmin, setProductAdmin] = useState(null)
+
+    // console.log(categoryAdmin);
+
     const getAllMealTypeListData = async () => {
         try {
             const res = await getTravelAllMealType();
-            console.log('MealTypeD----', res?.data);
+            // console.log('MealTypeD----', res?.data);
             setAllMealTypesD(res?.data);
+            const res2 = await getcategoryAdmin()
+            setCategoryAdmin(res2?.data)
+            const res3 = await getindustryAdmin()
+            setIndustryAdmin(res3?.data)
+            const resBrand = await getBrandByPage()
+            setProductAdmin(resBrand?.data)
         } catch (error) {
 
         }
@@ -194,9 +215,19 @@ function TravelPackageAddComp() {
 
     const navigate = useNavigate();
 
+    const handleMultiSelectChange = (value, name) => {
+        setInpVal((prevState) => ({
+            ...prevState,
+            [name]: value,
+        }));
+    };
+
+
     const handleSubmitData = async () => {
-        const payloadObj = { ...inpVal, country: selectedCountry, cities: rows, tags: selectedTags, meal_type: mealtypeVal, other: selectedOthers, itinerary: itineraryVal, inclusions: inclusionVal, exclusions: exclusionVal, extra1: extraOneVal, extra2: extraTwoVal, upload_images: selectedImages };
+        const payloadObj = { ...inpVal, country: selectedCountry, cities: rows, itinerary: itineraryVal, inclusions: inclusionVal, exclusions: exclusionVal, extra1: extraOneVal, extra2: extraTwoVal, upload_images: selectedImages };
         setLoading(true);
+        console.log(inpVal);
+
 
         if (params?.id) {
             try {
@@ -204,7 +235,7 @@ function TravelPackageAddComp() {
                 if (res?.error === false) {
                     toastSuccessMessage('Package Updated');
                     setTimeout(() => {
-                        navigate('../../travel-package')
+                        navigate('/travel-package-list')
                     }, 3000);
                 } else if (res?.error === true) {
                     toastErrorMessage('Package Not Updated');
@@ -220,7 +251,7 @@ function TravelPackageAddComp() {
                 if (res?.error === false) {
                     toastSuccessMessage('Package Added');
                     setTimeout(() => {
-                        navigate('../../travel-package')
+                        navigate('/travel-package-list')
                     }, 3000);
                 } else if (res?.error === true) {
                     toastErrorMessage('Package Not Added');
@@ -240,7 +271,7 @@ function TravelPackageAddComp() {
             setInpVal(res?.data);
             setInclusionVal(res?.data?.inclusions);
             setExclusionVal(res?.data?.exclusions);
-            setRows(res?.data?.cities);
+            // setRows(res?.data?.cities);
             setExtraOneVal(res?.data?.extra1);
             setExtraTwoVal(res?.data?.extra2);
             setSelectedTags(res?.data?.tags);
@@ -248,6 +279,25 @@ function TravelPackageAddComp() {
             setmealtypeVal(res?.data?.meal_type);
             setItineraryVal(res?.data?.itinerary);
             setSelectedImages(res?.data?.upload_images);
+
+            const data = res?.data;
+            if (data) {
+                console.log("Fetched Data by ID:", data);
+                setRows(data.cities || [{ country: "", state: "", city: "", stay: "" }]);
+                if (data.cities && data.cities.length) {
+                    for (const [index, cityRow] of data.cities.entries()) {
+                        if (cityRow.country) {
+                            const resStates = await getTravelAllState(cityRow.country);
+                            setAllStatesD(resStates?.data || []);
+                        }
+                        if (cityRow.state) {
+                            const resCities = await getTravelAllCity(cityRow.state);
+                            setAllCitiesD(resCities?.data || []);
+                        }
+                    }
+                }
+            }
+
         } catch (error) {
 
         }
@@ -284,9 +334,8 @@ function TravelPackageAddComp() {
                                         <h4 className="heading mb-0"><b>{params?.id ? "Update" : "Add"} New Package</b></h4>
                                     </div>
                                     <form className="row cusforms mt-3" style={{ padding: "0 20px" }}>
-
                                         <h4 className='mt-3' style={{ color: 'red' }}>Package Information</h4>
-                                        <div className="form-group col-6 mt-2">
+                                        <div className="form-group col-3 mt-2">
                                             <label htmlFor="fromDate">Package Name</label>
                                             <input
                                                 type="text"
@@ -297,6 +346,67 @@ function TravelPackageAddComp() {
                                                 placeholder='Enter Package Name'
                                                 id="fromDate"
                                             />
+                                        </div>
+                                        <div className="form-group col-3 mt-2">
+                                            <label htmlFor="fromDate">Travel Category</label>
+                                            <Select
+                                                showSearch
+                                                mode="multiple"
+                                                style={{ width: "100%", height: '40px' }}
+                                                placeholder="Select Travel Category "
+                                                optionFilterProp="children"
+                                                className=""
+
+                                                value={inpVal.product_category}
+                                                onChange={(value) => handleMultiSelectChange(value, "product_category")}
+                                                getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                                            >
+                                                {categoryAdmin?.map((loc) => (
+                                                    <Option key={loc._id} value={loc._id}>
+                                                        {loc.name}
+                                                    </Option>
+                                                ))}
+                                            </Select>
+                                        </div>
+                                        <div className="form-group col-3 mt-2">
+                                            <label htmlFor="fromDate">Travel Type</label>
+                                            <Select
+                                                showSearch
+                                                mode="multiple"
+                                                style={{ width: "100%", height: '40px' }}
+                                                placeholder="Select Agent Class "
+                                                optionFilterProp="children"
+                                                className=""
+                                                value={inpVal.product_industry}
+                                                onChange={(value) => handleMultiSelectChange(value, "product_industry")}
+                                                getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                                            >
+                                                {industryAdmin?.map((loc) => (
+                                                    <Option key={loc._id} value={loc._id}>
+                                                        {loc.name}
+                                                    </Option>
+                                                ))}
+                                            </Select>
+                                        </div>
+                                        <div className="form-group col-3 mt-2">
+                                            <label htmlFor="fromDate">Theame Brand</label>
+                                            <Select
+                                                showSearch
+                                                mode="multiple"
+                                                style={{ width: "100%", height: '40px' }}
+                                                placeholder="Select Agent Class "
+                                                optionFilterProp="children"
+                                                className=""
+                                                value={inpVal.theme}
+                                                onChange={(value) => handleMultiSelectChange(value, "theme")}
+                                                getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                                            >
+                                                {productAdmin?.map((loc) => (
+                                                    <Option key={loc._id} value={loc._id}>
+                                                        {loc.name}
+                                                    </Option>
+                                                ))}
+                                            </Select>
                                         </div>
 
                                         <h4 className='mt-3' style={{ color: 'red' }}>Cities</h4>
@@ -372,7 +482,7 @@ function TravelPackageAddComp() {
                                         <h4 className='mt-3' style={{ color: 'red' }}>Tags</h4>
                                         <div className="form-group col-12 mt-2">
                                             <label htmlFor="fromDate">Select Tags</label>
-                                            <Multiselect
+                                            {/* <Multiselect
                                                 options={allTagsD}
                                                 selectedValues={selectedTags}
                                                 onSelect={onSelectTag}
@@ -383,7 +493,24 @@ function TravelPackageAddComp() {
                                                     chips: { BiFontSize: '12px' },
                                                     searchBox: { padding: '1px 8px' }
                                                 }}
-                                            />
+                                            /> */}
+                                            <Select
+                                                showSearch
+                                                mode="multiple"
+                                                style={{ width: "100%", height: '40px' }}
+                                                placeholder="Select Agent Class "
+                                                optionFilterProp="children"
+                                                className=""
+                                                value={inpVal.tags}
+                                                onChange={(value) => handleMultiSelectChange(value, "tags")}
+                                                getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                                            >
+                                                {allTagsD?.map((loc) => (
+                                                    <Option key={loc._id} value={loc._id}>
+                                                        {loc.tag_name}
+                                                    </Option>
+                                                ))}
+                                            </Select>
                                             {/* <TagsInput value={tags} onChange={handleTagsChange} /> */}
                                         </div>
 
@@ -396,7 +523,15 @@ function TravelPackageAddComp() {
 
                                         <h4 className='mt-3' style={{ color: 'red' }}>Meal Type</h4>
                                         <div className="row">
-                                            <div className="form-group col-2">
+                                            <div className="form-group col-12">
+                                                <select class="form-select" aria-label="Default select example" name='meal_type' value={inpVal?.meal_type} onChange={handleAllChange}>
+                                                    <option selected>Open this select Meal Type</option>
+                                                    {allMealTypesD && allMealTypesD?.map((item) => {
+                                                        return <option value={item?._id} key={item?._id}>{item?.meal_name}</option>
+                                                    })}
+                                                </select>
+                                            </div>
+                                            {/* <div className="form-group col-2">
                                                 <div className="form-check">
                                                     <input
                                                         className="form-check-input"
@@ -491,7 +626,7 @@ function TravelPackageAddComp() {
                                                         AI (All Inclusive)
                                                     </label>
                                                 </div>
-                                            </div>
+                                            </div> */}
                                         </div>
 
                                         {/* <div className='row'>
@@ -547,8 +682,26 @@ function TravelPackageAddComp() {
 
                                         <h4 className='mt-3' style={{ color: 'red' }}>Others</h4>
                                         <div className="row">
-
-                                            {allOthersD &&
+                                            <div className="col-12">
+                                                <Select
+                                                    showSearch
+                                                    mode="multiple"
+                                                    style={{ width: "100%", height: '40px' }}
+                                                    placeholder="Select Agent Class "
+                                                    optionFilterProp="children"
+                                                    className=""
+                                                    value={inpVal.other}
+                                                    onChange={(value) => handleMultiSelectChange(value, "other")}
+                                                    getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                                                >
+                                                    {allOthersD?.map((loc) => (
+                                                        <Option key={loc._id} value={loc._id}>
+                                                            {loc.name}
+                                                        </Option>
+                                                    ))}
+                                                </Select>
+                                            </div>
+                                            {/* {allOthersD &&
                                                 allOthersD.map((item, i) => (
                                                     <div className="col-3" key={i}>
                                                         <div className="form-check">
@@ -568,7 +721,7 @@ function TravelPackageAddComp() {
                                                             </label>
                                                         </div>
                                                     </div>
-                                                ))}
+                                                ))} */}
 
 
                                             {/* {allOthersD && allOthersD?.map((item, i) => {

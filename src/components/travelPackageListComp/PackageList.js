@@ -6,10 +6,8 @@ import { Pagination } from 'antd';
 import Swal from 'sweetalert2';
 import { deleteTravelPackage } from '../../api/login/Login';
 
-function PackageList({ listData, totalCount, page, count, onChangeVal, pageIndex, countToShowInTable }) {
+function PackageList({ getListData, listData, totalCount, page, count, onChangeVal, pageIndex, countToShowInTable }) {
     const [loading, setLoading] = useState(false);
-
-
     const toastSuccessMessage = (msg) => {
         toast.success(msg, {
             position: "top-center",
@@ -27,6 +25,7 @@ function PackageList({ listData, totalCount, page, count, onChangeVal, pageIndex
             const res = await deleteTravelPackage(id)
             if (res?.error === false) {
                 toastSuccessMessage('Package Deleted');
+                getListData()
             } else if (res?.error === true) {
                 toastErrorMessage('Package Not Deleted');
             }
@@ -63,7 +62,7 @@ function PackageList({ listData, totalCount, page, count, onChangeVal, pageIndex
                 </div>
             )}
             <ToastContainer />
-            <section className="ListDistributer mx-4 expdf ">
+            <section className="ListDistributer mx-4 expdf mt-3">
                 <div className="text-end">
 
                 </div>
@@ -123,7 +122,7 @@ function PackageList({ listData, totalCount, page, count, onChangeVal, pageIndex
                                                         </td>
                                                         <td className="sorting_1" style={{ textAlign: 'center' }}>{item?.createdBy?.name}</td>
                                                         <td style={{ position: 'relative' }} className="d-flex align-item-center" >
-                                                            <Link to={`edit/${item?._id}`} className="btn btn-primary shadow btn-xs sharp me-1"><i className="fa fa-pencil" /></Link>
+                                                            <Link to={`/travel-package/update/${item?._id}`} className="btn btn-primary shadow btn-xs sharp me-1"><i className="fa fa-pencil" /></Link>
                                                             <Link to={"#"} onClick={() => openDeleteModal(item?._id)} className="btn btn-danger shadow btn-xs sharp me-1"><i className="fa fa-trash" /></Link>
                                                         </td>
                                                     </tr>

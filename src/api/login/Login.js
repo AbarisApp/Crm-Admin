@@ -5316,6 +5316,137 @@ export const getByTRCRM_service_master = (id) => {
 export const updateTRCRM_service_master = (id, value) => {
   return axiosInstance.put(`${baseUrl}TRCRM_service_master/update_type/${id}`, value);
 };
+
+export const getagentClass = (id) => {
+  return axiosInstance.get(`${extraBaseUrl}agentClass/admin`);
+};
+export const getjourneyType = (id) => {
+  return axiosInstance.get(`${extraBaseUrl}airlines/journeyType?id=673b1d7c85dbbfa354004889&search=`);
+};
+export const getflightcabinclass = (id) => {
+  return axiosInstance.get(`${extraBaseUrl}airlines/flightcabinclass?id=673b1d7c85dbbfa354004889`);
+};
+export const addagentClass = (data) => {
+  return axiosInstance.post(`${extraBaseUrl}agentClass/addType`, data);
+};
+export const gitagentClass = (value) => {
+  return axiosInstance.get(`${extraBaseUrl}agentClass?page=${value?.page}&count=${value?.count}&start_date=${value?.start_date}&end_date=${value?.end_date}`);
+};
+export const deleteagentClass = (id) => {
+  return axiosInstance.delete(`${extraBaseUrl}agentClass/delete_type/${id}`);
+};
+export const getByagentClass = (id) => {
+  return axiosInstance.get(`${extraBaseUrl}agentClass/${id}`);
+};
+export const updateagentClassr = (id, value) => {
+  return axiosInstance.put(`${extraBaseUrl}agentClass/update_type/${id}`, value);
+};
+
+export const addafareType = (data) => {
+  return axiosInstance.post(`${extraBaseUrl}airline/fareType/addType`, data);
+};
+export const gitfareType = (value) => {
+  return axiosInstance.get(`${extraBaseUrl}airline/fareType/page?page=${value?.page}&count=${value?.count}&start_date=${value?.start_date}&end_date=${value?.end_date}`);
+};
+export const getByfareType = (id) => {
+  return axiosInstance.get(`${extraBaseUrl}airline/fareType/${id}`);
+};
+export const deletefareType = (id) => {
+  return axiosInstance.delete(`${extraBaseUrl}airline/fareType/delete_type/${id}`);
+};
+export const updatefareType = (id, value) => {
+  return axiosInstance.put(`${extraBaseUrl}airline/fareType/update_type/${id}`, value);
+};
+
+export const getAllfareType = (id, value) => {
+  return axiosInstance.get(`${extraBaseUrl}airline/fareType/admin`);
+};
+
+export const addaFlightdiscount = (data) => {
+  return axiosInstance.post(`${extraBaseUrl}airline/discount//addType`, data);
+};
+export const gitFlightdiscount = (value) => {
+  return axiosInstance.get(`${extraBaseUrl}airline/discount/page?page=${value?.page}&count=${value?.count}&start_date=${value?.start_date}&end_date=${value?.end_date}`);
+};
+export const getByairlineDiscount = (id) => {
+  return axiosInstance.get(`${extraBaseUrl}airline/discount/${id}`);
+};
+export const updateairlinediscount = (id, value) => {
+  return axiosInstance.put(`${extraBaseUrl}airline/discount/update_type/${id}`, value);
+};
+export const deleteairlinediscount = (id) => {
+  return axiosInstance.delete(`${extraBaseUrl}airline/discount/delete_type/${id}`);
+};
+
+export const addabusdiscount = (data) => {
+  return axiosInstance.post(`${extraBaseUrl}bus/discount//addType`, data);
+};
+export const gitbusdiscount = (value) => {
+  return axiosInstance.get(`${extraBaseUrl}bus/discount/page?page=${value?.page}&count=${value?.count}&start_date=${value?.start_date}&end_date=${value?.end_date}`);
+};
+export const getBybusDiscount = (id) => {
+  return axiosInstance.get(`${extraBaseUrl}bus/discount/${id}`);
+};
+export const updatebusdiscount = (id, value) => {
+  return axiosInstance.put(`${extraBaseUrl}bus/discount/update_type/${id}`, value);
+};
+export const deletebusediscount = (id) => {
+  return axiosInstance.delete(`${extraBaseUrl}bus/discount/delete_type/${id}`);
+};
+
+
+export const addbusmarkup = (data) => {
+  return axiosInstance.post(`${extraBaseUrl}bus/markup/addType`, data);
+};
+export const gitbusmarkup = (value) => {
+  return axiosInstance.get(`${extraBaseUrl}bus/markup?page=${value?.page}&count=${value?.count}&start_date=${value?.start_date}&end_date=${value?.end_date}`);
+};
+export const getBybusMarkup = (id) => {
+  return axiosInstance.get(`${extraBaseUrl}bus/markup/${id}`);
+};
+export const updatebusmarkup = (id, value) => {
+  return axiosInstance.put(`${extraBaseUrl}bus/markup/update_type/${id}`, value);
+};
+
+export const deletebusmarkup = (id) => {
+  return axiosInstance.delete(`${extraBaseUrl}bus/markup/delete_type/${id}`);
+};
+
+export const addHotelmarkup = (data) => {
+  return axiosInstance.post(`${extraBaseUrl}hotels/markup/addType`, data);
+};
+export const githotelsmarkup = (value) => {
+  return axiosInstance.get(`${extraBaseUrl}hotels/markup?page=${value?.page}&count=${value?.count}&start_date=${value?.start_date}&end_date=${value?.end_date}`);
+};
+export const getByHotelsMarkup = (id) => {
+  return axiosInstance.get(`${extraBaseUrl}hotels/markup/${id}`);
+};
+export const updatehotelsMarkup = (id, value) => {
+  return axiosInstance.put(`${extraBaseUrl}hotels/markup/update_type/${id}`, value);
+};
+export const deleteHotelmarkup = (id) => {
+  return axiosInstance.delete(`${extraBaseUrl}hotels/markup/delete_type/${id}`);
+};
+
+export const addflightsmarkup = (data) => {
+  return axiosInstance.post(`${extraBaseUrl}flights/markup/addType`, data);
+};
+export const gitflightsmarkup = (value) => {
+  return axiosInstance.get(`${extraBaseUrl}flights/markup?page=${value?.page}&count=${value?.count}&start_date=${value?.start_date}&end_date=${value?.end_date}`);
+};
+export const getByflightsMarkup = (id) => {
+  return axiosInstance.get(`${extraBaseUrl}flights/markup/${id}`);
+};
+export const updateflightsMarkup = (id, value) => {
+  return axiosInstance.put(`${extraBaseUrl}flights/markup/update_type/${id}`, value);
+};
+export const deleteflightsmarkup = (id) => {
+  return axiosInstance.delete(`${extraBaseUrl}flights/markup/delete_type/${id}`);
+};
+
+
+
+
 export const addTRCRM_passport = (data) => {
   return axiosInstance.post(`${baseUrl}TRCRM_passport/addType`, data);
 };
@@ -5786,6 +5917,13 @@ export const getBusList = (value) => {
 
 export const getIdBusList = (id) => {
   return axiosInstance.get(`${extraBaseUrl}busservice_txn/admin/detail?ticket_no=${id}`)
+}
+
+export const getHotelList = (value) => {
+  return axiosInstance.get(`${extraBaseUrl}hotels/transaction/admin?page=${value?.page}&count=${value?.count}&start_date=${value?.start_date}&end_date=${value?.end_date}&txn_id=`)
+}
+export const getIdHotelList = (id) => {
+  return axiosInstance.get(`${extraBaseUrl}hotels/transaction/admin/detail?ticket_no=${id}`)
 }
 
 
@@ -7081,3 +7219,22 @@ export const deletePurchaseQuotation = (id) => {
     }
   );
 };
+
+
+export const getcategoryAdmin = (page, count) => {
+  return axios.get(`${baseproductUrl}category/admin`, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+export const getindustryAdmin = (page, count) => {
+  return axios.get(`${baseproductUrl}industry/admin`, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+

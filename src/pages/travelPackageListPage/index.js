@@ -52,8 +52,8 @@ function TravelPackageListPage() {
                 </div>
             )}
             <Breadcrumbs breadCrumbsTitle={breadCrumbsTitle} />
-            <PackageFIlter />
-            <PackageList listData={listData} totalCount={totalCount} page={page} onChangeVal={onChangeVal} count={count} pageIndex={pageIndex} countToShowInTable={countToShowInTable} />
+            {/* <PackageFIlter /> */}
+            <PackageList getListData={getListData} listData={listData} totalCount={totalCount} page={page} onChangeVal={onChangeVal} count={count} pageIndex={pageIndex} countToShowInTable={countToShowInTable} />
         </>
     )
 }
