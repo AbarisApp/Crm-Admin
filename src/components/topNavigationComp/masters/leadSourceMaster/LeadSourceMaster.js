@@ -8,7 +8,7 @@ import LeadSourceMasterList from './leadSourceMasterList/LeadSourceMasterList'
 function LeadSourceMaster() {
     const breadCrumbsTitle = {
         title_1: "master",
-        title_2: "Lead Sub Status",
+        title_2: "Lead source",
     }
     const [data, setData] = useState()
     const [loading, setLoading] = useState(false);

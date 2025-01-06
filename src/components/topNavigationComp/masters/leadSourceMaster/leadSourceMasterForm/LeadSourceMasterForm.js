@@ -3,19 +3,19 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import CustomInputField from '../../../../../common/CustomInputField';
 import Breadcrumbs from '../../../../../common/breadcrumb/Breadcrumbs';
-import { addenquiryStatusMaster, getUpdateenquiryStatusId, updateenquiryStatusMaster } from '../../../../../api/login/Login';
+import { addenquirySourceMaster, addenquiryStatusMaster, getUpdateenquirySorseId, getUpdateenquiryStatusId, updateenquirySourceMaster, updateenquiryStatusMaster } from '../../../../../api/login/Login';
 import { toast } from 'react-toastify';
 
-function LeadStatusForm() {
+function LeadSourceMasterForm() {
     const breadCrumbsTitle = {
         title_1: "master",
-        title_2: "Lead Status",
+        title_2: "Lead Source",
     };
 
     const [initialValues, setInitialValues] = useState({
         name: "",
         slug: "",
-        is_active: "", // Default to empty string to select "Select Lead Status"
+        isActive: "", // Default to empty string to select "Select Lead Status"
     });
 
     const params = useParams();
@@ -29,31 +29,31 @@ function LeadStatusForm() {
         if (!values.slug) {
             errors.slug = "Slug Is Required";
         }
-        if (values.is_active === "") {
-            errors.is_active = "Lead Status Is Required";
+        if (values.isActive === "") {
+            errors.isActive = "Lead Status Is Required";
         }
         return errors;
     };
 
     const blankBtn = () => {
-        setInitialValues({ name: "", slug: "", is_active: "" }); // Reset to default empty string
+        setInitialValues({ name: "", slug: "", isActive: "" }); // Reset to default empty string
     };
 
     const submitForm = async (values) => {
         try {
             if (!params?.id) {
-                const res = await addenquiryStatusMaster(values);
+                const res = await addenquirySourceMaster(values);
                 if (res?.statusCode === "200") {
-                    toastSuccessMessage("Lead Status Added Successfully");
-                    navigate('/lead-status');
+                    toastSuccessMessage("Lead Source Added Successfully");
+                    navigate('/lead-source');
                 }
                 blankBtn();
             } else {
-                const res = await updateenquiryStatusMaster(params.id, values);
+                const res = await updateenquirySourceMaster(params.id, values);
                 if (res?.statusCode === "200") {
-                    toastSuccessMessage("Lead Status Updated Successfully");
+                    toastSuccessMessage("Lead Source Updated Successfully");
                     blankBtn();
-                    navigate('/lead-status');
+                    navigate('/lead-source');
                 }
             }
         } catch (error) {
@@ -71,13 +71,13 @@ function LeadStatusForm() {
         const fetchCurrency = async () => {
             try {
                 if (params?.id) {
-                    const response = await getUpdateenquiryStatusId(params.id);
+                    const response = await getUpdateenquirySorseId(params.id);
                     setInitialValues(response?.data);
                 } else {
                     setInitialValues({
                         name: "",
                         slug: "",
-                        is_active: "", // Set default to empty string
+                        isActive: "", // Set default to empty string
                     });
                 }
             } catch (error) {
@@ -96,8 +96,8 @@ function LeadStatusForm() {
                     <div className="card-body p-0">
                         <div className="table-responsive active-projects style-1">
                             <div className="tbl-caption tbl-caption-2">
-                                <h4 className="heading mb-0">
-                                    {params?.id ? "UPDATE" : "ADD"} &nbsp; Lead Status
+                                <h4 className="heading mb-0 p-1">
+                                    {params?.id ? "UPDATE" : "ADD"} &nbsp; Lead Source
                                 </h4>
                             </div>
                             <Formik
@@ -131,7 +131,7 @@ function LeadStatusForm() {
                                                         autoFocus={true}
                                                         id="name"
                                                         name="name"
-                                                        placeholder="Lead Types"
+                                                        placeholder="Lead Source"
                                                     />
                                                 </div>
                                                 <div className="col-xl-4 mb-3">
@@ -153,8 +153,8 @@ function LeadStatusForm() {
                                                         className="form-select"
                                                         aria-label="Default select example"
                                                         onChange={handleChange}
-                                                        value={values.is_active}
-                                                        name="is_active"
+                                                        value={values.isActive}
+                                                        name="isActive"
                                                     >
                                                         <option value="" disabled>
                                                             Select Lead Status
@@ -162,8 +162,8 @@ function LeadStatusForm() {
                                                         <option value={true}>Active</option>
                                                         <option value={false}>Inactive</option>
                                                     </select>
-                                                    {errors.is_active && touched.is_active && (
-                                                        <div className="error">{errors.is_active}</div>
+                                                    {errors.isActive && touched.isActive && (
+                                                        <div className="error">{errors.isActive}</div>
                                                     )}
                                                 </div>
                                                 <div className="col-xl-12 mb-3">
@@ -188,4 +188,4 @@ function LeadStatusForm() {
     );
 }
 
-export default LeadStatusForm;
+export default LeadSourceMasterForm;

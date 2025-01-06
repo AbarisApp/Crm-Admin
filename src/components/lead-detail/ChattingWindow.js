@@ -11,7 +11,7 @@ function ChattingWindow() {
     const getChattings = async () => {
         try {
             const res = await geChatting(parem.id)
-            // setMessages(res.data)
+            setMessages(res.data)
             // dispatch(setChats(res.data.length));
         } catch (error) {
 

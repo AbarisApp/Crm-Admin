@@ -14,7 +14,7 @@ function CallsCompo() {
             const res = await getCallList(parems?.id)
             console.log(res.data);
             
-            // setcallList(res.data)
+            setcallList(res.data)
             // dispatch(setCalls(res.data.length));
         } catch (error) {
 
@@ -39,7 +39,7 @@ function CallsCompo() {
 
                             </span>
                             {modalShow && <CallAddModel show={modalShow}
-                                onHide={() => setModalShow(false)} />}
+                                onHide={() => setModalShow(false)} getFloorMasters={getFloorMasters}/>}
                             
                             <nav aria-label="Page navigation example">
                                 <ul className="pagination">

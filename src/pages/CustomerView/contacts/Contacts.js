@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import AddContact from "./AddContact";
 import { useParams } from "react-router-dom";
-import { getAccContactByPage } from "../../../api/login/Login";
+import { getAccContactByPage, getLeadDetail } from "../../../api/login/Login";
 
 const ContactTable = ({ title }) => {
     const [modalShow, setModalShow] = useState(false);
@@ -32,10 +32,11 @@ const ContactTable = ({ title }) => {
     const handlePrevPage = () => {
         if (page > 1) setPage(prevPage => prevPage - 1);
     };
-
+   
     return (
         <>
             <h4>{title}</h4>
+          
             <div className="container mt-4 card">
                 <div className="d-flex justify-content-between align-items-center mb-3">
                     <button className="btn btn-primary" onClick={() => setModalShow(true)}>+ New Contact</button>
