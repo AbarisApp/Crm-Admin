@@ -65,7 +65,7 @@ function DistributerList({ dynemicFields, loading, params, state, handleChange, 
 
 
     const [modalShow2, setModalShow2] = useState(false);
-    const [datas , setDats] = useState()
+    const [datas, setDats] = useState()
     const sendatas = (item) => {
         setDats(item)
         setTimeout(() => {
@@ -120,6 +120,7 @@ function DistributerList({ dynemicFields, loading, params, state, handleChange, 
                                                     <th>Name</th>
                                                     <th>{dynemicFields?.field_one}</th>
                                                     <th>{dynemicFields?.field_two}</th>
+                                                    <th>Asign To</th>
                                                     <th>Mobile</th>
                                                     <th>Email</th>
                                                     <th>Main Balance</th>
@@ -148,9 +149,31 @@ function DistributerList({ dynemicFields, loading, params, state, handleChange, 
                                                         <td className="sorting_1">{item?.refer_id}</td>
                                                         <td className="sorting_1">{item?.member_type}</td>
                                                         <td>{item?.name}</td>
-                                                        <td>---</td>
-                                                        <td>---</td>
-                                                        {/* <td className="sorting_1">{item?._id}</td> */}
+
+                                                        <td>
+                                                            {item?.course_id?.map((course, index) => (
+                                                                <span key={course?._id}>
+                                                                    {course?.service_name}
+                                                                    {index !== item?.course_id?.length - 1 && <br />}
+                                                                </span>
+                                                            ))}
+                                                        </td>
+                                                        <td>
+                                                            {item?.stream_id?.map((course, index) => (
+                                                                <span key={course?._id}>
+                                                                    {course?.name}
+                                                                    {index !== item?.stream_id?.length - 1 && <br />}
+                                                                </span>
+                                                            ))}
+                                                        </td>
+                                                        <td>
+                                                            {item?.assignTo?.map((course, index) => (
+                                                                <span key={course?._id}>
+                                                                    {course?.name}
+                                                                    {index !== item?.assignTo?.length - 1 && <br />}
+                                                                </span>
+                                                            ))}
+                                                        </td>
                                                         <td>{item?.mobile}</td>
 
                                                         <td>{item?.email}</td>
@@ -182,7 +205,7 @@ function DistributerList({ dynemicFields, loading, params, state, handleChange, 
                                                                 </Dropdown.Toggle>
 
                                                                 <Dropdown.Menu>
-                                                                    <Dropdown.Item Link="#" onClick={()=>{sendatas(item)}}>Fund Transfer / Return</Dropdown.Item>
+                                                                    <Dropdown.Item Link="#" onClick={() => { sendatas(item) }}>Fund Transfer / Return</Dropdown.Item>
                                                                     <Dropdown.Item href="/admin/certificate" >BC Authorization Letter</Dropdown.Item>
                                                                     <Dropdown.Item Link="#" >ID Card</Dropdown.Item>
                                                                     <Dropdown.Item href="#" >Certificate</Dropdown.Item>
@@ -242,7 +265,7 @@ function DistributerList({ dynemicFields, loading, params, state, handleChange, 
                         </div>
                     </div>
                 </div>
-                <FundTransfer show={show} handleClose={handleClose} datas={datas}/>
+                <FundTransfer show={show} handleClose={handleClose} datas={datas} />
                 <SchemeManager show={show2} handleClose={handleClose2} />
                 <IdStocks show={show3} handleClose={handleClose3} />
                 <MemberPermission show={show4} handleClose={handleClose4} />

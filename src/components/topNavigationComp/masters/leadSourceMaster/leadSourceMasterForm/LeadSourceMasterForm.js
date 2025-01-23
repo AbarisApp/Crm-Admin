@@ -3,8 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import CustomInputField from '../../../../../common/CustomInputField';
 import Breadcrumbs from '../../../../../common/breadcrumb/Breadcrumbs';
-import { addenquirySourceMaster, addenquiryStatusMaster, getUpdateenquirySorseId, getUpdateenquiryStatusId, updateenquirySourceMaster, updateenquiryStatusMaster } from '../../../../../api/login/Login';
-import { toast } from 'react-toastify';
+import { addenquirySourceMaster, addenquiryStatusMaster, addLeadSourseMaster, addSourceMaster, getUpdateenquirySorseId, getUpdateenquiryStatusId, getUpdateLeadSourseId, getUpdateSourceStatusId, updateenquirySourceMaster, updateenquiryStatusMaster, updateLeadSourseMaster, updateSourceMaster } from '../../../../../api/login/Login';
+import { toast, ToastContainer } from 'react-toastify';
 
 function LeadSourceMasterForm() {
     const breadCrumbsTitle = {
@@ -15,7 +15,7 @@ function LeadSourceMasterForm() {
     const [initialValues, setInitialValues] = useState({
         name: "",
         slug: "",
-        isActive: "", // Default to empty string to select "Select Lead Status"
+        is_active: false, // Default to empty string to select "Select Lead Status"
     });
 
     const params = useParams();
@@ -29,32 +29,40 @@ function LeadSourceMasterForm() {
         if (!values.slug) {
             errors.slug = "Slug Is Required";
         }
-        if (values.isActive === "") {
-            errors.isActive = "Lead Status Is Required";
+        if (values.is_active === "") {
+            errors.is_active = "Lead Status Is Required";
         }
         return errors;
     };
 
     const blankBtn = () => {
-        setInitialValues({ name: "", slug: "", isActive: "" }); // Reset to default empty string
+        setInitialValues({ name: "", slug: "", is_active: "" }); // Reset to default empty string
+    };
+
+    const toastErrorMessage = (message) => {
+        toast.error(message, {
+            position: "top-right",
+        });
     };
 
     const submitForm = async (values) => {
         try {
             if (!params?.id) {
-                const res = await addenquirySourceMaster(values);
+                const res = await addLeadSourseMaster(values);
                 if (res?.statusCode === "200") {
                     toastSuccessMessage("Lead Source Added Successfully");
                     navigate('/lead-source');
                 }
+                toastErrorMessage(res.message)
                 blankBtn();
             } else {
-                const res = await updateenquirySourceMaster(params.id, values);
+                const res = await updateLeadSourseMaster(params.id, values);
                 if (res?.statusCode === "200") {
                     toastSuccessMessage("Lead Source Updated Successfully");
-                    blankBtn();
+                    // blankBtn();
                     navigate('/lead-source');
                 }
+                toastErrorMessage(res.message)
             }
         } catch (error) {
             alert(`Error: ${error.message}`);
@@ -71,13 +79,13 @@ function LeadSourceMasterForm() {
         const fetchCurrency = async () => {
             try {
                 if (params?.id) {
-                    const response = await getUpdateenquirySorseId(params.id);
+                    const response = await getUpdateLeadSourseId(params.id);
                     setInitialValues(response?.data);
                 } else {
                     setInitialValues({
                         name: "",
                         slug: "",
-                        isActive: "", // Set default to empty string
+                        is_active: "", // Set default to empty string
                     });
                 }
             } catch (error) {
@@ -153,8 +161,8 @@ function LeadSourceMasterForm() {
                                                         className="form-select"
                                                         aria-label="Default select example"
                                                         onChange={handleChange}
-                                                        value={values.isActive}
-                                                        name="isActive"
+                                                        value={values.is_active}
+                                                        name="is_active"
                                                     >
                                                         <option value="" disabled>
                                                             Select Lead Status
@@ -162,8 +170,8 @@ function LeadSourceMasterForm() {
                                                         <option value={true}>Active</option>
                                                         <option value={false}>Inactive</option>
                                                     </select>
-                                                    {errors.isActive && touched.isActive && (
-                                                        <div className="error">{errors.isActive}</div>
+                                                    {errors.is_active && touched.is_active && (
+                                                        <div className="error">{errors.is_active}</div>
                                                     )}
                                                 </div>
                                                 <div className="col-xl-12 mb-3">
@@ -183,6 +191,7 @@ function LeadSourceMasterForm() {
                         </div>
                     </div>
                 </div>
+                <ToastContainer className={"text-center"} />
             </div>
         </>
     );

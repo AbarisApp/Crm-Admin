@@ -1,6 +1,6 @@
 import Breadcrumbs from '../../../../common/breadcrumb/Breadcrumbs'
 import React, { useEffect, useState } from 'react'
-import {  deleteCallConvertStatusById, deleteCallStatusById, deleteTypes_Of_ApprovedBy_Master, getApprovedBy_Master, getCallConvertStatusByUser, getCallsStatusByUser } from '../../../../api/login/Login'
+import { deleteCallConvertStatusById, deleteCallStatusById, deleteTypes_Of_ApprovedBy_Master, getApprovedBy_Master, getCallConvertStatusByUser, getCallsStatusByUser } from '../../../../api/login/Login'
 import { message } from 'antd'
 import { useParams } from 'react-router-dom'
 import ConvertStatusMasterList from './MasterList/ConvertStatusMasterList'
@@ -14,12 +14,11 @@ function ConvertStatus() {
     const [count, setCount] = useState(10)
     const [page, setPage] = useState(0)
     const [totalCount, setTotalCount] = useState()
-    
+
 
     // ----------list Api----------
     const param = useParams()
     const getFloorMasters = async (page) => {
-        
         setLoading(true)
         try {
             const res = await getCallConvertStatusByUser(param?.id, page)
@@ -65,7 +64,7 @@ function ConvertStatus() {
     return (
         <>
             <Breadcrumbs breadCrumbsTitle={breadCrumbsTitle} />
-            <ConvertStatusMasterList totalCount={totalCount} page={page} onChangeVal={onChangeVal} data={data}  count={count} confirm={confirm} cancel={cancel} loading={loading}/>
+            <ConvertStatusMasterList totalCount={totalCount} page={page} onChangeVal={onChangeVal} data={data} count={count} confirm={confirm} cancel={cancel} loading={loading} />
         </>
     )
 }

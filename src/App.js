@@ -1179,6 +1179,20 @@ import AgentMasterPage from "./pages/travelCrmMaster/agentMaster/index.js";
 import AgentMasterAdd from "./components/travelCrmMaster/agentMaster/agentMasterAdd/AgentMasterAdd.js";
 import FareTypePage from "./pages/travelCrmMaster/fareType/index.js";
 import FareTypeAdd from "./components/travelCrmMaster/fareType/fareTypeAdd/FareTypeAdd.js";
+import AmendmentsMasterPage from "./pages/travelCrmMaster/amendmentsMaster/index.js";
+import AmendmentsMasterAdd from "./components/travelCrmMaster/amendmentsMaster/amendmentsMasterAdd/AmendmentsMasterAdd.js";
+import PriceCategoryPage from "./pages/travelCrmMaster/priceCategory/index.js";
+import PriceCategoryAdd from "./components/travelCrmMaster/priceCategory/priceCategoryAdd/PriceCategoryAdd.js";
+import AccomodationMasterPage from "./pages/travelCrmMaster/accomodationMaster/index.js";
+import AccomodationMasterAdd from "./components/travelCrmMaster/accomodationMaster/accomodationMasterAdd/AccomodationMasterAdd.js";
+import CouponPage from "./pages/travelCrmMaster/coupon/index.js";
+import CouponAdd from "./components/travelCrmMaster/coupon/couponAdd/CouponAdd.js";
+import CampusPage from "./pages/masters/campus/index.js";
+import CampusAdd from "./components/topNavigationComp/masters/campus/campusAdd/CampusAdd.js";
+import RankPage from "./pages/masters/rank/index.js";
+import RankAdd from "./components/topNavigationComp/masters/rank/rankAdd/RankAdd.js";
+import MealTypePage from "./pages/travelCrmMaster/mealType/index.js";
+import MealTypeAdd from "./components/travelCrmMaster/mealType/mealTypeAdd/MealTypeAdd.js";
 
 
 function App() {
@@ -1952,6 +1966,10 @@ function App() {
                 path="/update-lead-status/:id"
                 element={<LeadStatusForm />}
               />
+
+
+
+
               <Route
                 path="/lead-sub-status"
                 element={<LeadSubStatusMaster />}
@@ -3077,6 +3095,18 @@ function App() {
               <Route path="travel-agent" element={<AgentMasterPage />} />
               <Route path="travel-agent-add" element={<AgentMasterAdd />} />
               <Route path="travel-agent-update/:id" element={<AgentMasterAdd />} />
+              <Route path="travel-price-category" element={<PriceCategoryPage />} />
+              <Route path="travel-price-category-add" element={<PriceCategoryAdd />} />
+              <Route path="travel-price-category-update/:id" element={<PriceCategoryAdd />} />
+
+              <Route path="travel-accomodation" element={<AccomodationMasterPage />} />
+              <Route path="travel-accomodation-add" element={<AccomodationMasterAdd />} />
+              <Route path="travel-accomodation-update/:id" element={<AccomodationMasterAdd />} />
+
+              <Route path="coupan" element={<CouponPage />} />
+              <Route path="coupan-add" element={<CouponAdd />} />
+              <Route path="coupan-update/:id" element={<CouponAdd />} />
+
               <Route path="travel-passport" element={<TravelPasswordPage />} />
               <Route path="travel-passport-add" element={<TravelPassportAdd />} />
               <Route path="travel-passport-update/:id" element={<TravelPassportAdd />} />
@@ -3105,6 +3135,12 @@ function App() {
               <Route path="travel-trip-type" element={<TripTypePage />} />
               <Route path="travel-trip-type-add" element={<TripTypeAdd />} />
               <Route path="travel-trip-type-update/:id" element={<TripTypeAdd />} />
+              <Route path="hotel-amendments-type" element={<AmendmentsMasterPage />} />
+              <Route path="hotel-amendments-type-add" element={<AmendmentsMasterAdd />} />
+              <Route path="hotel-amendments-type-update/:id" element={<AmendmentsMasterAdd />} />
+
+              <Route path="meal-type-master" element={<MealTypePage />} />
+              <Route path="meal-type-master-add" element={<MealTypeAdd />} />
 
 
 
@@ -3128,6 +3164,15 @@ function App() {
               <Route path="travel-payment-receipt-create" element={<AddpaymentReceipt />} />
               <Route path="travel-Credit Note" element={<CreditNoteAdd />} />
               <Route path="travel-create-flight" element={<FlightInvoiceAdd />} />
+
+
+
+              <Route path="campus" element={<CampusPage />} />
+              <Route path="campus-add" element={<CampusAdd />} />
+              <Route path="campus-update/:id" element={<CampusAdd />} />
+              <Route path="rank" element={<RankPage />} />
+              <Route path="rank-add" element={<RankAdd />} />
+              <Route path="rank-update/:id" element={<RankAdd />} />
 
               {/* travocrm */}
               {/* ----------------Moin's Route start-------------------------------*/}
@@ -3243,7 +3288,6 @@ function App() {
 
               <Route path="product_color" element={<ColorsPage />} />
               <Route path="product_color/:uid" element={<ColorsPage />} />
-
               <Route path="product_category" element={<CategoryPage />} />
               <Route path="product_category/:uid" element={<CategoryPage />} />
 

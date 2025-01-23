@@ -32,14 +32,19 @@ function PermisionOption() {
   };
 
   // Handle form submit (or additional logic)
-  const [loader , setLoader] = useState(false)
-  const handleSubmit =async (e) => {
+  const [loader, setLoader] = useState(false)
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setLoader(true)
     try {
-      const res = await updatePermissions(parems.id ,permissions);
+      const res = await updatePermissions(parems.id, permissions);
+      if (res?.error == false) {
+        alert('Success')
+      } else {
+        alert('Server Side Error !')
+      }
     } catch (error) {
-      
+
     }
     setLoader(false)
     console.log("Permissions updated:", permissions);
@@ -62,7 +67,7 @@ function PermisionOption() {
     } catch (error) {
       console.log(error);
     }
-  };  
+  };
 
   useEffect(() => {
     getData();
@@ -70,11 +75,11 @@ function PermisionOption() {
 
   return (
     <div className="container mt-4">
-      {loader && <Loadar/>}
+      {loader && <Loadar />}
       <div className="row">
         <div className="col-12">
           <div className="card p-3">
-            <form onSubmit={handleSubmit}>
+            <form>
               <div className="row">
                 {/* Whatsapp Permission */}
                 <div className="col-12 mb-2">
@@ -168,7 +173,7 @@ function PermisionOption() {
               </div>
 
               {Object.values(isEditMode).some((mode) => mode) && (
-                <button type="submit" className="btn btn-success mt-3">
+                <button type="submit" className="btn btn-success mt-3" onClick={handleSubmit}>
                   Submit
                 </button>
               )}

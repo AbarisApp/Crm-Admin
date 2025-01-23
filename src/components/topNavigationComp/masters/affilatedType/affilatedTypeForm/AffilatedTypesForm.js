@@ -5,11 +5,11 @@ import { Link } from 'react-router-dom'
 import CustomInputField from '../../../../../common/CustomInputField';
 import { Button } from 'antd';
 import Breadcrumbs from '../../../../../common/breadcrumb/Breadcrumbs';
-import { addTypes_Of_AffilatedBy_Master, getAffilatedBy_MasterId,updateTypes_Of_AffilatedBy_Master } from '../../../../../api/login/Login';
-import { toast } from 'react-toastify';
+import { addTypes_Of_AffilatedBy_Master, getAffilatedBy_MasterId, updateTypes_Of_AffilatedBy_Master } from '../../../../../api/login/Login';
+import { toast, ToastContainer } from 'react-toastify';
 
 function AffilatedTypesForm
-() {
+    () {
     const breadCrumbsTitle = {
         title_1: "master",
         title_2: "Affiliated By",
@@ -38,17 +38,26 @@ function AffilatedTypesForm
             position: "top-right",
         });
     };
+
+    const toastErrorMessage = (message) => {
+        toast.error(message, {
+            position: "top-right",
+        });
+    };
+
     const submitForm = async (values) => {
         try {
             if (!params?.id) {
                 try {
                     const res = await addTypes_Of_AffilatedBy_Master(values);
                     if (res?.statusCode == "200") {
-                        toastSuccessMessage(" Affilated Successfully");
+                        toastSuccessMessage("Affilated Successfully");
                         navigate(`/affilated-by`)
                     }
+                    toastErrorMessage(res.message)
                     blankBtn()
                 } catch (error) {
+                    // toastErrorMessage(error.message)
                     alert(error.message)
                 }
 
@@ -61,10 +70,11 @@ function AffilatedTypesForm
                         blankBtn()
                         navigate(`/affilated-by`)
                     }
-                    if (res?.statusCode == "403") {
-                        toastSuccessMessage("Affilated Successfully");
-                        blankBtn()
-                    }
+                    toastErrorMessage(res.message)
+                    // if (res?.statusCode == "403") {
+                    //     toastSuccessMessage("Affilated Successfully");
+                    //     blankBtn()
+                    // }
                     // getFloorMasters(page)
 
                 } catch (error) {
@@ -187,6 +197,7 @@ function AffilatedTypesForm
                         </div>
                     </div>
                 </div>
+                <ToastContainer className={"text-center"} />
             </div>
         </>
     )

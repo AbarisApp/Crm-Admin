@@ -56,7 +56,7 @@ function CollegesData() {
   }, [])
   return (
     <>
-      <CollageDataFilter />
+      {/* <CollageDataFilter /> */}
       <CollegesInfoList totalCount={totalCount} page={page} onChangeVal={onChangeVal} data={data} count={count} confirm={confirm} cancel={cancel} loading={loading} />
     </>
   )

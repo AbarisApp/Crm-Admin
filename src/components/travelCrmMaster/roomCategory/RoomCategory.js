@@ -130,6 +130,7 @@ const RoomCategory = () => {
                                             <thead>
                                                 <tr role="row">
                                                     <th style={{ width: '50px' }}>S.No</th>
+                                                    <th style={{ width: '50px' }}>Number Of User</th>
                                                     <th style={{ width: '150px' }}>Category Name</th>
                                                     <th style={{ width: '150px' }}>Status</th>
                                                     <th style={{ width: '150px' }}>Action</th>
@@ -139,6 +140,7 @@ const RoomCategory = () => {
                                                 {data && data?.map((item, i) => {
                                                     return <tr role="row" key={item?._id}>
                                                         <td valign="top" className="dataTables_empty">{(i + 1) + (page * count)}</td>
+                                                        <td valign="top" className="dataTables_empty" >{item?.no_of_user}</td>
                                                         <td valign="top" className="dataTables_empty" >{item?.category_name}</td>
                                                         <td valign="top" className="dataTables_empty" >{item?.isActive == true ? 'Active' : 'InActive'}</td>
                                                         <td>
