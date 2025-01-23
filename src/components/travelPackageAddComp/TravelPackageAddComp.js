@@ -5,11 +5,17 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import TagsInput from 'react-tagsinput';
 import { baseUrl } from '../../baseUrl';
-import { addTravelPackage, getBrandByPage, getcategoryAdmin, getindustryAdmin, getTravelAllCity, getTravelAllCountry, getTravelAllMealType, getTravelAllOthers, getTravelAllState, getTravelAllTags, getTravelPackageById, updateTravelPackage } from '../../api/login/Login';
+import { addTravelPackage, cityMainGett, clodinaryImage, getBrandByPage, getcategoryAdmin, getindustryAdmin, getTravelAllCity, getTravelAllCountry, getTravelAllMealType, getTravelAllOthers, getTravelAllState, getTravelAllTags, getTravelPackageById, getTRCRM_sight_seeing_masteradmin, updateTravelPackage } from '../../api/login/Login';
 import { ToastContainer, toast } from "react-toastify";
 
 import { useNavigate, useParams } from 'react-router-dom';
 import { Select } from 'antd';
+
+const data = [
+    { id: 'Breakfast', name: 'Breakfast' },
+    { id: 'Lunch', name: 'Lunch' },
+    { id: 'Dinner', name: 'Dinner' }
+]
 const { Option } = Select;
 
 function TravelPackageAddComp() {
@@ -17,6 +23,8 @@ function TravelPackageAddComp() {
     const [selectedCountry, setSelectedCountry] = useState([]);
     const [selectedTags, setSelectedTags] = useState([]);
     const [itineraryVal, setItineraryVal] = useState(false);
+    const [purchage, setPurchage] = useState(false);
+
     const [mealtypeVal, setmealtypeVal] = useState("");
     const [selectedOthers, setSelectedOthers] = useState([]);
     // const [othersCheckedValues, setOthersCheckedValues] = useState([{ other_facilities: '', value: null }]);
@@ -34,13 +42,36 @@ function TravelPackageAddComp() {
     const [rows, setRows] = useState([{ country: "", state: "", city: "", stay: "" }]);
     const [inpVal, setInpVal] = useState({
         package: '',
-        overview: '',
         product_category: [],
         product_industry: [],
         theme: [],
         tags: [],
         meal_type: '',
-        other: []
+        other: [],
+        thumnail_image: '',
+        gallery_image: [],
+        itinerary_sight: [
+            {
+                day: 1,
+                sightseeing_id: '',
+                city_id: '',
+                options: [],
+                title: '',
+                details: '',
+                images: ''
+            },
+        ],
+        overview: [
+            {
+                day: '',
+                events: [
+                    {
+                        title: '',
+                        description: '',
+                    },
+                ],
+            },
+        ],
     });
     const handleAllChange = (e) => {
         const inputName = e.target.name;
@@ -53,7 +84,7 @@ function TravelPackageAddComp() {
     const params = useParams();
 
     const addRow = () => {
-        setRows([...rows, { country: "", state: "", city: "", stay: "" }]);
+        setRows([...rows, { country: "", state: "", city: "", stay: "", title: "", desc: "" }]);
     };
     const removeRow = (index) => {
         const updatedRows = rows.filter((_, rowIndex) => rowIndex !== index);
@@ -79,6 +110,83 @@ function TravelPackageAddComp() {
         const updatedRows = [...rows];
         updatedRows[index][field] = value;
         setRows(updatedRows);
+    };
+
+    // const handleChange = async (id, field, value) => {
+    //     setInpVal((prev) => ({
+    //         ...prev,
+    //         itinerary_sight: prev.itinerary_sight.map((row) =>
+    //             row.id === id ? { ...row, [field]: value } : row
+    //         ),
+    //     }));
+    //     const image = new FormData()
+    //     image.append('image', e.target.files[0])
+    //     try {
+    //         const res = await clodinaryImage(image)
+    //         setTimeout(() => {
+    //             setImage(res.data?.data?.url)
+    //         }, 1000);
+    //     } catch (error) {
+
+    //     }
+    // };
+
+    const handleChange = async (id, field, value, e = null) => {
+        if (field === 'images' && e?.target?.files?.[0]) {
+            const image = new FormData();
+            image.append('image', e.target.files[0]);
+
+            try {
+                const res = await clodinaryImage(image);
+                const imageUrl = res.data?.data?.url;
+
+                if (imageUrl) {
+                    setInpVal((prev) => ({
+                        ...prev,
+                        itinerary_sight: prev.itinerary_sight.map((row) =>
+                            row.id === id ? { ...row, images: imageUrl } : row
+                        ),
+                    }));
+                }
+            } catch (error) {
+                console.error('Image upload failed:', error);
+            }
+        } else {
+            setInpVal((prev) => ({
+                ...prev,
+                itinerary_sight: prev.itinerary_sight.map((row) =>
+                    row.id === id ? { ...row, [field]: value } : row
+                ),
+            }));
+        }
+    };
+
+    // Add new itinerary row
+    const addRowItinerary = () => {
+        setInpVal((prev) => ({
+            ...prev,
+            itinerary_sight: [
+                ...prev.itinerary_sight,
+                {
+                    id: prev.itinerary_sight.length + 1,
+                    day: prev.itinerary_sight.length + 1,
+                    sightseeing_id: '',
+                    city_id: '',
+                    options: [],
+                    title: '',
+                    details: '',
+                    images: ''
+                },
+            ],
+        }));
+    };
+
+    // Delete itinerary row
+    const deleteRow = (id) => {
+        setInpVal((prev) => ({
+            ...prev,
+            itinerary_sight: prev.itinerary_sight.filter((row) => row.id !== id),
+        }));
     };
 
     // const allCountries = [
@@ -112,6 +220,9 @@ function TravelPackageAddComp() {
 
     const handleItineraryCheckboxChange = (e) => {
         setItineraryVal(e.target.checked);
+    };
+    const handlePurchageCheckboxChange = (e) => {
+        setPurchage(e.target.checked);
     };
     const handleRadioChange = (e) => {
         setmealtypeVal(e.target.value);
@@ -194,6 +305,8 @@ function TravelPackageAddComp() {
     // console.log(categoryAdmin);
     const [industryAdmin, setIndustryAdmin] = useState(null)
     const [productAdmin, setProductAdmin] = useState(null)
+    const [seeingAdmin, setSeeingAdmin] = useState(null)
+    const [CityAdmin, setCityAdmin] = useState(null)
 
     // console.log(categoryAdmin);
 
@@ -208,6 +321,11 @@ function TravelPackageAddComp() {
             setIndustryAdmin(res3?.data)
             const resBrand = await getBrandByPage()
             setProductAdmin(resBrand?.data)
+            const resSeeing = await getTRCRM_sight_seeing_masteradmin()
+            setSeeingAdmin(resSeeing?.data);
+            const resCity = await cityMainGett()
+            setCityAdmin(resCity?.data);
+
         } catch (error) {
 
         }
@@ -223,12 +341,80 @@ function TravelPackageAddComp() {
     };
 
 
+    // overView
+    const handleOverviewChange = (dayIndex, eventIndex, field, value) => {
+        setInpVal((prev) => {
+            const updatedOverview = [...prev.overview];
+            if (field === "day") {
+                updatedOverview[dayIndex].day = value;
+            } else if (field === "title" || field === "description") {
+                updatedOverview[dayIndex].events[eventIndex][field] = value;
+            }
+            return { ...prev, overview: updatedOverview };
+        });
+    };
+
+    const addDay = () => {
+        setInpVal((prev) => ({
+            ...prev,
+            overview: [
+                ...prev.overview,
+                {
+                    day: '',
+                    events: [
+                        {
+                            title: '',
+                            description: '',
+                        },
+                    ],
+                },
+            ],
+        }));
+    };
+
+    const addEvent = (dayIndex) => {
+        setInpVal((prev) => {
+            const updatedOverview = [...prev.overview];
+            updatedOverview[dayIndex].events.push({ title: '', description: '' });
+            return { ...prev, overview: updatedOverview };
+        });
+    };
+
+    const deleteEvent = (dayIndex, eventIndex) => {
+        setInpVal((prev) => {
+            const updatedOverview = [...prev.overview];
+            updatedOverview[dayIndex].events = updatedOverview[dayIndex].events.filter(
+                (_, index) => index !== eventIndex
+            );
+            return { ...prev, overview: updatedOverview };
+        });
+    };
+
+    const removeFirstIndex = () => {
+        setInpVal((prev) => ({
+            ...prev,
+            overview: prev.overview.slice(1),
+        }));
+    };
+    const [image, setImage] = useState()
+    const handleChangeImage = async (e) => {
+        const image = new FormData()
+        image.append('image', e.target.files[0])
+        try {
+            const res = await clodinaryImage(image)
+            setTimeout(() => {
+                setImage(res.data?.data?.url)
+            }, 1000);
+        } catch (error) {
+
+        }
+    }
+
+
     const handleSubmitData = async () => {
-        const payloadObj = { ...inpVal, country: selectedCountry, cities: rows, itinerary: itineraryVal, inclusions: inclusionVal, exclusions: exclusionVal, extra1: extraOneVal, extra2: extraTwoVal, upload_images: selectedImages };
+        const payloadObj = { ...inpVal, country: selectedCountry, cities: rows, is_purchase: purchage, itinerary: itineraryVal, inclusions: inclusionVal, exclusions: exclusionVal, extra1: extraOneVal, extra2: extraTwoVal, upload_images: selectedImages, thumnail_image: image };
         setLoading(true);
-        console.log(inpVal);
-
-
+        console.log(payloadObj);
         if (params?.id) {
             try {
                 const res = await updateTravelPackage(params?.id, payloadObj);
@@ -279,6 +465,8 @@ function TravelPackageAddComp() {
             setmealtypeVal(res?.data?.meal_type);
             setItineraryVal(res?.data?.itinerary);
             setSelectedImages(res?.data?.upload_images);
+            setPurchage(res?.data?.is_purchase)
+            setImage(res?.data?.thumnail_image)
 
             const data = res?.data;
             if (data) {
@@ -468,6 +656,28 @@ function TravelPackageAddComp() {
                                                         onChange={(e) => handleInputChange(index, "stay", e.target.value)}
                                                     />
                                                 </div>
+                                                <div className="form-group col-2">
+                                                    <label htmlFor={`title-${index}`}>Title</label>
+                                                    <input
+                                                        type="text"
+                                                        className="form-control"
+                                                        placeholder="Enter Title"
+                                                        id={`title-${index}`}
+                                                        value={row.title}
+                                                        onChange={(e) => handleInputChange(index, "title", e.target.value)}
+                                                    />
+                                                </div>
+                                                <div className="form-group col-2">
+                                                    <label htmlFor={`desc-${index}`}>Description</label>
+                                                    <input
+                                                        type="text"
+                                                        className="form-control"
+                                                        placeholder="Enter Description"
+                                                        id={`desc-${index}`}
+                                                        value={row.desc}
+                                                        onChange={(e) => handleInputChange(index, "desc", e.target.value)}
+                                                    />
+                                                </div>
                                                 <div className="form-group col-1" style={{ marginTop: "35px" }}>
                                                     <button
                                                         className="btn btn-danger"
@@ -514,12 +724,84 @@ function TravelPackageAddComp() {
                                             {/* <TagsInput value={tags} onChange={handleTagsChange} /> */}
                                         </div>
 
-                                        <h4 className='mt-3' style={{ color: 'red' }}>Overview</h4>
-                                        <div className="form-group col-12">
-                                            <label htmlFor="fromDate">Overview</label>
-                                            <textarea class="form-control" name='overview' value={inpVal?.overview} onChange={handleAllChange} placeholder='Enter Overview' id="exampleFormControlTextarea1" rows="3">
-                                            </textarea>
-                                        </div>
+                                        <h4 className="mt-3" style={{ color: 'red' }}>Overview</h4>
+                                        {inpVal.overview.map((day, dayIndex) => (
+                                            <div className="form-group col-12" key={dayIndex}>
+                                                <div className="row">
+                                                    <div className="col-lg-4">
+                                                        <div className="form-group">
+                                                            <label>Day</label>
+                                                            <input
+                                                                type="number"
+                                                                className="form-control"
+                                                                placeholder="Enter Day"
+                                                                value={day.day}
+                                                                onChange={(e) =>
+                                                                    handleOverviewChange(dayIndex, null, "day", e.target.value)
+                                                                }
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                    <div className="col-lg-8">
+                                                        <h2>Events</h2>
+                                                        {day.events.map((event, eventIndex) => (
+                                                            <div className="row" key={eventIndex}>
+                                                                <div className="col-lg-5">
+                                                                    <div className="form-group">
+                                                                        <label>Title</label>
+                                                                        <input
+                                                                            type="text"
+                                                                            className="form-control"
+                                                                            placeholder="Enter Title"
+                                                                            value={event.title}
+                                                                            onChange={(e) =>
+                                                                                handleOverviewChange(dayIndex, eventIndex, "title", e.target.value)
+                                                                            }
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-lg-5">
+                                                                    <div className="form-group">
+                                                                        <label>Description</label>
+                                                                        <input
+                                                                            type="text"
+                                                                            className="form-control"
+                                                                            placeholder="Enter Description"
+                                                                            value={event.description}
+                                                                            onChange={(e) =>
+                                                                                handleOverviewChange(dayIndex, eventIndex, "description", e.target.value)
+                                                                            }
+                                                                        />
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-lg-2">
+                                                                    <button
+                                                                        type="button"
+                                                                        className="btn btn-danger mt-4"
+                                                                        onClick={() => deleteEvent(dayIndex, eventIndex)}
+                                                                    >
+                                                                        Delete
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        ))}
+                                                        <button
+                                                            type="button"
+                                                            className="btn btn-primary mt-2"
+                                                            onClick={() => addEvent(dayIndex)}
+                                                        >
+                                                            Add Event
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                        <button type="button" className="btn btn-success mt-3" onClick={addDay}>
+                                            Add Day
+                                        </button>
+                                        <button type="button" className="btn btn-danger mt-3" onClick={removeFirstIndex}>
+                                            Remove First Index
+                                        </button>
 
                                         <h4 className='mt-3' style={{ color: 'red' }}>Meal Type</h4>
                                         <div className="row">
@@ -531,154 +813,10 @@ function TravelPackageAddComp() {
                                                     })}
                                                 </select>
                                             </div>
-                                            {/* <div className="form-group col-2">
-                                                <div className="form-check">
-                                                    <input
-                                                        className="form-check-input"
-                                                        style={{ border: "1px solid black" }}
-                                                        type="radio"
-                                                        name="flexRadioDefault"
-                                                        id="flexRadioDefault1"
-                                                        value="AP(Full Board)"
-                                                        onChange={handleRadioChange} // Listen for changes
-                                                    />
-                                                    <label className="form-check-label" htmlFor="flexRadioDefault1">
-                                                        AP(Full Board)
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className="form-group col-2">
-                                                <div className="form-check">
-                                                    <input
-                                                        className="form-check-input"
-                                                        style={{ border: "1px solid black" }}
-                                                        type="radio"
-                                                        name="flexRadioDefault"
-                                                        id="flexRadioDefault2"
-                                                        value="MAP(Half Board)"
-                                                        onChange={handleRadioChange}
-                                                    />
-                                                    <label className="form-check-label" htmlFor="flexRadioDefault2">
-                                                        MAP(Half Board)
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className="form-group col-2">
-                                                <div className="form-check">
-                                                    <input
-                                                        className="form-check-input"
-                                                        style={{ border: "1px solid black" }}
-                                                        type="radio"
-                                                        name="flexRadioDefault"
-                                                        id="flexRadioDefault3"
-                                                        value="CP(Only Breakfast)"
-                                                        onChange={handleRadioChange}
-                                                    />
-                                                    <label className="form-check-label" htmlFor="flexRadioDefault3">
-                                                        CP(Only Breakfast)
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className="form-group col-2">
-                                                <div className="form-check">
-                                                    <input
-                                                        className="form-check-input"
-                                                        style={{ border: "1px solid black" }}
-                                                        type="radio"
-                                                        name="flexRadioDefault"
-                                                        id="flexRadioDefault4"
-                                                        value="EP(No Meals)"
-                                                        onChange={handleRadioChange}
-                                                    />
-                                                    <label className="form-check-label" htmlFor="flexRadioDefault4">
-                                                        EP(No Meals)
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className="form-group col-3">
-                                                <div className="form-check">
-                                                    <input
-                                                        className="form-check-input"
-                                                        style={{ border: "1px solid black" }}
-                                                        type="radio"
-                                                        name="flexRadioDefault"
-                                                        id="flexRadioDefault5"
-                                                        value="Any (Any Types Of Meals)"
-                                                        onChange={handleRadioChange}
-                                                    />
-                                                    <label className="form-check-label" htmlFor="flexRadioDefault5">
-                                                        Any (Any Types Of Meals)
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className="form-group col-2">
-                                                <div className="form-check">
-                                                    <input
-                                                        className="form-check-input"
-                                                        style={{ border: "1px solid black" }}
-                                                        type="radio"
-                                                        name="flexRadioDefault"
-                                                        id="flexRadioDefault6"
-                                                        value="AI (All Inclusive)"
-                                                        onChange={handleRadioChange}
-                                                    />
-                                                    <label className="form-check-label" htmlFor="flexRadioDefault6">
-                                                        AI (All Inclusive)
-                                                    </label>
-                                                </div>
-                                            </div> */}
+
                                         </div>
 
-                                        {/* <div className='row'>
-                                            <div className="form-group col-2">
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="radio" name="flexRadioDefault" id="flexRadioDefault1" />
-                                                    <label className="form-check-label" htmlFor="flexRadioDefault1">
-                                                        AP(Full Board)
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className="form-group col-2">
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="radio" name="flexRadioDefault" id="flexRadioDefault1" />
-                                                    <label className="form-check-label" htmlFor="flexRadioDefault1">
-                                                        MAP(Half Board)
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className="form-group col-2">
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="radio" name="flexRadioDefault" id="flexRadioDefault1" />
-                                                    <label className="form-check-label" htmlFor="flexRadioDefault1">
-                                                        CP(Only Breakfast)
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className="form-group col-2">
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="radio" name="flexRadioDefault" id="flexRadioDefault1" />
-                                                    <label className="form-check-label" htmlFor="flexRadioDefault1">
-                                                        EP(No Meals)
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className="form-group col-3">
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="radio" name="flexRadioDefault" id="flexRadioDefault1" />
-                                                    <label className="form-check-label" htmlFor="flexRadioDefault1">
-                                                        Any (Any Types Of Meals)
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className="form-group col-2">
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="radio" name="flexRadioDefault" id="flexRadioDefault1" />
-                                                    <label className="form-check-label" htmlFor="flexRadioDefault1">
-                                                        AI (All Inclusive)
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div> */}
+
 
                                         <h4 className='mt-3' style={{ color: 'red' }}>Others</h4>
                                         <div className="row">
@@ -745,408 +883,10 @@ function TravelPackageAddComp() {
 
 
 
-                                            {/* <div className="col-2">
-                                                <div className="form-check">
-                                                    <input
-                                                        className="form-check-input"
-                                                        style={{ border: "1px solid black" }}
-                                                        type="checkbox"
-                                                        id="wifi"
-                                                        value="Free Wi-fi"
-                                                        onChange={handleCheckboxChange}
-                                                    />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="wifi">
-                                                        Free Wi-fi
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className='col-3'>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="checkbox" id="flexCheckChecked" value="Airport Transfers-Private"
-                                                        onChange={handleCheckboxChange} />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
-                                                        Airport Transfers-Private
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className='col-3'>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="checkbox" id="flexCheckChecked" value="Airport Transfers-SIC"
-                                                        onChange={handleCheckboxChange} />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
-                                                        Airport Transfers-SIC
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className='col-3'>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="checkbox" id="flexCheckChecked" value="Travel Insurance"
-                                                        onChange={handleCheckboxChange} />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
-                                                        Travel Insurance
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className='col-2'>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="checkbox" id="flexCheckChecked" value="Visa"
-                                                        onChange={handleCheckboxChange} />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
-                                                        Visa
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className='col-3'>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="checkbox" id="flexCheckChecked" value="Inter Hotel Transfer-Private"
-                                                        onChange={handleCheckboxChange} />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
-                                                        Inter Hotel Transfer-Private
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className='col-3'>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="checkbox" id="flexCheckChecked" value="Sightseeing Transfers-Private"
-                                                        onChange={handleCheckboxChange} />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
-                                                        Sightseeing Transfers-Private
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className='col-3'>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="checkbox" id="flexCheckChecked" value="Sightseeing Transfers-SIC"
-                                                        onChange={handleCheckboxChange} />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
-                                                        Sightseeing Transfers-SIC
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className='col-5'>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="checkbox" id="flexCheckChecked" value="Airport transfers-Speed Boat/Sea Plane"
-                                                        onChange={handleCheckboxChange} />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
-                                                        Airport transfers-Speed Boat/Sea Plane
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className='col-3'>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="checkbox" id="flexCheckChecked" value="Inter Hotel Transfer-SIC"
-                                                        onChange={handleCheckboxChange} />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
-                                                        Inter Hotel Transfer-SIC
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className='col-3'>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="checkbox" id="flexCheckChecked" value="Candlelight Dinner"
-                                                        onChange={handleCheckboxChange} />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
-                                                        Candlelight Dinner
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className='col-3'>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="checkbox" id="flexCheckChecked" value="Bed Decorations"
-                                                        onChange={handleCheckboxChange} />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
-                                                        Bed Decorations
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className='col-2'>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="checkbox" id="flexCheckChecked" value="Honeymoon Cake"
-                                                        onChange={handleCheckboxChange} />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
-                                                        Honeymoon Cake
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className='col-3'>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="checkbox" id="flexCheckChecked" value="Private Ferry"
-                                                        onChange={handleCheckboxChange} />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
-                                                        Private Ferry
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className='col-3'>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="checkbox" id="flexCheckChecked" value="Private Cruise"
-                                                        onChange={handleCheckboxChange} />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
-                                                        Private Cruise
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className='col-3'>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="checkbox" id="flexCheckChecked" value="Scuba Diving"
-                                                        onChange={handleCheckboxChange} />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
-                                                        Scuba Diving
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className='col-2'>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="checkbox" id="flexCheckChecked" value="Parasailing"
-                                                        onChange={handleCheckboxChange} />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
-                                                        Parasailing
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className='col-3'>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="checkbox" id="flexCheckChecked" value="Sea Walk"
-                                                        onChange={handleCheckboxChange} />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
-                                                        Sea Walk
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className='col-3'>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="checkbox" id="flexCheckChecked" value="Photoshoot For Couple"
-                                                        onChange={handleCheckboxChange} />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
-                                                        Photoshoot For Couple
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className='col-3'>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="checkbox" id="flexCheckChecked" value="Candle Light Dinner With Wine"
-                                                        onChange={handleCheckboxChange} />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
-                                                        Candle Light Dinner With Wine
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className='col-2'>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="checkbox" id="flexCheckChecked" value="Jet Ski"
-                                                        onChange={handleCheckboxChange} />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
-                                                        Jet Ski
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className='col-3'>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="checkbox" id="flexCheckChecked" value="Candle Dinner Without Wine"
-                                                        onChange={handleCheckboxChange} />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
-                                                        Candle Dinner Without Wine
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className='col-2'>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="checkbox" id="flexCheckChecked" value="Snorkeling"
-                                                        onChange={handleCheckboxChange} />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
-                                                        Snorkeling
-                                                    </label>
-                                                </div>
-                                            </div> */}
+
                                         </div>
 
-                                        {/* <div className='row'>
-                                            <div className='col-2'>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="checkbox" defaultValue id="flexCheckChecked" />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
-                                                        Free Wi-fi
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className='col-3'>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="checkbox" defaultValue id="flexCheckChecked" />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
-                                                        Airport Transfers-Private
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className='col-3'>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="checkbox" defaultValue id="flexCheckChecked" />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
-                                                        Airport Transfers-SIC
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className='col-3'>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="checkbox" defaultValue id="flexCheckChecked" />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
-                                                        Travel Insurance
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className='col-2'>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="checkbox" defaultValue id="flexCheckChecked" />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
-                                                        Visa
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className='col-3'>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="checkbox" defaultValue id="flexCheckChecked" />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
-                                                        Inter Hotel Transfer- Private
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className='col-3'>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="checkbox" defaultValue id="flexCheckChecked" />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
-                                                        Sightseeing Transfers - Private
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className='col-3'>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="checkbox" defaultValue id="flexCheckChecked" />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
-                                                        Sightseeing Transfers - SIC
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className='col-5'>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="checkbox" defaultValue id="flexCheckChecked" />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
-                                                        Airport transfers - Speed Boat/Sea Plane
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className='col-3'>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="checkbox" defaultValue id="flexCheckChecked" />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
-                                                        Inter Hotel Transfer- SIC
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className='col-3'>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="checkbox" defaultValue id="flexCheckChecked" />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
-                                                        Candlelight Dinner
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className='col-3'>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="checkbox" defaultValue id="flexCheckChecked" />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
-                                                        Bed Decorations
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className='col-2'>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="checkbox" defaultValue id="flexCheckChecked" />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
-                                                        Honeymoon Cake
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className='col-3'>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="checkbox" defaultValue id="flexCheckChecked" />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
-                                                        Private Ferry
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className='col-3'>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="checkbox" defaultValue id="flexCheckChecked" />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
-                                                        Private Cruise
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className='col-3'>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="checkbox" defaultValue id="flexCheckChecked" />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
-                                                        Scuba Diving
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className='col-2'>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="checkbox" defaultValue id="flexCheckChecked" />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
-                                                        Parasailing
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className='col-3'>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="checkbox" defaultValue id="flexCheckChecked" />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
-                                                        Sea Walk
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className='col-3'>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="checkbox" defaultValue id="flexCheckChecked" />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
-                                                        Photoshoot For Couple
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className='col-3'>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="checkbox" defaultValue id="flexCheckChecked" />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
-                                                        Candle Light Dinner With Wine
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className='col-2'>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="checkbox" defaultValue id="flexCheckChecked" />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
-                                                        Jet Ski
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div className='col-3'>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="checkbox" defaultValue id="flexCheckChecked" />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
-                                                        Candle Dinner Without Wine
-                                                    </label>
-                                                </div>
-                                            </div>
 
-                                            <div className='col-2'>
-                                                <div className="form-check">
-                                                    <input className="form-check-input" style={{ border: '1px solid black' }} type="checkbox" defaultValue id="flexCheckChecked" />
-                                                    <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
-                                                        Snorkeling
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div> */}
 
                                         <h4 className='mt-3' style={{ color: 'red' }}>Itinerary</h4>
                                         <div className='col-12'>
@@ -1166,6 +906,23 @@ function TravelPackageAddComp() {
                                             <small>It will be created on next page</small>
                                         </div>
 
+                                        <div className='col-12'>
+                                            <div className="form-check">
+                                                <input
+                                                    className="form-check-input"
+                                                    style={{ border: '1px solid black' }}
+                                                    type="checkbox"
+                                                    id="flexCheckChecked"
+                                                    checked={purchage}
+                                                    onChange={handlePurchageCheckboxChange}
+                                                />
+                                                <label className="form-check-label mb-0 mt-0" htmlFor="flexCheckChecked">
+                                                    Purchase?
+                                                </label>
+                                            </div>
+                                            {/* <small>It will be created on next page</small> */}
+                                        </div>
+
                                         <h4 className='mt-3' style={{ color: 'red' }}>Upload Images</h4>
                                         <div className="form-group col-6">
                                             <label htmlFor="uploadImages">Upload Images</label>
@@ -1175,6 +932,16 @@ function TravelPackageAddComp() {
                                                 id="uploadImages"
                                                 multiple // Allows multiple file selection
                                                 onChange={handleImageChange}
+                                            />
+                                        </div>
+                                        <div className="form-group col-6">
+                                            <label htmlFor="uploadImages">Thumnail Images</label>
+                                            <input
+                                                type="file"
+                                                className="form-control"
+                                                id="uploadImages"
+                                                // multiple // Allows multiple file selection
+                                                onChange={handleChangeImage}
                                             />
                                         </div>
 
@@ -1238,18 +1005,128 @@ function TravelPackageAddComp() {
                                                 />
                                             </div>
                                         </div>
+                                        {itineraryVal == true &&
+                                            <div>
+                                                <h4 className="mb-2 mt-3" style={{ color: 'red' }}>
+                                                    Day Wise Itinerary
+                                                </h4>
+                                                {inpVal?.itinerary_sight?.map((row, index) => (
+                                                    <div className="row mb-3" key={row.id}>
+                                                        <h5>Day {row.day}</h5>
+                                                        <div className="col-lg-4">
+                                                            <label htmlFor="sightseeing">Select Sightseeing</label>
+                                                            <Select
+                                                                showSearch
+                                                                style={{ width: '100%', height: '40px' }}
+                                                                placeholder="Select Sightseeing"
+                                                                value={row.sightseeing_id}
+                                                                onChange={(value) => handleChange(row.id, 'sightseeing_id', value)}
+                                                                optionFilterProp="children"
+                                                                getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                                                            >
+                                                                {seeingAdmin?.map((loc) => (
+                                                                    <Option key={loc._id} value={loc._id}>
+                                                                        {loc.sightsseing_activity}
+                                                                    </Option>
+                                                                ))}
+                                                            </Select>
+                                                        </div>
+                                                        <div className="col-lg-4">
+                                                            <label htmlFor="city">City</label>
+                                                            <Select
+                                                                showSearch
+                                                                style={{ width: '100%', height: '40px' }}
+                                                                placeholder="Select City"
+                                                                value={row.city_id}
+                                                                onChange={(value) => handleChange(row.id, 'city_id', value)}
+                                                                optionFilterProp="children"
+                                                                getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                                                            >
+                                                                {CityAdmin?.map((loc) => (
+                                                                    <Option key={loc._id} value={loc._id}>
+                                                                        {loc.name}
+                                                                    </Option>
+                                                                ))}
+                                                            </Select>
+                                                        </div>
+                                                        <div className="col-lg-4">
+                                                            <label htmlFor="options">Choose Option</label>
+                                                            <Select
+                                                                showSearch
+                                                                mode="multiple"
+                                                                style={{ width: '100%', height: '40px' }}
+                                                                placeholder="Select Choose Option"
+                                                                value={row.options}
+                                                                onChange={(value) => handleChange(row.id, 'options', value)}
+                                                                optionFilterProp="children"
+                                                                getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                                                            >
+                                                                {data?.map((loc, i) => (
+                                                                    <Option key={i} value={loc.id}>
+                                                                        {loc.name}
+                                                                    </Option>
+                                                                ))}
+                                                            </Select>
+                                                        </div>
+                                                        <div className="form-group col-lg-4 mt-2">
+                                                            <label htmlFor="title">Title</label>
+                                                            <input
+                                                                type="text"
+                                                                name="title"
+                                                                className="form-control"
+                                                                placeholder="Enter Title"
+                                                                value={row.title}
+                                                                onChange={(e) => handleChange(row.id, 'title', e.target.value)}
+                                                            />
+                                                        </div>
+                                                        <div className="form-group col-lg-4 mt-2">
+                                                            <label htmlFor="details">Other Details</label>
+                                                            <input
+                                                                type="text"
+                                                                name="details"
+                                                                className="form-control"
+                                                                placeholder="Enter Other Details"
+                                                                value={row.details}
+                                                                onChange={(e) => handleChange(row.id, 'details', e.target.value)}
+                                                            />
+                                                        </div>
 
+                                                        <div className="form-group col-lg-4 mt-2">
+                                                            <label htmlFor="details">Image</label>
+                                                            <input
+                                                                type="file"
+                                                                className="form-control"
+                                                                placeholder="Enter Other Details"
+                                                                onChange={(e) => handleChange(row.id, 'images', '', e)}
+                                                            />
+                                                        </div>
 
-
+                                                        <div className="col-lg-4 mt-4">
+                                                            {index > 0 && (
+                                                                <button
+                                                                    type="button"
+                                                                    className="btn btn-danger"
+                                                                    onClick={() => deleteRow(row.id)}
+                                                                >
+                                                                    Delete
+                                                                </button>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                                <button type="button" className="btn btn-primary" onClick={addRowItinerary}>
+                                                    Add More
+                                                </button>
+                                            </div>
+                                        }
                                         <div className="form-group col-12 mt-3">
-                                            <button type="button" className="btn btn-warning float-end">
+                                            {/* <button type="button" className="btn btn-warning float-end">
                                                 RESET
-                                            </button>
+                                            </button> */}
                                             <button type="button" onClick={handleSubmitData} className="btn btn-primary float-end">
                                                 {params?.id ? "Update" : "Save"}
                                             </button>
                                         </div>
-
                                     </form>
                                 </div>
                             </div>

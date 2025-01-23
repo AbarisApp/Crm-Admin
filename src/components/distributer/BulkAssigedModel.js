@@ -6,9 +6,13 @@ import Form from 'react-bootstrap/Form';
 import Container from 'react-bootstrap/Container';
 import { getLeadTypeList, getServiceCategory, getStaffpermisionall, leadenquiryStatusMasterListAll, leadSubStatusMasterListAll, reailerDistIdAgainstAll, updateLeadBulkEdit } from '../../api/login/Login';
 import { toast, ToastContainer } from 'react-toastify';
+import { Select } from 'antd';
+const { Option } = Select;
 
 function BulkAssignedModel(props) {
     const [data, setData] = useState(props?.selectedUsers);
+    console.log(data);
+
     const [stream, setStream] = useState([]);
     const [staff, setStaff] = useState([]);
     const [courses, setCourses] = useState([]);
@@ -17,9 +21,20 @@ function BulkAssignedModel(props) {
     const [leadSubStatuses, setLeadSubStatuses] = useState([]);
 
     useEffect(() => {
-        setData(props?.selectedUsers);
+        const arrayObj = props?.selectedUsers?.map((item) => {
+            return {
+                ...item,
+                course_id: item?.course_id?.map((item) => { return { ...item, value: item?._id, lable: item?.service_name } }),
+                assignTo: item?.assignTo?.map((item) => { return { ...item, value: item?._id, lable: item?.name } }),
+                stream_id: item?.stream_id?.map((item) => { return { ...item, value: item?._id, lable: item?.name } })
+            }
+        })
+        // console.log(arrayObj);
+        setData(arrayObj);
         getAllCrud();
     }, [props]);
+
+
 
     const getAllCrud = async () => {
         try {
@@ -57,7 +72,6 @@ function BulkAssignedModel(props) {
         );
     };
 
-
     const toastSuccessMessage = () => {
         toast.success(`Lead Edit Updated Successfully.`, {
             position: "top-center",
@@ -69,21 +83,29 @@ function BulkAssignedModel(props) {
         })
     }
 
+    const handleMultiSelectChange = (value, name, rowIndex) => {
+        setData((prevState) => {
+            const updatedData = [...prevState];
+            updatedData[rowIndex] = {
+                ...updatedData[rowIndex],
+                [name]: value,
+            };
+            return updatedData;
+        });
+    };
+
     const submitdata = async () => {
-
-
         const maped = data?.map((item) => {
-            return { ...item, lead_status: item?.leadStatus, assignTo: [item?.leadAssign], lead_sub_status: item?.leadSubStatus, course_id: [item?.courses], stream_id: [item?.streams] }
+            return { ...item, lead_status: item?.lead_status, assignTo: item?.assignTo, lead_sub_status: item?.lead_sub_status, course_id: item?.course_id, stream_id: item?.stream_id }
         }
         )
-
-        const res =await updateLeadBulkEdit({ leads: maped })
+        // console.log(maped);
+        const res = await updateLeadBulkEdit({ leads: maped })
         if (res && res.statusCode == "200") {
             toastSuccessMessage();
         } else {
             errorMessage();
         }
-
     }
 
 
@@ -95,7 +117,7 @@ function BulkAssignedModel(props) {
             aria-labelledby="contained-modal-title-vcenter"
             centered
         >
-             <ToastContainer />
+            <ToastContainer />
             <Modal.Header closeButton>
                 <Modal.Title id="contained-modal-title-vcenter">
                     Mass Lead Editing
@@ -103,7 +125,6 @@ function BulkAssignedModel(props) {
             </Modal.Header>
             <Modal.Body style={{ overflow: "auto" }}>
                 <Container fluid>
-
                     <div className="container mt-5">
                         <form className='row'>
                             <div className="mb-3 col-3">
@@ -120,7 +141,6 @@ function BulkAssignedModel(props) {
                                     ))}
                                 </select>
                             </div>
-
                             <div className="mb-3 col-3">
                                 <label htmlFor="leadType" className="form-label">Lead Type</label>
                                 <select
@@ -135,7 +155,6 @@ function BulkAssignedModel(props) {
                                     })}
                                 </select>
                             </div>
-
                             <div className="mb-3 col-3">
                                 <label htmlFor="leadStatus" className="form-label">Lead Status</label>
                                 <select
@@ -250,7 +269,7 @@ function BulkAssignedModel(props) {
                                         />
                                     </td>
                                     <td>
-                                        <Form.Select
+                                        {/* <Form.Select
                                             value={row.streams}
                                             style={{ width: "200px" }}
                                             onChange={(e) => handleInputChange(index, 'streams', e.target.value)}
@@ -261,10 +280,28 @@ function BulkAssignedModel(props) {
                                                     {item.name}
                                                 </option>
                                             ))}
-                                        </Form.Select>
+                                        </Form.Select> */}
+
+                                        <Select
+                                            showSearch
+                                            mode="multiple"
+                                            style={{ width: "200px", height: '40px' }}
+                                            placeholder="Select Agent Class "
+                                            optionFilterProp="children"
+                                            className=""
+                                            value={row.stream_id || []}
+                                            onChange={(value) => handleMultiSelectChange(value, "stream_id", index)}
+                                            getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                                        >
+                                            {stream?.map((loc) => (
+                                                <Option key={loc._id} value={loc._id}>
+                                                    {loc.name}
+                                                </Option>
+                                            ))}
+                                        </Select>
                                     </td>
                                     <td>
-                                        <Form.Select
+                                        {/* <Form.Select
                                             value={row.courses}
                                             style={{ width: "200px" }}
                                             onChange={(e) => handleInputChange(index, 'courses', e.target.value)}
@@ -275,10 +312,27 @@ function BulkAssignedModel(props) {
                                                     {course.service_name}
                                                 </option>
                                             ))}
-                                        </Form.Select>
+                                        </Form.Select> */}
+                                        <Select
+                                            showSearch
+                                            mode="multiple"
+                                            style={{ width: "200px", height: '40px' }}
+                                            placeholder="Select Agent Class "
+                                            optionFilterProp="children"
+                                            className=""
+                                            value={row.course_id || []}
+                                            onChange={(value) => handleMultiSelectChange(value, "course_id", index)}
+                                            getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                                        >
+                                            {courses?.map((loc) => (
+                                                <Option key={loc._id} value={loc._id}>
+                                                    {loc.service_name}
+                                                </Option>
+                                            ))}
+                                        </Select>
                                     </td>
                                     <td>
-                                        <Form.Select
+                                        {/* <Form.Select
                                             style={{ width: "200px" }}
                                             value={row.leadAssign}
                                             onChange={(e) => handleInputChange(index, 'leadAssign', e.target.value)}
@@ -287,7 +341,25 @@ function BulkAssignedModel(props) {
                                             {staff?.map((staf) => (
                                                 <option key={staf._id} value={staf._id}>{staf.name}</option>
                                             ))}
-                                        </Form.Select>
+                                        </Form.Select> */}
+
+                                        <Select
+                                            showSearch
+                                            mode="multiple"
+                                            style={{ width: "200px", height: '40px' }}
+                                            placeholder="Select Agent Class "
+                                            optionFilterProp="children"
+                                            className=""
+                                            value={row.assignTo || []}
+                                            onChange={(value) => handleMultiSelectChange(value, "assignTo", index)}
+                                            getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                                        >
+                                            {staff?.map((loc) => (
+                                                <Option key={loc._id} value={loc._id}>
+                                                    {loc.name}
+                                                </Option>
+                                            ))}
+                                        </Select>
                                     </td>
                                     <td>
                                         <Form.Select
@@ -303,9 +375,9 @@ function BulkAssignedModel(props) {
                                     </td>
                                     <td>
                                         <Form.Select
-                                            value={row.leadStatus}
+                                            value={row.lead_status}
                                             style={{ width: "200px" }}
-                                            onChange={(e) => handleInputChange(index, 'leadStatus', e.target.value)}
+                                            onChange={(e) => handleInputChange(index, 'lead_status', e.target.value)}
                                         >
                                             <option value="">Select Lead Status</option>
                                             {leadStatuses?.map((subst) => {
@@ -315,9 +387,9 @@ function BulkAssignedModel(props) {
                                     </td>
                                     <td>
                                         <Form.Select
-                                            value={row.leadSubStatus}
+                                            value={row.lead_sub_status}
                                             style={{ width: "200px" }}
-                                            onChange={(e) => handleInputChange(index, 'leadSubStatus', e.target.value)}
+                                            onChange={(e) => handleInputChange(index, 'lead_sub_status', e.target.value)}
                                         >
                                             <option value="">Select Lead Sub Status</option>
                                             {leadSubStatuses?.map((subst) => {
@@ -348,8 +420,8 @@ function BulkAssignedModel(props) {
                                     </td>
                                     <td>
                                         <Form.Select
-                                            value={row.isApproved}
-                                            onChange={(e) => handleInputChange(index, 'isApproved', e.target.value)}
+                                            value={row.is_approved}
+                                            onChange={(e) => handleInputChange(index, 'is_approved', e.target.value)}
                                         >
                                             <option value={true}>Approved</option>
                                             <option value={false}>Not Approved</option>

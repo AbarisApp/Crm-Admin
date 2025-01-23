@@ -54,8 +54,8 @@ const LeadTypeAdd = () => {
         });
     };
 
-    const toastErrorMessage = () => {
-        toast.error(`${params?.id ? "Update" : "Add"} Lead Type Failed.`, {
+    const toastErrorMessage = (message) => {
+        toast.error(`${message}`, {
             position: "top-center",
         });
     };
@@ -70,19 +70,17 @@ const LeadTypeAdd = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         if (!validate()) return;
-
         setLoader(true);
         try {
             const res = await postLeadType(formValues);
             if (res?.statusCode == 200) {
                 toastSuccessMessage();
             } else {
-                toastErrorMessage();
+                toastErrorMessage(res?.message);
             }
         } catch (error) {
-            toastErrorMessage();
+            toastErrorMessage(error?.message);
         }
         setLoader(false);
     };
@@ -98,10 +96,10 @@ const LeadTypeAdd = () => {
             if (res?.statusCode == 200) {
                 toastSuccessMessage();
             } else {
-                toastErrorMessage();
+                toastErrorMessage(res?.message);
             }
         } catch (error) {
-            toastErrorMessage();
+            toastErrorMessage(error?.message);
         }
         setLoader(false);
     };

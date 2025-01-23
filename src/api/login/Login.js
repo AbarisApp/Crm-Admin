@@ -642,6 +642,8 @@ export const providerUpdate = (id, value) => {
   return axiosInstance.put(`${baseUrl}provider/updateprovider/${id}`, value);
 };
 
+
+
 // clodinaryImage
 
 export const clodinaryImage = (value) => {
@@ -1733,14 +1735,14 @@ export const getTypes_Of_creditCardMasterId = (id) => {
 };
 // --------------------Sources Apis---------------------------
 export const leadSourseMasterList = (page, count) => {
-  return axiosInstance.get(`${baseUrl}call-source?page=${page}&count=${count}`);
+  return axiosInstance.get(`${baseUrl}source?page=${page}&count=${count}`);
 };
 
 export const addLeadSourseMaster = (data) => {
   return axiosInstance.post(`${baseUrl}source/addType`, data);
 };
 export const deleteLeadSourseMaster = (id) => {
-  return axiosInstance.delete(`${baseUrl}call-source/delete_type/${id}`);
+  return axiosInstance.delete(`${baseUrl}source/delete_type/${id}`);
 };
 export const updateLeadSourseMaster = (id, value) => {
   return axiosInstance.put(`${baseUrl}source/update_type/${id}`, value);
@@ -1800,6 +1802,27 @@ export const getUpdateenquiryStatusId = (id) => {
 };
 export const getUpdateenquirySorseId = (id) => {
   return axiosInstance.get(`${baseUrl}call-source/${id}`);
+};
+
+
+
+
+
+export const addSourceMaster = (data) => {
+  return axiosInstance.post(`${baseUrl}source/addType`, data);
+};
+export const deleteStatusMaster = (id) => {
+  return axiosInstance.delete(`${baseUrl}source/deletestatus/${id}`);
+};
+
+export const updateSourceMaster = (id, value) => {
+  return axiosInstance.put(`${baseUrl}source/update_Type/${id}`, value);
+};
+export const getUpdateSourceStatusId = (id) => {
+  return axiosInstance.get(`${baseUrl}source/${id}`);
+};
+export const getSourceList = (page, count) => {
+  return axiosInstance.get(`${baseUrl}source?page=${page}&count=${count}`);
 };
 // ____________________Facilities Crud Apis ___________________________________
 
@@ -5354,6 +5377,69 @@ export const updateagentClassr = (id, value) => {
   return axiosInstance.put(`${extraBaseUrl}agentClass/update_type/${id}`, value);
 };
 
+
+export const price_categoryAdd = (data) => {
+  return axiosInstance.post(`${baseUrl}trcrm/price_category/addType`, data);
+};
+export const gitprice_category = (value) => {
+  return axiosInstance.get(`${baseUrl}trcrm/price_category/user?page=${value?.page}&count=${value?.count}&start_date=${value?.start_date}&end_date=${value?.end_date}`);
+};
+export const deleteprice_category = (id) => {
+  return axiosInstance.delete(`${baseUrl}trcrm/price_category/delete_type/${id}`);
+};
+export const getByprice_category = (id) => {
+  return axiosInstance.get(`${baseUrl}trcrm/price_category/${id}`);
+};
+export const updateprice_category = (id, value) => {
+  return axiosInstance.put(`${baseUrl}trcrm/price_category/update_type/${id}`, value);
+};
+
+
+export const couponAddd = (data) => {
+  return axios.post(`${baseproductUrl}coupon/add_coupons`, data, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
+export const couponGet = (value) => {
+  return axios.get(`${baseproductUrl}coupon?page=${value?.page}&count=${value?.count}&start_date=${value?.start_date}&end_date=${value?.end_date}`, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
+export const couponDelete = (id) => {
+  return axios.delete(`${baseproductUrl}coupon/delete_coupons/${id}`, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+export const updateCoupon = (id, data) => {
+  return axios.put(`${baseproductUrl}coupon/update_coupons/${id}`, data, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
+export const coupongetById = (id) => {
+  return axios.get(`${baseproductUrl}coupon/${id}`, {
+    headers: {
+      "Content-Type": "application/json; charset=UTF-8",
+      Authorization: `Bearer ${window.localStorage.getItem('userToken')}`,
+    },
+  });
+};
+
+
 export const addafareType = (data) => {
   return axiosInstance.post(`${extraBaseUrl}airline/fareType/addType`, data);
 };
@@ -5388,6 +5474,39 @@ export const updateairlinediscount = (id, value) => {
 };
 export const deleteairlinediscount = (id) => {
   return axiosInstance.delete(`${extraBaseUrl}airline/discount/delete_type/${id}`);
+};
+
+export const addahoteldiscount = (data) => {
+  return axiosInstance.post(`${extraBaseUrl}hotel/discount/addType`, data);
+};
+export const gitHoteldiscount = (value) => {
+  return axiosInstance.get(`${extraBaseUrl}hotel/discount/page?page=${value?.page}&count=${value?.count}&start_date=${value?.start_date}&end_date=${value?.end_date}`);
+};
+export const getByhotelDiscount = (id) => {
+  return axiosInstance.get(`${extraBaseUrl}hotel/discount/${id}`);
+};
+export const updatehoteldiscount = (id, value) => {
+  return axiosInstance.put(`${extraBaseUrl}hotel/discount/update_type/${id}`, value);
+};
+export const deletehoteldiscount = (id) => {
+  return axiosInstance.delete(`${extraBaseUrl}hotel/discount/delete_type/${id}`);
+};
+
+export const addammedmentTypet = (data) => {
+  return axiosInstance.post(`${extraBaseUrl}ammedmentType/addType`, data);
+};
+
+export const gitAmmedmentType = (value) => {
+  return axiosInstance.get(`${extraBaseUrl}ammedmentType/page?page=${value?.page}&count=${value?.count}&start_date=${value?.start_date}&end_date=${value?.end_date}`);
+};
+export const getByammedmentType = (id) => {
+  return axiosInstance.get(`${extraBaseUrl}ammedmentType/${id}`);
+};
+export const updateammedmentType = (id, value) => {
+  return axiosInstance.put(`${extraBaseUrl}ammedmentType/update_type/${id}`, value);
+};
+export const deleteAmmedmentType = (id) => {
+  return axiosInstance.delete(`${extraBaseUrl}ammedmentType/delete_type/${id}`);
 };
 
 export const addabusdiscount = (data) => {
@@ -5837,6 +5956,29 @@ export const addTRCRM_tr_quotation_master = (data) => {
   return axiosInstance.post(`${baseUrl}TRCRM_tr_quotation_master/addType`, data);
 };
 
+
+
+export const getTRCRM_meal_type_master = (value) => {
+  return axiosInstance.get(`${baseUrl}TRCRM_meal_type_master/user?page=${value?.page}&count=${value?.count}&start_date=${value?.start_date}&end_date=${value?.end_date}`);
+};
+
+export const deleteTRCRM_meal_type_master = (id) => {
+  return axiosInstance.delete(`${baseUrl}TRCRM_meal_type_master/delete_type/${id}`);
+};
+export const getIdTRCRM_meal_type_master = (id) => {
+  return axiosInstance.get(`${baseUrl}TRCRM_meal_type_master/${id}`);
+};
+export const updateTRCRM_meal_type_master = (id, data) => {
+  return axiosInstance.put(`${baseUrl}TRCRM_meal_type_master/update_type/${id}`, data);
+};
+
+export const addTRCRM_meal_type_master = (data) => {
+  return axiosInstance.post(`${baseUrl}TRCRM_meal_type_master/addType`, data);
+};
+
+
+
+
 export const getTRCRM_tr_quotation_master = (value) => {
   return axiosInstance.get(`${baseUrl}TRCRM_tr_quotation_master/user?page=${value?.page}&count=${value?.count}&start_date=${value?.start_date}&end_date=${value?.end_date}`);
 };
@@ -5850,6 +5992,25 @@ export const getIdTRCRM_tr_quotation_master = (id) => {
 export const updateTRCRM_tr_quotation_master = (id, data) => {
   return axiosInstance.put(`${baseUrl}TRCRM_tr_quotation_master/update_type/${id}`, data);
 };
+
+export const addTRCRMaccomodation = (data) => {
+  return axiosInstance.post(`${baseUrl}trcrm/accomodation/addType`, data);
+};
+
+export const getTRCRMaccomodation = (value) => {
+  return axiosInstance.get(`${baseUrl}trcrm/accomodation/user?page=${value?.page}&count=${value?.count}&start_date=${value?.start_date}&end_date=${value?.end_date}`);
+};
+
+export const deleteTRCRMaccomodation = (id) => {
+  return axiosInstance.delete(`${baseUrl}trcrm/accomodation/delete_type/${id}`);
+};
+
+export const getIdTRCRMaccomodation = (id) => {
+  return axiosInstance.get(`${baseUrl}trcrm/accomodation/${id}`);
+};
+export const updateTRCRMaccomodation = (id, data) => {
+  return axiosInstance.put(`${baseUrl}trcrm/accomodation/update_type/${id}`, data);
+}
 
 
 export const addAccount_invoice = (data) => {
@@ -5887,6 +6048,22 @@ export const updatetrcrm = (id, data) => {
   return axiosInstance.put(`${baseUrl}trcrm/room_category/update_type/${id}`, data);
 };
 
+export const addcampus = (data) => {
+  return axiosInstance.post(`${baseUrl}campus/addType`, data);
+};
+export const getcampus = (value) => {
+  return axiosInstance.get(`${baseUrl}campus/?page=${value?.page}&count=${value?.count}&start_date=${value?.start_date}&end_date=${value?.end_date}`);
+};
+export const deletetCampus = (id) => {
+  return axiosInstance.delete(`${baseUrl}campus/delete_type/${id}`);
+};
+export const getByIdcampus = (id) => {
+  return axiosInstance.get(`${baseUrl}campus/${id}`);
+};
+export const updatecampus = (id, data) => {
+  return axiosInstance.put(`${baseUrl}campus/update_type/${id}`, data);
+};
+
 
 export const addTRCRM_tr_follow_up = (data) => {
   return axiosInstance.post(`${baseUrl}TRCRM_tr_follow_up/addType`, data);
@@ -5902,6 +6079,31 @@ export const getByIdTRCRM_tr_follow_up = (id) => {
 };
 export const updateTRCRM_tr_follow_up = (id, data) => {
   return axiosInstance.put(`${baseUrl}TRCRM_tr_follow_up/update_type/${id}`, data);
+};
+
+
+export const getBycollege = (id) => {
+  return axiosInstance.get(`${baseUrl}college/admin`);
+};
+
+export const gecampusadmin = (id) => {
+  return axiosInstance.get(`${baseUrl}campus/admin`);
+};
+
+export const addCollegeRanking = (data) => {
+  return axiosInstance.post(`${baseUrl}college_ranking/addType`, data);
+};
+export const getranking = (value) => {
+  return axiosInstance.get(`${baseUrl}college_ranking?page=${value?.page}&count=${value?.count}&start_date=${value?.start_date}&end_date=${value?.end_date}`);
+};
+export const deletranking = (id) => {
+  return axiosInstance.delete(`${baseUrl}college_ranking/delete_type/${id}`);
+};
+export const getByIdranking = (id) => {
+  return axiosInstance.get(`${baseUrl}college_ranking/${id}`);
+};
+export const updateranking = (id, data) => {
+  return axiosInstance.put(`${baseUrl}college_ranking/update_type/${id}`, data);
 };
 
 
@@ -5974,6 +6176,15 @@ export const getListTaskTypeSelect = (page, count) => {
 export const getListTaskStageSelect = (page, count) => {
   return axiosInstance.get(`${baseUrl}lead_task_stage/user`);
 };
+
+
+export const getTPackage = (id) => {
+  return axiosInstance.get(`${baseUrl}TRCRM_add_package/admin`);
+};
+export const getprice_category = (id) => {
+  return axiosInstance.get(`${baseUrl}trcrm/price_category/admin`);
+};
+
 
 // post comment 
 export const postCommentAccTask = (value) => {

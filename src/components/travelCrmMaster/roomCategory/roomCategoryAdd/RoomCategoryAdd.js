@@ -24,6 +24,7 @@ const RoomCategoryAdd = () => {
     };
 
     const [formData, setFormData] = useState({
+        no_of_user: '',
         category_name: '',
         isActive: true
     })
@@ -109,6 +110,17 @@ const RoomCategoryAdd = () => {
                             <form className="tbl-captionn">
                                 <div className="row">
                                     <div className="col-xl-4 mb-3">
+                                        <label for="exampleFormControlInput1" className="form-label">Number Of User <span style={{ color: 'red' }}>*</span></label>
+                                        <input
+                                            type="number"
+                                            className="form-control"
+                                            placeholder="Enter Number Of User"
+                                            name="no_of_user"
+                                            value={formData?.no_of_user}
+                                            onChange={changeHandle}
+                                        />
+                                    </div>
+                                    <div className="col-xl-4 mb-3">
                                         <label for="exampleFormControlInput1" className="form-label">Room Type Name <span style={{ color: 'red' }}>*</span></label>
                                         <input
                                             type="text"
@@ -123,8 +135,8 @@ const RoomCategoryAdd = () => {
                                         <label for="exampleFormControlInput1" className="form-label">Status <span style={{ color: 'red' }}>*</span></label>
                                         <select className="form-control" aria-label="Default select example" name="isActive" value={formData?.isActive}
                                             onChange={changeHandle}>
-                                            {/* <option selected>Open this select Status</option> */}
-                                            <option value={true} selected>Active</option>
+                                            <option selected>Open this select Status</option>
+                                            <option value={true} >Active</option>
                                             <option value={false}>InActive</option>
                                         </select>
                                     </div>

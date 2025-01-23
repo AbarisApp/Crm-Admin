@@ -19,7 +19,7 @@ function MainCustomerView() {
             <h5 className="card m-2">Hello Test Admin. You are added as admin to this customer.</h5>
             <div className="table-responsive active-projects style-1">
 
-                <div className="tbl-caption tbl-caption-2 d-block p-2" style={{ marginTop: "15px" }}>
+                <div className="tbl-caption tbl-caption-2 d-block p-2 mb-3" style={{ marginTop: "15px" }}>
                     <h5 className="heading">Name : {dataUser?.name}</h5>
                     <h5 className="heading">Mobile  : {dataUser?.mobile}</h5>
                     <h5 className="heading">Email : {dataUser?.email}</h5>

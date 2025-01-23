@@ -10,6 +10,7 @@ import {
     cityAddCollageSelectList,
     clodinaryImage,
     countryList,
+    gecampusadmin,
     getAffiliatedListSelect,
     getApproveListSelect,
     getCollegeTypeListSelect,
@@ -62,9 +63,13 @@ function CollagesFormData() {
         meta_description: "",
         meta_image: "",
         course_type: "",
-        is_top_college: '',
-        is_featured: '',
-        courses: [{ course_id: "", fee: null }]
+        is_top_college: false,
+        is_featured: false,
+        courses: [{ course_id: "", fee: null }],
+        is_popular_citywise: false,
+        // is_featured: false,
+        is_type_college: false,
+        campus_id: ''
     });
 
 
@@ -268,6 +273,25 @@ function CollagesFormData() {
         }
     }
 
+    const [dataCollge, setDataCollege] = useState(null)
+    const masterGet = async () => {
+        try {
+            const res = await gecampusadmin()
+            setDataCollege(res?.data)
+        } catch (error) {
+
+        }
+    }
+
+
+    const handleChange2 = (e) => {
+        const { name, value } = e.target;
+        setInitialValues((prevValues) => ({
+            ...prevValues,
+            [name]: value,
+        }));
+    }
+
     // console.log(selectedCourseState, "see you soon");
     // console.log(courseState, "see you ");
 
@@ -287,6 +311,7 @@ function CollagesFormData() {
             logo_img: logoImage,
             meta_image: metaImage,
         };
+        delete submissionData._id;
         console.log(submissionData, "see Values");
 
         try {
@@ -336,6 +361,11 @@ function CollagesFormData() {
                         stream_id: collegeData?.stream_id?.map(item => ({ value: item?._id, label: item?.name })),
                         overview: collegeData?.overview || "",
                     });
+                    setInitialValues(collegeData)
+
+                    setMetaImage(collegeData?.meta_image)
+                    setLogoImage(collegeData?.logo_img)
+                    setbannImageState(collegeData?.banner_img)
 
                     setSelectedState4(collegeData?.affiliate?.map(item => ({ value: item?._id, label: item?.name })));
                     setSelectedState3(collegeData?.approvedBy?.map(item => ({ value: item?._id, label: item?.name })));
@@ -360,8 +390,8 @@ function CollagesFormData() {
 
 
                     setselectedCourseState(collegeData?.courses.map(item => ({
-                        value: item?._id,
-                        label: item?.service_name,
+                        value: item?.course_id?._id,
+                        label: item?.course_id?.service_name,
                         fee: item?.fee || null,
                     })));
 
@@ -375,6 +405,91 @@ function CollagesFormData() {
         fetchCollegeData();
     }, [params?.id]);
 
+    // useEffect(() => {
+    //     const fetchCollegeData = async () => {
+    //         try {
+    //             if (params?.id) {
+    //                 const response = await getupdateCollegesCrudStatusId(params.id);
+    //                 const collegeData = response?.data;
+
+    //                 if (!collegeData) {
+    //                     console.error("College data not found.");
+    //                     return;
+    //                 }
+
+    //                 console.log("Fetched college data:", collegeData);
+
+    //                 // Populate form state
+    //                 setInitialValues({
+    //                     ...collegeData,
+    //                     affiliate: collegeData?.affiliate?.map(item => ({ value: item?._id, label: item?.name })) || [],
+    //                     approvedBy: collegeData?.approvedBy?.map(item => ({ value: item?._id, label: item?.name })) || [],
+    //                     facilities: collegeData?.facilities?.map(item => ({ value: item?._id, label: item?.name })) || [],
+    //                     stream_id: collegeData?.stream_id?.map(item => ({ value: item?._id, label: item?.name })) || [],
+    //                     courses: collegeData?.courses?.map(item => ({
+    //                         course_id: item?._id,
+    //                         fee: item?.fee || null,
+    //                     })) || [],
+    //                     overview: collegeData?.overview || "",
+    //                     banner_img: collegeData?.banner_img || "",
+    //                     logo_img: collegeData?.logo_img || "",
+    //                     meta_image: collegeData?.meta_image || "",
+    //                     name: collegeData?.name || "",
+    //                     establish: collegeData?.establish || "",
+    //                     college_type_id: collegeData?.college_type_id || "",
+    //                     location: collegeData?.location || "",
+    //                     eligibilityCriteria: collegeData?.eligibilityCriteria || "",
+    //                     video_link: collegeData?.video_link || "",
+    //                     placement_desc: collegeData?.placement_desc || "",
+    //                     placement_company_name: collegeData?.placement_company_name || "",
+    //                     Other: collegeData?.Other || "",
+    //                     country: collegeData?.country?._id || "",
+    //                     state: collegeData?.state?._id || "",
+    //                     city: collegeData?.city?._id || "",
+    //                     meta_title: collegeData?.meta_title || "",
+    //                     meta_keyword: collegeData?.meta_keyword || "",
+    //                     meta_description: collegeData?.meta_description || "",
+    //                     course_type: collegeData?.course_type || "",
+    //                     is_top_college: collegeData?.is_top_college || "",
+    //                     is_featured: collegeData?.is_featured || "",
+    //                 });
+
+    //                 // Set state for Select components
+    //                 setSelectedState4(collegeData?.affiliate?.map(item => ({ value: item?._id, label: item?.name })) || []);
+    //                 setSelectedState3(collegeData?.approvedBy?.map(item => ({ value: item?._id, label: item?.name })) || []);
+    //                 setSelectedState2(collegeData?.facilities?.map(item => ({ value: item?._id, label: item?.name })) || []);
+    //                 setselectedStreamState(collegeData?.stream_id?.map(item => ({ value: item?._id, label: item?.name })) || []);
+    //                 setselectedCourseState(collegeData?.courses?.map(item => ({
+    //                     value: item?._id,
+    //                     label: item?.service_name,
+    //                     fee: item?.fee || null,
+    //                 })) || []);
+    //                 setContent(collegeData?.overview || "");
+
+    //                 // Fetch additional data for Country and State
+    //                 if (collegeData?.country?._id) {
+    //                     const resState = await StateAddCollageSelectList(collegeData?.country?._id);
+    //                     setCountryWiseState(resState?.data || []);
+    //                 }
+
+    //                 if (collegeData?.state?._id) {
+    //                     const resCity = await cityAddCollageSelectList(collegeData?.state?._id);
+    //                     setStateWisecCity(resCity?.data || []);
+    //                 }
+
+    //                 // Fetch course type data for streams
+    //                 const streamIds = collegeData?.stream_id?.map(item => item?._id);
+    //                 if (streamIds?.length) {
+    //                     await courseTypeDataForSelect(streamIds);
+    //                 }
+    //             }
+    //         } catch (error) {
+    //             console.error("Error fetching college data:", error);
+    //         }
+    //     };
+
+    //     fetchCollegeData();
+    // }, [params?.id]);
 
 
 
@@ -467,7 +582,7 @@ function CollagesFormData() {
 
     const affiliatedHandler = (selectedOptions) => {
         console.log(selectedOptions);
-        
+
         setSelectedState4(selectedOptions);
     };
 
@@ -481,6 +596,8 @@ function CollagesFormData() {
     const courseTypeDataForSelect = async (ids) => {
         try {
             const response = await getCourseListSelect(ids)
+            console.log(response);
+
 
             SetCourseState(response?.data.map(item => ({
                 value: item?._id,
@@ -536,6 +653,50 @@ function CollagesFormData() {
             tags: initialValues.tags.filter((_, i) => i !== index),
         });
     };
+
+
+    const isFormValid = () => {
+        const values = { ...initialValues };
+        const stringFields = [
+            "name",
+            "establish",
+            "college_type_id",
+            "location",
+            "overview",
+            "eligibilityCriteria",
+            "video_link",
+            "placement_desc",
+            "placement_company_name",
+            "Other",
+            "country",
+            "state",
+            "city",
+            "logo_img",
+            "banner_img",
+            "meta_title",
+            "meta_keyword",
+            "meta_description",
+            "meta_image",
+            "course_type"
+        ];
+        const stringValid = stringFields.every(field => values[field].trim() !== "");
+
+        const arrayFields = ["affiliate", "approvedBy", "tags", "facilities", "stream_id"];
+        const arrayValid = arrayFields.every(field => values[field].length > 0);
+
+
+        const booleanFields = ["is_top_college", "is_featured"];
+        const booleanValid = booleanFields.every(field => values[field] !== '');
+
+
+        const coursesValid = values.courses.every(course => course.course_id && course.fee !== null);
+        return stringValid && arrayValid && booleanValid && coursesValid;
+    };
+
+
+    useEffect(() => {
+        masterGet()
+    }, [])
 
     return (
         <>
@@ -828,6 +989,52 @@ function CollagesFormData() {
                                                         </small>
                                                     ) : null}
                                                 </div>
+                                                <div className="col-xl-4 mb-3">
+                                                    <label for="exampleFormControlInput1" className="form-label">Popular City wise <span style={{ color: 'red' }}>*</span></label>
+                                                    <select className="form-control" aria-label="Default select example" name="is_popular_citywise" value={values?.is_popular_citywise}
+                                                        onChange={(e) => {
+                                                            handleChange(e);
+                                                        }}>
+                                                        <option selected>Open this select Status</option>
+                                                        <option value={true}>Yes</option>
+                                                        <option value={false}>No</option>
+                                                    </select>
+                                                </div>
+                                                <div className="col-xl-4 mb-3">
+                                                    <label for="exampleFormControlInput1" className="form-label">Is featured <span style={{ color: 'red' }}>*</span></label>
+                                                    <select className="form-control" aria-label="Default select example" name="is_featured" value={values?.is_featured}
+                                                        onChange={(e) => {
+                                                            handleChange(e);
+                                                        }}>
+                                                        <option selected>Open this select Status</option>
+                                                        <option value={true}>Yes</option>
+                                                        <option value={false}>No</option>
+                                                    </select>
+                                                </div>
+                                                <div className="col-xl-4 mb-3">
+                                                    <label for="exampleFormControlInput1" className="form-label">Is Type College <span style={{ color: 'red' }}>*</span></label>
+                                                    <select className="form-control" aria-label="Default select example" name="is_type_college" value={values?.is_type_college}
+                                                        onChange={(e) => {
+                                                            handleChange(e);
+                                                        }}>
+                                                        <option selected>Open this select Status</option>
+                                                        <option value={true} >Yes</option>
+                                                        <option value={false}>No</option>
+                                                    </select>
+                                                </div>
+                                                <div className="col-xl-4 mb-3">
+                                                    <label for="exampleFormControlInput1" className="form-label">Campus <span style={{ color: 'red' }}>*</span></label>
+                                                    <select className="form-control" aria-label="Default select example" name="campus_id" value={values?.campus_id}
+                                                        onChange={(e) => {
+                                                            handleChange(e);
+                                                        }}>
+                                                        <option selected>Open this select Campus</option>
+                                                        {dataCollge && dataCollge?.map((iten) => {
+                                                            return <option value={iten?._id} >{iten?.name}</option>
+                                                        })}
+
+                                                    </select>
+                                                </div>
 
                                                 <div className="col-xl-4 mb-3">
                                                     <CustomInputField
@@ -988,7 +1195,7 @@ function CollagesFormData() {
                                                                 </option>
                                                             </select>
                                                         </div>
-                                                        <div className="col-xl-6 mb-3">
+                                                        {/* <div className="col-xl-6 mb-3">
                                                             <select
                                                                 id="is_featured"
                                                                 name="is_featured"
@@ -1006,7 +1213,7 @@ function CollagesFormData() {
                                                                     No
                                                                 </option>
                                                             </select>
-                                                        </div>
+                                                        </div> */}
                                                         <div className="col-xl-6 mb-3">
                                                             <div className='row align-items-center'>
                                                                 <div className='col-xl-10'>
@@ -1026,7 +1233,7 @@ function CollagesFormData() {
                                                                                 <img
                                                                                     src={`${baseUrlImage}${metaImage}`} // Display the uploaded image
                                                                                     alt='meta_image'
-                                                                                    style={{ objectFit: 'cover',width:"100px" }}
+                                                                                    style={{ objectFit: 'cover', width: "100px" }}
                                                                                 />
                                                                             </picture>
                                                                         </div>
@@ -1036,7 +1243,7 @@ function CollagesFormData() {
                                                                                 <img
                                                                                     src={`${baseUrlImage}${values.meta_image}`} // Display the existing meta image
                                                                                     alt='meta_image'
-                                                                                    style={{ objectFit: 'cover' ,width:"100px"}}
+                                                                                    style={{ objectFit: 'cover', width: "100px" }}
                                                                                 />
                                                                             </picture>
                                                                         </div>
@@ -1054,7 +1261,7 @@ function CollagesFormData() {
                                                             </div>
 
                                                         </div>
-                                                       
+
                                                     </div>
                                                 </div>
                                                 <div className='col-12 '>
@@ -1182,6 +1389,7 @@ function CollagesFormData() {
                                                     <button
                                                         type="submit"
                                                         className="btn btn-primary"
+
                                                     >
                                                         {params?.id ? "Update" : "Add"}
                                                     </button>

@@ -1,36 +1,48 @@
 import React, { useEffect, useState } from "react";
 import { FaPencilAlt } from "react-icons/fa"; // Importing the edit icon
-import Select from 'react-select';
-import { getBudgetMasterByUser, getCourseTypeForCombo, reailerDistIdAgainstAll } from "../../api/login/Login";
 
-function RequirementDetail() {
+import { getBudgetMasterByUser, getCourseTypeForCombo, reailerDistIdAgainstAll, updateLead, updatePermissions } from "../../api/login/Login";
+import { useParams } from "react-router-dom";
+import { Select } from 'antd';
+const { Option } = Select;
+
+function RequirementDetail({ data }) {
   // State to hold form data
   const [formData, setFormData] = useState({
-    course: [],
-    interestedCourses: [],
-    courseType: [],
+    course_id: [],
+    interested_courses: [],
+    course_type: [],
     budget: [],
     location: "",
-    fbFormId: "",
-    fbFormName: "",
-    fbPageName: "",
+    fb_form_id: "",
+    fb_form_name: "",
+    fb_page_name: "",
   });
 
   // State to manage individual edit mode for each field
   const [isEditMode, setIsEditMode] = useState({
-    course: false,
-    interestedCourses: false,
-    courseType: false,
+    course_id: false,
+    interested_courses: false,
+    course_type: false,
     budget: false,
     location: false,
-    fbFormId: false,
-    fbFormName: false,
-    fbPageName: false,
+    fb_form_id: false,
+    fb_form_name: false,
+    fb_page_name: false,
   });
 
   // Handle multi-select change
-  const handleMultiSelectChange = (field, selectedOptions) => {
-    setFormData({ ...formData, [field]: selectedOptions });
+  // const handleMultiSelectChange = (field, selectedOptions) => {
+  //   console.log(field, selectedOptions);
+
+  //   setFormData({ ...formData, [field]: selectedOptions });
+  // };
+
+  const handleMultiSelectChange = (value, name) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
 
   // Toggle edit mode for a specific field
@@ -41,39 +53,58 @@ function RequirementDetail() {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
+
+
+
   // Handle form submission (or other actions)
-  const handleSubmit = (e) => {
+  const parems = useParams()
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Form data updated:", formData);
     // After submission, disable all fields
+    try {
+      const res = await updateLead(parems.id, formData);
+      if (res?.error == false) {
+        alert('Requirement Detail Success')
+      } else {
+        alert('Server Side Error !')
+      }
+    } catch (error) {
+
+    }
     setIsEditMode({
-      course: false,
-      interestedCourses: false,
-      courseType: false,
+      course_id: false,
+      interested_courses: false,
+      course_type: false,
       budget: false,
       location: false,
-      fbFormId: false,
-      fbFormName: false,
-      fbPageName: false,
+      fb_form_id: false,
+      fb_form_name: false,
+      fb_page_name: false,
     });
   };
 
   // Options for multi-select
-  const [courseOptions , setCourseOptions] = useState([]);
+  const [courseOptions, setCourseOptions] = useState([]);
 
-  const [interestedCoursesOptions , setInterestedCoursesOptions] = useState([]);
 
-  const [courseTypeOptions , setCourseTypeOptions] = useState([]);
+  const [interestedCoursesOptions, setInterestedCoursesOptions] = useState([]);
 
-  const [budgetOptions , setBudgetOptions] = useState([]);
+
+  const [courseTypeOptions, setCourseTypeOptions] = useState([]);
+
+
+
+  const [budgetOptions, setBudgetOptions] = useState([]);
+  // console.log(budgetOptions);
 
   const getAllMaster = async () => {
     try {
       const res1 = await reailerDistIdAgainstAll()
       const res2 = await getCourseTypeForCombo()
-      const res3 = await getBudgetMasterByUser(0,100)
+      const res3 = await getBudgetMasterByUser(0, 100)
       const maped1 = res1.data.map((item) => ({
-        ...item ,
+        ...item,
         value: item.id,
         label: item.service_name,
       }));
@@ -81,13 +112,13 @@ function RequirementDetail() {
       setInterestedCoursesOptions(maped1);
 
       const maped2 = res2.data.map((item) => ({
-        ...item ,
+        ...item,
         value: item._id,
         label: item.course_type_name,
       }));
       setCourseTypeOptions(maped2);
       const maped3 = res3.data.map((item) => ({
-        ...item ,
+        ...item,
         value: item._id,
         label: item.name,
       }));
@@ -102,12 +133,26 @@ function RequirementDetail() {
     getAllMaster();
   }, []);
 
+
+  useEffect(() => {
+    setFormData({
+      course_id: data?.course_id,
+      interested_courses: data?.interested_courses,
+      course_type: data?.course_type,
+      budget: data?.budget,
+      location: data?.location,
+      fb_form_id: data?.fb_form_id,
+      fb_form_name: data?.fb_form_name,
+      fb_page_name: data?.fb_page_name,
+    })
+  }, [data])
+
   return (
     <div className="container mt-4">
       <div className="row">
         <div className="col-12">
           <div className="card p-3">
-            <form onSubmit={handleSubmit}>
+            <form>
               <div className="row">
                 {/* Course */}
                 <div className="col-12 mb-2">
@@ -115,28 +160,45 @@ function RequirementDetail() {
                     <strong>Course *: </strong>
                   </label>
                   <div className="input-container" style={{ position: "relative" }}>
-                    <Select
+                    {/* <Select
                       isMulti
-                      name="course"
-                      value={formData.course}
+                      name="course_id"
+                      value={formData.course_id}
                       options={courseOptions}
                       closeMenuOnSelect={false}
                       onChange={(selectedOptions) =>
-                        handleMultiSelectChange("course", selectedOptions)
+                        handleMultiSelectChange("course_id", selectedOptions)
                       }
                       placeholder="Select Course"
-                      isDisabled={!isEditMode.course}
+                      isDisabled={!isEditMode.course_id}
                       classNamePrefix="react-select"
-                    />
+                    /> */}
+                    <Select
+                      showSearch
+                      mode="multiple"
+                      style={{ width: "100%", height: '40px' }}
+                      placeholder="Select Agent Class "
+                      optionFilterProp="children"
+                      className=""
+                      value={formData.course_id}
+                      onChange={(value) => handleMultiSelectChange(value, "course_id")}
+                      getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                    >
+                      {courseOptions?.map((loc) => (
+                        <Option key={loc._id} value={loc._id}>
+                          {loc.label}
+                        </Option>
+                      ))}
+                    </Select>
                     <FaPencilAlt
-                      onClick={() => toggleEditMode("course")}
+                      onClick={() => toggleEditMode("course_id")}
                       style={{
                         position: "absolute",
                         right: "10px",
                         top: "50%",
                         transform: "translateY(-50%)",
                         cursor: "pointer",
-                        color: isEditMode.course ? "#28a745" : "#6c757d",
+                        color: isEditMode.course_id ? "#28a745" : "#6c757d",
                       }}
                     />
                   </div>
@@ -148,28 +210,45 @@ function RequirementDetail() {
                     <strong>Interested Courses: </strong>
                   </label>
                   <div className="input-container" style={{ position: "relative" }}>
-                    <Select
+                    {/* <Select
                       isMulti
-                      name="interestedCourses"
-                      value={formData.interestedCourses}
+                      name="interested_courses"
+                      value={formData.interested_courses}
                       options={interestedCoursesOptions}
                       closeMenuOnSelect={false}
                       onChange={(selectedOptions) =>
-                        handleMultiSelectChange("interestedCourses", selectedOptions)
+                        handleMultiSelectChange("interested_courses", selectedOptions)
                       }
                       placeholder="Select Interested Courses"
-                      isDisabled={!isEditMode.interestedCourses}
+                      isDisabled={!isEditMode.interested_courses}
                       classNamePrefix="react-select"
-                    />
+                    /> */}
+                    <Select
+                      showSearch
+                      mode="multiple"
+                      style={{ width: "100%", height: '40px' }}
+                      placeholder="Select Agent Class "
+                      optionFilterProp="children"
+                      className=""
+                      value={formData.interested_courses}
+                      onChange={(value) => handleMultiSelectChange(value, "interested_courses")}
+                      getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                    >
+                      {interestedCoursesOptions?.map((loc) => (
+                        <Option key={loc._id} value={loc._id}>
+                          {loc.label}
+                        </Option>
+                      ))}
+                    </Select>
                     <FaPencilAlt
-                      onClick={() => toggleEditMode("interestedCourses")}
+                      onClick={() => toggleEditMode("interested_courses")}
                       style={{
                         position: "absolute",
                         right: "10px",
                         top: "50%",
                         transform: "translateY(-50%)",
                         cursor: "pointer",
-                        color: isEditMode.interestedCourses ? "#28a745" : "#6c757d",
+                        color: isEditMode.interested_courses ? "#28a745" : "#6c757d",
                       }}
                     />
                   </div>
@@ -181,28 +260,46 @@ function RequirementDetail() {
                     <strong>Course Type: </strong>
                   </label>
                   <div className="input-container" style={{ position: "relative" }}>
-                    <Select
+                    {/* <Select
                       isMulti
-                      name="courseType"
-                      value={formData.courseType}
+                      name="course_type"
+                      value={formData.course_type}
                       options={courseTypeOptions}
                       closeMenuOnSelect={false}
                       onChange={(selectedOptions) =>
-                        handleMultiSelectChange("courseType", selectedOptions)
+                        handleMultiSelectChange("course_type", selectedOptions)
                       }
                       placeholder="Select Course Type"
-                      isDisabled={!isEditMode.courseType}
+                      isDisabled={!isEditMode.course_type}
                       classNamePrefix="react-select"
-                    />
+                    /> */}
+
+                    <Select
+                      showSearch
+                      mode="multiple"
+                      style={{ width: "100%", height: '40px' }}
+                      placeholder="Select Course type "
+                      optionFilterProp="children"
+                      className=""
+                      value={formData.course_type}
+                      onChange={(value) => handleMultiSelectChange(value, "course_type")}
+                      getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                    >
+                      {courseTypeOptions?.map((loc) => (
+                        <Option key={loc._id} value={loc._id}>
+                          {loc.course_type_name}
+                        </Option>
+                      ))}
+                    </Select>
                     <FaPencilAlt
-                      onClick={() => toggleEditMode("courseType")}
+                      onClick={() => toggleEditMode("course_type")}
                       style={{
                         position: "absolute",
                         right: "10px",
                         top: "50%",
                         transform: "translateY(-50%)",
                         cursor: "pointer",
-                        color: isEditMode.courseType ? "#28a745" : "#6c757d",
+                        color: isEditMode.course_type ? "#28a745" : "#6c757d",
                       }}
                     />
                   </div>
@@ -214,7 +311,7 @@ function RequirementDetail() {
                     <strong>Budget: </strong>
                   </label>
                   <div className="input-container" style={{ position: "relative" }}>
-                    <Select
+                    {/* <Select
                       isMulti
                       name="budget"
                       value={formData.budget}
@@ -226,7 +323,24 @@ function RequirementDetail() {
                       placeholder="Select Budget"
                       isDisabled={!isEditMode.budget}
                       classNamePrefix="react-select"
-                    />
+                    /> */}
+                    <Select
+                      showSearch
+                      mode="multiple"
+                      style={{ width: "100%", height: '40px' }}
+                      placeholder="Select Course type "
+                      optionFilterProp="children"
+                      className=""
+                      value={formData.budget}
+                      onChange={(value) => handleMultiSelectChange(value, "budget")}
+                      getPopupContainer={(triggerNode) => triggerNode.parentNode}
+                    >
+                      {budgetOptions?.map((loc) => (
+                        <Option key={loc._id} value={loc._id}>
+                          {loc.name}
+                        </Option>
+                      ))}
+                    </Select>
                     <FaPencilAlt
                       onClick={() => toggleEditMode("budget")}
                       style={{
@@ -279,20 +393,20 @@ function RequirementDetail() {
                     <input
                       type="text"
                       className="form-control"
-                      name="fbFormId"
-                      value={formData.fbFormId}
+                      name="fb_form_id"
+                      value={formData.fb_form_id}
                       onChange={handleInputChange}
-                      disabled={!isEditMode.fbFormId}
+                      disabled={!isEditMode.fb_form_id}
                     />
                     <FaPencilAlt
-                      onClick={() => toggleEditMode("fbFormId")}
+                      onClick={() => toggleEditMode("fb_form_id")}
                       style={{
                         position: "absolute",
                         right: "10px",
                         top: "50%",
                         transform: "translateY(-50%)",
                         cursor: "pointer",
-                        color: isEditMode.fbFormId ? "#28a745" : "#6c757d",
+                        color: isEditMode.fb_form_id ? "#28a745" : "#6c757d",
                       }}
                     />
                   </div>
@@ -307,20 +421,20 @@ function RequirementDetail() {
                     <input
                       type="text"
                       className="form-control"
-                      name="fbFormName"
-                      value={formData.fbFormName}
+                      name="fb_form_name"
+                      value={formData.fb_form_name}
                       onChange={handleInputChange}
-                      disabled={!isEditMode.fbFormName}
+                      disabled={!isEditMode.fb_form_name}
                     />
                     <FaPencilAlt
-                      onClick={() => toggleEditMode("fbFormName")}
+                      onClick={() => toggleEditMode("fb_form_name")}
                       style={{
                         position: "absolute",
                         right: "10px",
                         top: "50%",
                         transform: "translateY(-50%)",
                         cursor: "pointer",
-                        color: isEditMode.fbFormName ? "#28a745" : "#6c757d",
+                        color: isEditMode.fb_form_name ? "#28a745" : "#6c757d",
                       }}
                     />
                   </div>
@@ -335,20 +449,20 @@ function RequirementDetail() {
                     <input
                       type="text"
                       className="form-control"
-                      name="fbPageName"
-                      value={formData.fbPageName}
+                      name="fb_page_name"
+                      value={formData.fb_page_name}
                       onChange={handleInputChange}
-                      disabled={!isEditMode.fbPageName}
+                      disabled={!isEditMode.fb_page_name}
                     />
                     <FaPencilAlt
-                      onClick={() => toggleEditMode("fbPageName")}
+                      onClick={() => toggleEditMode("fb_page_name")}
                       style={{
                         position: "absolute",
                         right: "10px",
                         top: "50%",
                         transform: "translateY(-50%)",
                         cursor: "pointer",
-                        color: isEditMode.fbPageName ? "#28a745" : "#6c757d",
+                        color: isEditMode.fb_page_name ? "#28a745" : "#6c757d",
                       }}
                     />
                   </div>
@@ -356,7 +470,7 @@ function RequirementDetail() {
 
                 {/* Submit Button */}
                 {Object.values(isEditMode).some((mode) => mode) && (
-                  <button type="submit" className="btn btn-success mt-3">
+                  <button type="button" className="btn btn-success mt-3" onClick={handleSubmit}>
                     Submit
                   </button>
                 )}

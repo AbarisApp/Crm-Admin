@@ -27,7 +27,7 @@ function LeadInformation({ data }) {
     cpName: "",
   });
   useEffect(() => {
-    setAssignedTo(data?.assignTo?.map((item)=>{return {...item ,value: item?.name , label: item?.name}}))
+    setAssignedTo(data?.assignTo?.map((item) => { return { ...item, value: item?.name, label: item?.name } }))
     setFormData({
       name: data?.name,
       assignedTo: "Rsoft",
@@ -91,13 +91,13 @@ function LeadInformation({ data }) {
     setIsEditMode((prev) => ({ ...prev, [field]: !prev[field] }));
   };
 
-  const [load , setLoad] = useState(false)
+  const [load, setLoad] = useState(false)
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoad(true)
     // console.log("Form data submitted:", formData);
     try {
-      const update = await updateLead(parems?.id, {...formData , assignTo: assignedTo ,lead_source: formData.leadSource , lead_status: formData.leadStatus})
+      const update = await updateLead(parems?.id, { ...formData, assignTo: assignedTo, lead_source: formData.leadSource, lead_status: formData.leadStatus })
     } catch (error) {
 
     }
@@ -107,7 +107,7 @@ function LeadInformation({ data }) {
 
   return (
     <div className="container mt-4">
-    {load && <Loadar/>}
+      {load && <Loadar />}
       <div className="row">
         <div className="col-12">
           <div className="card p-3">

@@ -39,7 +39,6 @@ function Distributer() {
             const res = await reailerDistIdAgainst(page, count, userId)
             setTotalCount(res?.data?.totalCount)
             console.log(res?.data);
-            
             setState(res?.data)
         } catch (error) {
 
@@ -100,7 +99,6 @@ function Distributer() {
 
     useEffect(() => {
         let isMounted = true;
-
         const handleChange = async (e, id) => {
             const val = e.target.value;
             console.log(val);
@@ -135,18 +133,20 @@ function Distributer() {
 
     }, []);
 
-    const [dynemicFields , setDynemic] = useState()
+    const [dynemicFields, setDynemic] = useState()
 
     useEffect(() => {
-      const getData = async ()=>{
-        try {
-            const res = await getCompanyInfo()
-            setDynemic(res.data.companyType)
-        } catch (error) {
+        const getData = async () => {
+            try {
+                const res = await getCompanyInfo()
+                // console.log(res);
 
+                setDynemic(res.data.companyType)
+            } catch (error) {
+
+            }
         }
-      }
-      getData()
+        getData()
     }, [])
 
     const breadCrumbsTitle = {

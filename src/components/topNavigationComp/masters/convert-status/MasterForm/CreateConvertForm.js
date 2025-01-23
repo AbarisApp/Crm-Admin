@@ -5,11 +5,11 @@ import { Link } from 'react-router-dom'
 import CustomInputField from '../../../../../common/CustomInputField';
 import { Button } from 'antd';
 import Breadcrumbs from '../../../../../common/breadcrumb/Breadcrumbs';
-import {  addTypes_Of_ApprovedBy_Master,getApprovedBy_MasterId, getCallByStatusId, getCallConvertStatusById, postCallConvertStatus, postCallStatus, updateCallConvertStatusById, updateCallStatusById, updateTypes_Of_ApprovedBy_Master,} from '../../../../../api/login/Login';
-import { toast } from 'react-toastify';
+import { addTypes_Of_ApprovedBy_Master, getApprovedBy_MasterId, getCallByStatusId, getCallConvertStatusById, postCallConvertStatus, postCallStatus, updateCallConvertStatusById, updateCallStatusById, updateTypes_Of_ApprovedBy_Master, } from '../../../../../api/login/Login';
+import { toast, ToastContainer } from 'react-toastify';
 
 function CreateConvertForm
-() {
+    () {
     const breadCrumbsTitle = {
         title_1: "master",
         title_2: "Add Call Status",
@@ -38,6 +38,11 @@ function CreateConvertForm
             position: "top-right",
         });
     };
+    const toastErrorMessage = (message) => {
+        toast.error(message, {
+            position: "top-right",
+        });
+    };
     const submitForm = async (values) => {
         try {
             if (!params?.id) {
@@ -47,6 +52,7 @@ function CreateConvertForm
                         toastSuccessMessage(" Convert-status Added Successfully");
                         navigate(`/convert-status`)
                     }
+                    toastErrorMessage(res.message)
                     blankBtn()
                 } catch (error) {
                     alert(error.message)
@@ -58,12 +64,13 @@ function CreateConvertForm
 
                     if (res?.statusCode == "200") {
                         toastSuccessMessage("Convert-status Update Successfully");
-                        blankBtn()
+                        // blankBtn()
                         navigate(`/convert-status`)
                     }
+                    toastErrorMessage(res.message)
                     if (res?.statusCode == "403") {
                         // toastSuccessMessage("call-status  Successfully");
-                        blankBtn()
+                        // blankBtn()
                     }
                     // getFloorMasters(page)
 
@@ -86,8 +93,8 @@ function CreateConvertForm
                 if (params?.id) {
                     const response = await getCallConvertStatusById(params.id);
                     setInitialValues(response?.data);
-                    console.log(response,"approval");
-                    
+                    console.log(response, "approval");
+
 
                 } else {
                     setInitialValues({
@@ -190,6 +197,7 @@ function CreateConvertForm
                         </div>
                     </div>
                 </div>
+                <ToastContainer className={"text-center"} />
             </div>
         </>
     )

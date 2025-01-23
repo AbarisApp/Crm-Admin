@@ -19,20 +19,20 @@ import { useEffect, useState } from "react";
 
 function LeadDetail() {
     const datas = useSelector((state) => {
-       return state.auth
+        return state.auth
     })
 
     const [data, setData] = useState([])
     const parems = useParams()
-    const getData =async () => {
-       const res = await getLeadDetail(parems.id)
-       setData(res.data)
-       console.log(res.data)
+    const getData = async () => {
+        const res = await getLeadDetail(parems.id)
+        setData(res.data)
+        console.log(res.data)
     }
-    useEffect(()=>{
+    useEffect(() => {
         getData()
-    },[])
-    
+    }, [])
+
     return (
         <div className="row m-4">
             <div className="col-12">
@@ -54,7 +54,7 @@ function LeadDetail() {
                                     <Accordion.Item eventKey="0">
                                         <Accordion.Header>Lead Information</Accordion.Header>
                                         <Accordion.Body style={{ padding: "0" }}>
-                                            <LeadInformation data={data}/>
+                                            <LeadInformation data={data} />
                                         </Accordion.Body>
                                     </Accordion.Item>
                                     <Accordion.Item eventKey="1">
@@ -66,14 +66,14 @@ function LeadDetail() {
                                     <Accordion.Item eventKey="2">
                                         <Accordion.Header>Requirement Detail</Accordion.Header>
                                         <Accordion.Body style={{ padding: "0" }}>
-                                            <RequirementDetail />
+                                            <RequirementDetail data={data} />
                                         </Accordion.Body>
                                     </Accordion.Item>
-                                   
+
                                     <Accordion.Item eventKey="4">
                                         <Accordion.Header>Systematic Information</Accordion.Header>
                                         <Accordion.Body style={{ padding: "0" }}>
-                                            <SystematicInfo />
+                                            <SystematicInfo data={data} />
                                         </Accordion.Body>
                                     </Accordion.Item>
                                     {/* <Accordion.Item eventKey="3">
@@ -136,7 +136,7 @@ function LeadDetail() {
                                             <EnquiryTable />
                                         </Accordion.Body>
                                     </Accordion.Item>
-                                  
+
                                     <Accordion.Item eventKey="2">
                                         <Accordion.Header>Updates (0)</Accordion.Header>
                                         <Accordion.Body style={{ padding: "0" }}>

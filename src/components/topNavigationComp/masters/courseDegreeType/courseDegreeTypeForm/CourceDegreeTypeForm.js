@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import CustomInputField from '../../../../../common/CustomInputField';
 import { Button } from 'antd';
 import Breadcrumbs from '../../../../../common/breadcrumb/Breadcrumbs';
-import { addCourseDegree,  getupdateCourseDegreeStatusId, updateCourseDegree } from '../../../../../api/login/Login';
+import { addCourseDegree, getupdateCourseDegreeStatusId, updateCourseDegree } from '../../../../../api/login/Login';
 import { toast } from 'react-toastify';
 
 function CourceDegreeTypeForm() {
@@ -34,6 +34,11 @@ function CourceDegreeTypeForm() {
     }
     const toastSuccessMessage = (message) => {
         toast.success(`${params?.id ? "Update" : "Add"} ${message}`, {
+            position: "top-right",
+        });
+    };
+    const toastErrorMessage = (message) => {
+        toast.error(message, {
             position: "top-right",
         });
     };

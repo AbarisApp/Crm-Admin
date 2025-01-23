@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaPencilAlt } from "react-icons/fa"; // Importing the edit icon
+import { updateLead } from "../../api/login/Login";
+import { useParams } from "react-router-dom";
 
-function SystematicInfo() {
+function SystematicInfo({ data }) {
   // State to hold form data
   const [formData, setFormData] = useState({
-    entityId: "",
-    callId: "",
+    entity_id: "",
+    call_id: "",
     feedback: "",
     live: "",
     createdTime: "",
@@ -17,15 +19,15 @@ function SystematicInfo() {
 
   // State to manage individual edit mode for each field
   const [isEditMode, setIsEditMode] = useState({
-    entityId: false,
-    callId: false,
+    entity_id: false,
+    call_id: false,
     feedback: false,
     live: false,
-    createdTime: false,
-    createdBy: false,
-    modifiedTime: false,
-    modifiedBy: false,
-    leadNumber: false,
+    // createdTime: false,
+    // createdBy: false,
+    // modifiedTime: false,
+    // modifiedBy: false,
+    // leadNumber: false,
   });
 
   // Handle form data change
@@ -40,29 +42,54 @@ function SystematicInfo() {
   };
 
   // Handle form submission (or other actions)
-  const handleSubmit = (e) => {
+  const parems = useParams()
+  const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("Form data updated:", formData);
     // After submission, disable all fields
+    try {
+      const res = await updateLead(parems.id, formData);
+      if (res?.error == false) {
+        alert('Systematic Information Success')
+      } else {
+        alert('Server Side Error !')
+      }
+    } catch (error) {
+
+    }
     setIsEditMode({
-      entityId: false,
-      callId: false,
+      entity_id: false,
+      call_id: false,
       feedback: false,
       live: false,
-      createdTime: false,
-      createdBy: false,
-      modifiedTime: false,
-      modifiedBy: false,
-      leadNumber: false,
+      // createdTime: false,
+      // createdBy: false,
+      // modifiedTime: false,
+      // modifiedBy: false,
+      // leadNumber: false,
     });
   };
+
+  useEffect(() => {
+    setFormData({
+      entity_id: data?.entity_id,
+      call_id: data?.call_id,
+      feedback: data?.feedback,
+      live: data?.live,
+      createdTime: data?.createdAt,
+      createdBy: '',
+      modifiedTime: data?.updatedAt,
+      modifiedBy: '',
+
+    })
+  }, [data])
 
   return (
     <div className="container mt-4">
       <div className="row">
         <div className="col-12">
           <div className="card p-3">
-            <form onSubmit={handleSubmit}>
+            <form>
               <div className="row">
                 {/* Entity ID */}
                 <div className="col-12 mb-2">
@@ -73,20 +100,20 @@ function SystematicInfo() {
                     <input
                       type="text"
                       className="form-control"
-                      name="entityId"
-                      value={formData.entityId}
+                      name="entity_id"
+                      value={formData.entity_id}
                       onChange={handleInputChange}
-                      disabled={!isEditMode.entityId}
+                      disabled={!isEditMode.entity_id}
                     />
                     <FaPencilAlt
-                      onClick={() => toggleEditMode("entityId")}
+                      onClick={() => toggleEditMode("entity_id")}
                       style={{
                         position: "absolute",
                         right: "10px",
                         top: "50%",
                         transform: "translateY(-50%)",
                         cursor: "pointer",
-                        color: isEditMode.entityId ? "#28a745" : "#6c757d",
+                        color: isEditMode.entity_id ? "#28a745" : "#6c757d",
                       }}
                     />
                   </div>
@@ -101,20 +128,20 @@ function SystematicInfo() {
                     <input
                       type="text"
                       className="form-control"
-                      name="callId"
-                      value={formData.callId}
+                      name="call_id"
+                      value={formData.call_id}
                       onChange={handleInputChange}
-                      disabled={!isEditMode.callId}
+                      disabled={!isEditMode.call_id}
                     />
                     <FaPencilAlt
-                      onClick={() => toggleEditMode("callId")}
+                      onClick={() => toggleEditMode("call_id")}
                       style={{
                         position: "absolute",
                         right: "10px",
                         top: "50%",
                         transform: "translateY(-50%)",
                         cursor: "pointer",
-                        color: isEditMode.callId ? "#28a745" : "#6c757d",
+                        color: isEditMode.call_id ? "#28a745" : "#6c757d",
                       }}
                     />
                   </div>
@@ -162,8 +189,8 @@ function SystematicInfo() {
                       disabled={!isEditMode.live}
                     >
                       <option value="">Select Status</option>
-                      <option value="Yes">Yes</option>
-                      <option value="No">No</option>
+                      <option value={true}>Yes</option>
+                      <option value={false}>No</option>
                     </select>
                     <FaPencilAlt
                       onClick={() => toggleEditMode("live")}
@@ -193,7 +220,7 @@ function SystematicInfo() {
                       onChange={handleInputChange}
                       disabled={!isEditMode.createdTime}
                     />
-                    <FaPencilAlt
+                    {/* <FaPencilAlt
                       onClick={() => toggleEditMode("createdTime")}
                       style={{
                         position: "absolute",
@@ -203,12 +230,12 @@ function SystematicInfo() {
                         cursor: "pointer",
                         color: isEditMode.createdTime ? "#28a745" : "#6c757d",
                       }}
-                    />
+                    /> */}
                   </div>
                 </div>
 
                 {/* Created By */}
-                <div className="col-12 mb-2">
+                {/* <div className="col-12 mb-2">
                   <label>
                     <strong>Created By: </strong>
                   </label>
@@ -233,7 +260,7 @@ function SystematicInfo() {
                       }}
                     />
                   </div>
-                </div>
+                </div> */}
 
                 {/* Modified Time */}
                 <div className="col-12 mb-2">
@@ -249,7 +276,7 @@ function SystematicInfo() {
                       onChange={handleInputChange}
                       disabled={!isEditMode.modifiedTime}
                     />
-                    <FaPencilAlt
+                    {/* <FaPencilAlt
                       onClick={() => toggleEditMode("modifiedTime")}
                       style={{
                         position: "absolute",
@@ -259,12 +286,12 @@ function SystematicInfo() {
                         cursor: "pointer",
                         color: isEditMode.modifiedTime ? "#28a745" : "#6c757d",
                       }}
-                    />
+                    /> */}
                   </div>
                 </div>
 
                 {/* Modified By */}
-                <div className="col-12 mb-2">
+                {/* <div className="col-12 mb-2">
                   <label>
                     <strong>Modified By: </strong>
                   </label>
@@ -289,10 +316,10 @@ function SystematicInfo() {
                       }}
                     />
                   </div>
-                </div>
+                </div> */}
 
                 {/* Lead Number */}
-                <div className="col-12 mb-2">
+                {/* <div className="col-12 mb-2">
                   <label>
                     <strong>Lead Number *: </strong>
                   </label>
@@ -317,11 +344,11 @@ function SystematicInfo() {
                       }}
                     />
                   </div>
-                </div>
+                </div> */}
 
                 {/* Submit Button */}
                 {Object.values(isEditMode).some((mode) => mode) && (
-                  <button type="submit" className="btn btn-success mt-3">
+                  <button type="button" className="btn btn-success mt-3" onClick={handleSubmit}>
                     Submit
                   </button>
                 )}

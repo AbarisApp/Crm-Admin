@@ -136,7 +136,7 @@ function CourseDegreeTypeList() {
                             <Popconfirm
                               title="Delete Course !"
                               description="Are you sure to delete ?"
-                              onConfirm={() => confirm(item?.id)}
+                              onConfirm={() => confirm(item?._id)}
                               onCancel={cancel}
                               okText="Yes"
                               cancelText="No"

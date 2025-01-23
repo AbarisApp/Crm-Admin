@@ -15,7 +15,7 @@ function LeadSourceMaster() {
     const [count, setCount] = useState(10)
     const [page, setPage] = useState(0)
     const [totalCount, setTotalCount] = useState()
-    
+
 
     // ----------list Api----------
     const getFloorMasters = async (page) => {
@@ -31,9 +31,6 @@ function LeadSourceMaster() {
         setLoading(false)
     }
     // add Area
-
-
-    
 
     const onChangeVal = (e) => {
         // console.log(e);
@@ -62,7 +59,7 @@ function LeadSourceMaster() {
         // console.log(e);
         message.error('Cancle Successfull!');
     };
-   
+
 
 
     useEffect(() => {
@@ -71,7 +68,7 @@ function LeadSourceMaster() {
     return (
         <>
             <Breadcrumbs breadCrumbsTitle={breadCrumbsTitle} />
-            <LeadSourceMasterList totalCount={totalCount} page={page} onChangeVal={onChangeVal} data={data}  count={count} confirm={confirm} cancel={cancel} loading={loading}/>
+            <LeadSourceMasterList totalCount={totalCount} page={page} onChangeVal={onChangeVal} data={data} count={count} confirm={confirm} cancel={cancel} loading={loading} />
         </>
     )
 }
